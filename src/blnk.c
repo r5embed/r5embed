@@ -6,15 +6,17 @@
 
 #ifdef BLNK2
 
-#include <string.h>
-
 #include "blnk.h"
 
-//	Clear state
+//	Initialize with given rate and number of rounds
 
 void blnk_clr(blnk_t *ctx, size_t rate, uint8_t rounds)
 {
-	memset(ctx->st, 0, BLNK_BLOCK);
+	size_t i;
+
+	for (i = 0; i < BLNK_BLOCK; i++)
+		ctx->st[i] = 0;
+
 	ctx->pos = 0;
 	ctx->rate = rate;
 	ctx->rounds = rounds;
@@ -26,12 +28,13 @@ void blnk_fin(blnk_t *ctx, blnk_dom_t dom)
 {
 	const uint8_t pad[1] = { 0x01 };
 
-	blnk_put(ctx, dom, pad, 1);				// padding bit
-	if ((dom & BLNK_FULL) == 0) {			// not a full-state input domain?
-		ctx->st[ctx->rate - 1] ^= 0x80;		// flip last bit before capacity
+	blnk_put(ctx, dom, pad, 1);							// padding bit
+	if ((dom & BLNK_FULL) == 0) {						// not full-state ?
+		ctx->st[ctx->rate - 1] ^= 0x80;					// indicate capacity
 	}
 
 	BLNK_PI(&ctx->st, dom | BLNK_LAST, ctx->rounds);	// finalize
+
 	ctx->pos = 0;
 }
 
@@ -39,33 +42,39 @@ void blnk_fin(blnk_t *ctx, blnk_dom_t dom)
 
 void blnk_put(blnk_t *ctx, blnk_dom_t dom, const void *in, size_t len)
 {
-	size_t j, rate;
+	size_t i, j, r;
 
-	//	full state-absorption ?
-	rate = dom & BLNK_FULL ? BLNK_BLOCK : ctx->rate;
+	i = ctx->pos;
+	r = dom & BLNK_FULL ? BLNK_BLOCK : ctx->rate;		// full-state ?
 
 	for (j = 0; j < len; j++) {
-		if (ctx->pos >= rate) {
+		if (i >= r) {
 			BLNK_PI(&ctx->st, dom, ctx->rounds);
-			ctx->pos = 0;
+			i = 0;
 		}
-		ctx->st[ctx->pos++] ^= ((const uint8_t *) in)[j];
+		ctx->st[i++] ^= ((const uint8_t *) in)[j];
 	}
+	ctx->pos = i;
 }
 
 //	Squeeze data
 
 void blnk_get(blnk_t *ctx, blnk_dom_t dom, void *out, size_t len)
 {
-	size_t j;
+	size_t i, j, r;
+
+	i = ctx->pos;
+	r = ctx->rate;
 
 	for (j = 0; j < len; j++) {
-		if (ctx->pos >= ctx->rate) {
+		if (i >= r) {
 			BLNK_PI(&ctx->st, dom, ctx->rounds);
-			ctx->pos = 0;
+			i = 0;
 		}
-		((uint8_t *) out)[j] = ctx->st[ctx->pos++];
+		((uint8_t *) out)[j] = ctx->st[i++];
 	}
+
+	ctx->pos = i;
 }
 
 //	Encrypt data
@@ -73,16 +82,21 @@ void blnk_get(blnk_t *ctx, blnk_dom_t dom, void *out, size_t len)
 void blnk_enc(blnk_t *ctx, blnk_dom_t dom,
 	void *out, const void *in, size_t len)
 {
-	size_t j;
+	size_t i, j, r;
+
+	i = ctx->pos;
+	r = ctx->rate;
 
 	for (j = 0; j < len; j++) {
-		if (ctx->pos >= ctx->rate) {
+		if (i >= r) {
 			BLNK_PI(&ctx->st, dom, ctx->rounds);
-			ctx->pos = 0;
+			i = 0;
 		}
-		ctx->st[ctx->pos] ^= ((const uint8_t *) in)[j];
-		((uint8_t *) out)[j] = ctx->st[ctx->pos++];
+		ctx->st[i] ^= ((const uint8_t *) in)[j];
+		((uint8_t *) out)[j] = ctx->st[i++];
 	}
+
+	ctx->pos = i;
 }
 
 //	Decrypt data
@@ -90,37 +104,62 @@ void blnk_enc(blnk_t *ctx, blnk_dom_t dom,
 void blnk_dec(blnk_t *ctx, blnk_dom_t dom,
 	void *out, const void *in, size_t len)
 {
-	size_t j;
+	size_t i, j, r;
 	uint8_t t;
 
+	i = ctx->pos;
+	r = ctx->rate;
+
 	for (j = 0; j < len; j++) {
-		if (ctx->pos >= ctx->rate) {
+		if (i >= r) {
 			BLNK_PI(&ctx->st, dom, ctx->rounds);
-			ctx->pos = 0;
+			i = 0;
 		}
 		t = ((const uint8_t *) in)[j];
-		((uint8_t *) out)[j] = ctx->st[ctx->pos] ^ t;
-		ctx->st[ctx->pos++] = t;
+		((uint8_t *) out)[j] = ctx->st[i] ^ t;
+		ctx->st[i++] = t;
 	}
+
+	ctx->pos = i;
 }
 
-// Compare to output (0 == equal)
+//	Compare to output (0 == equal)
 
 int blnk_cmp(blnk_t *ctx, blnk_dom_t dom, const void *in, size_t len)
 {
-	size_t j;
-	uint8_t d;
+	size_t i, j, r;
+	uint8_t t;
 
-	d = 0;
+	i = ctx->pos;
+	r = ctx->rate;
+	t = 0;
+
 	for (j = 0; j < len; j++) {
-		if (ctx->pos >= ctx->rate) {
+		if (i >= r) {
 			BLNK_PI(&ctx->st, dom, ctx->rounds);
-			ctx->pos = 0;
+			i = 0;
 		}
-		d |= ((const uint8_t *) in)[j] ^ ctx->st[ctx->pos++];
+		t |= ((const uint8_t *) in)[j] ^ ctx->st[i++];
 	}
 
-	return d != 0;
+	ctx->pos = i;
+
+	return t != 0;
+}
+
+//	Ratchet for forward security
+
+void blnk_ratchet(blnk_t *ctx)
+{
+	size_t i, r;
+
+	r = ctx->rate;
+
+	for (i = 0; i < r; i++) {
+		ctx->st[i] = 0;
+	}
+
+	ctx->pos = 0;
 }
 
 #endif /* BLNK2 */

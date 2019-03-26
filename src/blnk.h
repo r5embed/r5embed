@@ -2,7 +2,7 @@
 //	2019-02-23	Markku-Juhani O. Saarinen <mjos@pqshield.com>
 //	Copyright (C) 2019, PQShield Ltd. Please see LICENSE.
 
-//	BLNK2 modes.
+//	BLNK2 state update mechanism
 
 #ifdef BLNK2
 
@@ -40,11 +40,11 @@ typedef uint8_t blnk_dom_t;
 //	State
 typedef struct {
 	uint8_t st[BLNK_BLOCK];					// state
-	size_t pos, rate;						// data position and rate
+	uint8_t pos, rate;						// data position and rate
 	uint8_t rounds;							// number of rounds
 } blnk_t;
 
-//	Initialized
+//	Initialize with given rate and number of rounds
 void blnk_clr(blnk_t *st, size_t rate, uint8_t rounds);
 
 //	End a data element (compulsory between different types)
@@ -64,8 +64,11 @@ void blnk_enc(blnk_t *st, blnk_dom_t dom,
 void blnk_dec(blnk_t *st, blnk_dom_t dom,
 		void *out, const void *in, size_t len);
 
-// Compare to output (0 == equal)
+//	Compare to output (0 == equal)
 int blnk_cmp(blnk_t *st, blnk_dom_t dom, const void *in, size_t len);
+
+//	Ratchet for forward security
+void blnk_ratchet(blnk_t *ctx);
 
 #endif
 
