@@ -101,7 +101,7 @@ You'll also need a USB to TTL Serial cable. You can get two of those for
 For this interface the wires are defined as: Red +5V, Black GND, Green TXD, 
 White RXD. Connect the green TXD to PA3 and white RXD to PA2 on the board.
 The black GND and red +5V wires can be left unconnected.
-Like this: ![stdisco_b.jpg](https://mjos.fi/dist/stdisco_b.jpg)
+Like this: ![stdisco.jpg](https://r5embed.com/public/stdisco.jpg)
 
 In our system the ST-LINK programming interface appears as `/dev/ttyACM0` while
 the USB serial interface is `/dev/USB0`. You will have to manually change
