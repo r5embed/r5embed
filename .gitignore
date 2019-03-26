@@ -1,0 +1,9 @@
+*.o
+*.bin
+*.hex
+*.a
+*.elf
+.DS_Store
+.project
+.idea/
+
