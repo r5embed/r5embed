@@ -4,7 +4,7 @@
 
 //	Simple AES implementation for embedded. (ARM has "free" rotations)
 
-#ifndef R5_USE_SNEIK
+#ifndef BLNK2
 
 /*
  *	Derived from optimised ANSI C code for the Rijndael cipher (now AES)
@@ -271,5 +271,5 @@ void aes_enc_rounds(uint8_t ct[16], const uint8_t pt[16],
 	PUTU32_LE(ct + 12, s3);
 }
 
-#endif /* R5_USE_SNEIK */
+#endif /* !BLNK2 */
 

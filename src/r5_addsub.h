@@ -6,7 +6,7 @@
 
 #include "r5_parameter_sets.h"
 
-#ifndef R5_ARMV7_ASM
+#ifndef ARMV7_ASM
 
 //	generic versions
 
@@ -77,7 +77,7 @@ void r5_armv7_addsub16_perm_3(modq_t *dst, size_t n, size_t m,
 	r5_armv7_addsub16_perm_3(dst, PARAMS_D, PARAMS_N_BAR, perm, \
 		p_add1, p_sub1, p_add2, p_sub2, p_add3, p_sub3)
 
-#endif /* R5_ARMV7_ASM */
+#endif /* ARMV7_ASM */
 
 #endif /* _R5_ADDSUB_H_ */
 

@@ -1,8 +1,8 @@
-//	r5_dem.c
+//	r5_dem_aesgcm.c
 //	Copyright (c) 2019, PQShield Ltd. and Koninklijke Philips N.V.
 
+#ifndef BLNK2
 #include "r5_parameter_sets.h"
-
 #ifdef ROUND5_CCA_PKE
 
 #include <string.h>
@@ -24,6 +24,7 @@ int round5_dem(uint8_t *c, size_t *c_len,
 
 	r5_xof(final_key_iv, (size_t) (key_len + 12), key, key_len);
 
+	//	set ciphertext size
 	*c_len = m_len + 16;
 
 	switch (key_len) {
@@ -85,4 +86,4 @@ int round5_dem_inverse(uint8_t *m, size_t *m_len,
 }
 
 #endif /* ROUND5_CCA_PKE */
-
+#endif /* !BLNK2 */

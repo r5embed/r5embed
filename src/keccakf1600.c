@@ -1,8 +1,7 @@
-
 //	keccakf1600.c
 //	Flag for alternative implementation: keccakf1600_armv7m.S
 
-#if !defined(R5_USE_SNEIK) && !defined(R5_ARMV7_ASM) 
+#if !defined(ARMV7_ASM) && !defined(BLNK2)
 
 /* Based on the public domain implementation in
  * crypto_hash/keccakc512/simple/ from http://bench.cr.yp.to/supercop.html
@@ -126,21 +125,21 @@ void KeccakF1600_StatePermute(uint64_t * state)
 	for (round = 0; round < NROUNDS; round += 2 ) {
 
 		//	  prepareTheta
-		BCa = 	Aba ^ Aga ^ Aka ^ Ama ^ Asa;
-		BCe = 	Abe ^ Age ^ Ake ^ Ame ^ Ase;
-		BCi = 	Abi ^ Agi ^ Aki ^ Ami ^ Asi;
-		BCo = 	Abo ^ Ago ^ Ako ^ Amo ^ Aso;
-		BCu = 	Abu ^ Agu ^ Aku ^ Amu ^ Asu;
+		BCa =	Aba ^ Aga ^ Aka ^ Ama ^ Asa;
+		BCe =	Abe ^ Age ^ Ake ^ Ame ^ Ase;
+		BCi =	Abi ^ Agi ^ Aki ^ Ami ^ Asi;
+		BCo =	Abo ^ Ago ^ Ako ^ Amo ^ Aso;
+		BCu =	Abu ^ Agu ^ Aku ^ Amu ^ Asu;
 
 		//thetaRhoPiChiIotaPrepareTheta(round  , A, E)
-		Da 	= 	BCu^ROL(BCe, 1);
-		De 	= 	BCa^ROL(BCi, 1);
-		Di 	= 	BCe^ROL(BCo, 1);
-		Do 	= 	BCi^ROL(BCu, 1);
-		Du 	= 	BCo^ROL(BCa, 1);
+		Da	=	BCu^ROL(BCe, 1);
+		De	=	BCa^ROL(BCi, 1);
+		Di	=	BCe^ROL(BCo, 1);
+		Do	=	BCi^ROL(BCu, 1);
+		Du	=	BCo^ROL(BCa, 1);
 
 		Aba ^=	Da;
-		BCa = 	Aba;
+		BCa =	Aba;
 		Age ^=	De;
 		BCe =	ROL(Age, 44);
 		Aki ^=	Di;
@@ -221,21 +220,21 @@ void KeccakF1600_StatePermute(uint64_t * state)
 		Esu =	BCu ^ ((~BCa) & BCe);
 
 		//	  prepareTheta
-		BCa = 	Eba ^ Ega ^ Eka ^ Ema ^ Esa;
-		BCe = 	Ebe ^ Ege ^ Eke ^ Eme ^ Ese;
-		BCi = 	Ebi ^ Egi ^ Eki ^ Emi ^ Esi;
-		BCo = 	Ebo ^ Ego ^ Eko ^ Emo ^ Eso;
-		BCu = 	Ebu ^ Egu ^ Eku ^ Emu ^ Esu;
+		BCa =	Eba ^ Ega ^ Eka ^ Ema ^ Esa;
+		BCe =	Ebe ^ Ege ^ Eke ^ Eme ^ Ese;
+		BCi =	Ebi ^ Egi ^ Eki ^ Emi ^ Esi;
+		BCo =	Ebo ^ Ego ^ Eko ^ Emo ^ Eso;
+		BCu =	Ebu ^ Egu ^ Eku ^ Emu ^ Esu;
 
 		//thetaRhoPiChiIotaPrepareTheta(round+1, E, A)
-		Da 	= 	BCu^ROL(BCe, 1);
-		De 	= 	BCa^ROL(BCi, 1);
-		Di	= 	BCe^ROL(BCo, 1);
-		Do 	= 	BCi^ROL(BCu, 1);
-		Du 	= 	BCo^ROL(BCa, 1);
+		Da	=	BCu^ROL(BCe, 1);
+		De	=	BCa^ROL(BCi, 1);
+		Di	=	BCe^ROL(BCo, 1);
+		Do	=	BCi^ROL(BCu, 1);
+		Du	=	BCo^ROL(BCa, 1);
 
 		Eba ^=	Da;
-		BCa = 	Eba;
+		BCa =	Eba;
 		Ege ^=	De;
 		BCe =	ROL(Ege, 44);
 		Eki ^=	Di;
@@ -276,7 +275,7 @@ void KeccakF1600_StatePermute(uint64_t * state)
 		Emu ^=	Du;
 		BCo =	ROL(Emu, 8);
 		Esa ^=	Da;
-		BCu = 	ROL(Esa, 18);
+		BCu =	ROL(Esa, 18);
 		Aka =	BCa ^ ((~BCe) & BCi);
 		Ake =	BCe ^ ((~BCi) & BCo);
 		Aki =	BCi ^ ((~BCo) & BCu);
@@ -346,5 +345,5 @@ void KeccakF1600_StatePermute(uint64_t * state)
 	#undef	  round
 }
 
-#endif /* !R5_ARMV7_ASM && !R5_USE_SNEIK */
+#endif /* !ARMV7_ASM && !BLNK2 */
 

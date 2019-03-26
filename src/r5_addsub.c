@@ -8,9 +8,8 @@
 #include "r5_parameter_sets.h"
 #include "r5_addsub.h"
 
-#if !defined(R5_ARMV7_ASM)
-
-#if !defined(__AVX2__)
+#ifndef ARMV7_ASM
+#ifndef __AVX2__
 
 //	Basic generic C versions
 
@@ -38,7 +37,7 @@ void r5_modq_addsub3_d(modq_t *dst,
 	}
 }
 
-#endif
+#endif /* !__AVX2__ */
 
 void r5_modq_addsub_perm_nbar_d(modq_t *dst, const uint16_t *perm,
 	const modq_t *p_add, const modq_t *p_sub)
@@ -80,4 +79,4 @@ void r5_modp_addsub_mu(modp_t *dst,
 	}
 }
 
-#endif
+#endif /* !ARMV7_ASM */

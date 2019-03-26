@@ -1,11 +1,13 @@
-//	r5_xof.c
-//	Copyright (c) 2019, PQShield Ltd. and Koninklijke Philips N.V.
+//	r5_xof_shake.c
+//	2019-03-26	Markku-Juhani O. Saarinen <mjos@pqshield.com>
+//	Copyright (c) 2019, PQShield Ltd.
+
+#ifndef BLNK2
 
 #include "r5_xof.h"
 
 #include <assert.h>
 #include <string.h>
-#include "keccakf1600.h"
 
 static void keccak_absorb(r5_xof_ctx_t *ctx,
 	const uint8_t *in, size_t len, uint8_t pad)
@@ -80,5 +82,4 @@ void r5_xof_s_input(r5_xof_ctx_t *ctx,
 	ctx->idx = R5_XOF_RATE;
 }
 
-
-
+#endif /* !BLNK2 */

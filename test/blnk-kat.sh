@@ -4,12 +4,10 @@
 
 KEM_ND_5D="R5ND_1KEM_5d R5ND_3KEM_5d R5ND_5KEM_5d"
 PKE_ND_5D="R5ND_1PKE_5d R5ND_3PKE_5d R5ND_5PKE_5d"
-
-KEM_N1_0D="R5N1_1KEM_0d R5N1_3KEM_0d R5N1_5KEM_0d"
-PKE_N1_0D="R5N1_1PKE_0d R5N1_3PKE_0d R5N1_5PKE_0d"
-
 KEM_ND_0D="R5ND_1KEM_0d R5ND_3KEM_0d R5ND_5KEM_0d"
 PKE_ND_0D="R5ND_1PKE_0d R5ND_3PKE_0d R5ND_5PKE_0d"
+KEM_N1_0D="R5N1_1KEM_0d R5N1_3KEM_0d R5N1_5KEM_0d"
+PKE_N1_0D="R5N1_1PKE_0d R5N1_3PKE_0d R5N1_5PKE_0d"
 
 KEM_EXTRA="R5ND_0KEM_2iot R5ND_1KEM_4longkey" 
 
@@ -17,7 +15,7 @@ KEM_EXTRA="R5ND_0KEM_2iot R5ND_1KEM_4longkey"
 
 if [ ! -n "$1" ]
 then
-	TARGETS="$KEM_ND_5D $PKE_ND_5D $KEM_N1_0D $PKE_N1_0D $KEM_ND_0D $PKE_ND_0D $KEM_EXTRA"
+	TARGETS="$KEM_ND_5D $PKE_ND_5D $KEM_ND_0D $PKE_ND_0D $KEM_N1_0D $PKE_N1_0D $KEM_EXTRA"
 else
 	TARGETS=$@
 fi
@@ -45,20 +43,14 @@ fi
 
 # compile and test
 
-#CC=gcc
-#CC=clang
-CC=arm-linux-gnueabihf-gcc 
-#CC=aarch64-linux-gnu-gcc
-#CC=mips-linux-gnu-gcc
-#CC=powerpc-linux-gnu-gcc
+CC=gcc
 R5_SRC=src
-#CFLAGS="-Wall -Wextra -Wshadow -Ofast -static"
-CFLAGS="-Wall -Wextra -Wshadow -Ofast -static -march=armv7-a -DARMV7_ASM"
+CFLAGS="-march=native -Wall -Wextra -Wshadow -fsanitize=address,undefined -g -DBLNK2"
 LIBS=""
 KEM_MAIN=test/mygenkat_kem.c
 PKE_MAIN=test/mygenkat_pke.c
-RNG_SRC=test/mynistrng.c
-GOOD_KAT=test/good.kat
+RNG_SRC=test/myfastrng.c
+GOOD_KAT=test/good.blnk.kat
 MYDIR=`pwd`
 
 WORKD=`mktemp -d /tmp/r5test.XXXXXXXXXX`
@@ -80,7 +72,7 @@ do
 
 	cd $MYDIR
 	$CC $CFLAGS -o $WORKD/$targ/genkat -D$targ -Inist -I$R5_SRC \
-		$TEST_MAIN $RNG_SRC $R5_SRC/*.c $R5_SRC/*.S $LIBS
+		$TEST_MAIN $RNG_SRC $R5_SRC/*.c $LIBS
 
 	cd $WORKD/$targ
 	./genkat

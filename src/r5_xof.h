@@ -1,13 +1,20 @@
 //	r5_xof.h
-//	Copyright (c) 2019, PQShield Ltd. and Koninklijke Philips N.V.
+//	2019-03-26	Markku-Juhani O. Saarinen <mjos@pqshield.com>
+//	Copyright (c) 2019, PQShield Ltd.
 
 //	Abstract interface to an extensible output function ("XOF") type hash.
 //	Allows only one "input", but you can call "squeeze" many times.
+
 
 #ifndef _R5_XOF_H_
 #define _R5_XOF_H_
 
 #include "r5_parameter_sets.h"
+
+
+#ifndef BLNK2
+
+// -- Keccak-based functionality --
 
 #include "keccakf1600.h"
 
@@ -26,6 +33,15 @@ typedef struct {
 	size_t idx;
 } r5_xof_ctx_t;
 
+#else
+
+// -- SNEIK-based functionality --
+
+#include "blnk.h"
+typedef blnk_t r5_xof_ctx_t;
+
+#endif /* !BLNK2 */
+
 void r5_xof(void *out, const size_t out_len,
 	const void *in, const size_t in_len);
 
@@ -39,5 +55,5 @@ void r5_xof_s_input(r5_xof_ctx_t *ctx,
 void r5_xof_squeeze(r5_xof_ctx_t *ctx,
 	void *out, size_t out_len);
 
-#endif /* _R5_HASH_H_ */
+#endif /* _R5_XOF_H_ */
 

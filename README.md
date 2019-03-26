@@ -72,7 +72,7 @@ big-endian systems (MIPS). It is also noteworthy that since ARMv7-a
 instruction set is basically a superset of the ARMv7-m instruction set used in 
 (Cortex M3/M4) embedded devices, we are able to directly compile and test 
 our ARMv7 optimizations by using the `arm-linux-gnueabihf-gcc` cross compiler
-and compiling with flags `-march=armv7-a -DR5_ARMV7_ASM`.
+and compiling with flags `-march=armv7-a -DARMV7_ASM`.
 
 However, this type of emulation is not cycle accurate and therefore not
 directly useful for performance testing.
@@ -85,7 +85,7 @@ We use a very similar, but somewhat simpler set-up than the
 basically the same (with the exception that we do not use or require Python). 
 If you don't care about public key encryption (just KEM), 
 you should be able to compile `r5embed` with `PQM4` fairly easily; just 
-remember to define the `R5_ARMV7_ASM` macro to enable ARMv7-m assembler
+remember to define the `ARMV7_ASM` macro to enable ARMv7-m assembler
 optimizations (up to 50% faster).
 
 

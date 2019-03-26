@@ -2,7 +2,7 @@
 //	2019-03-05	Markku-Juhani O. Saarinen <mjos@pqshield.com>
 //	Copyright (c) 2019, PQShield Ltd.
 
-#ifndef R5_USE_SNEIK
+#ifndef BLNK2
 
 #include <string.h>
 
@@ -317,5 +317,5 @@ int aes256_dec_vfy_gcm(uint8_t *m, const uint8_t *c, size_t clen,
 	return x == 0 ? 0 : -1;
 }
 
-#endif /* R5_USE_SNEIK */
+#endif /* !BLNK2 */
 

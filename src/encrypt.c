@@ -58,8 +58,10 @@ int crypto_encrypt_open(unsigned char *m, unsigned long long *m_len,
 	/* Apply DEM-inverse to get m */
 	if (round5_dem_inverse(m, &m2_len, k, PARAMS_KAPPA_BYTES,
 			&ct[PARAMS_CT_SIZE + PARAMS_KAPPA_BYTES],
-			ct_len - (PARAMS_CT_SIZE + PARAMS_KAPPA_BYTES)))
+			ct_len - (PARAMS_CT_SIZE + PARAMS_KAPPA_BYTES))) {
+		*m_len = 0;
 		return -1;
+	}
 
 	/* OK */
 	*m_len = (unsigned long long) m2_len;
