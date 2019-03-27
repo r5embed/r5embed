@@ -1,10 +1,10 @@
-//	sneik_f512_c32.c
+//	sneik_f512_c99.c
 //	2019-02-18	Markku-Juhani O. Saarinen <mjos@pqshield.com>
 //	Copyright (C) 2019, PQShield Ltd. Please see LICENSE.
 
-#if defined(BLNK2) && !defined(ARMV7_ASM)
+//	SNEIK f512 implementation for a generic 32-bit C99 target.
 
-//	Sneik f512 implementation for a generic 32-bit C99 target.
+#if defined(BLNK2) && !defined(ARMV7_ASM)
 
 #include <stdint.h>
 
@@ -36,9 +36,9 @@ void sneik_f512(void *state, uint8_t dom, uint8_t rounds)
 
 	for (i = 0; i < 16; i++) {
 		sv[i] = ((uint32_t) ((uint8_t *) state)[4 * i]) |
-				(((uint32_t) ((uint8_t *) state)[4 * i + 1]) << 8) |
-				(((uint32_t) ((uint8_t *) state)[4 * i + 2]) << 16) |
-				(((uint32_t) ((uint8_t *) state)[4 * i + 3]) << 24);
+			(((uint32_t) ((uint8_t *) state)[4 * i + 1]) << 8) |
+			(((uint32_t) ((uint8_t *) state)[4 * i + 2]) << 16) |
+			(((uint32_t) ((uint8_t *) state)[4 * i + 3]) << 24);
 	}
 
 	w0 = sv[0];
