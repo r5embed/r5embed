@@ -5,8 +5,8 @@
 
 A highly portable, self-contained version of Round5 post-quantum algorithms 
 for embedded platforms. This heavily modified (and 50% smaller) fork is 
-NOT OFFICIAL (but is testvector-compatible with the second-round submission 
-to NIST).
+**NOT OFFICIAL** -- but is testvector-compatible with the second-round 
+submission to NIST.
 
 R5EMBED also optionally integrates with SNEIK / BLNK2 family of lightweight 
 permutation-based cryptographic primitives (at least 33% performance 
