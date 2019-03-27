@@ -4,7 +4,7 @@
 
 #ifdef BLNK2
 
-//	A XOF using "Sneigen" -- a lightweight XOF
+//	A XOF using "Sneigen" entropy expansion function
 
 #include "r5_xof.h"
 #include "blnk.h"

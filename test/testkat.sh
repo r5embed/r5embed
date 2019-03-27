@@ -85,9 +85,9 @@ do
 	then
 		echo $targ "OK"
 	else
-		echo $targ "FAIL"
-		echo "I have :" $kat2
 		echo "I want :" $kat1
+		echo "I have :" $kat2
+		echo $targ "FAIL"
 	fi
 done
 

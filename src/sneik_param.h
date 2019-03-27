@@ -2,7 +2,7 @@
 //  2019-02-19  Markku-Juhani O. Saarinen <mjos@pqshield.com>
 //  Copyright (C) 2019, PQShield Ltd. Please see LICENSE.
 
-//  This file provides parametrizations for the SNEIK family.
+//  This file provides a BLNK2 instantations with the SNEIK permutation.
 
 #ifndef _SNEIK_PARAM_H_
 #define _SNEIK_PARAM_H_
@@ -23,7 +23,7 @@ void sneik_f512(void *state, uint8_t dom, uint8_t rounds);
 
 #define SNEIKEN_RATE (BLNK_BLOCK - CRYPTO_KEYBYTES)
 
-//	number of rounds
+//	number of rounds for encryption
 #if (CRYPTO_KEYBYTES == 16)
 #define SNEIKEN_ROUNDS 6
 #elif (CRYPTO_KEYBYTES == 24)
@@ -41,6 +41,7 @@ void sneik_f512(void *state, uint8_t dom, uint8_t rounds);
 #if defined(CRYPTO_BYTES) && !defined(PARAMS_KAPPA_BYTES)
 #define SNEIKHA_RATE (BLNK_BLOCK - CRYPTO_BYTES)
 
+//	number of rounds for hashing
 #if (CRYPTO_BYTES == 16)
 #define SNEIKHA_ROUNDS 4
 #elif (CRYPTO_BYTES == 32)
@@ -59,12 +60,13 @@ void sneik_f512(void *state, uint8_t dom, uint8_t rounds);
 
 #define SNEIGEN_RATE (BLNK_BLOCK - PARAMS_KAPPA_BYTES)
 
+//	number of rounds for non-cryptographic prng
 #if (PARAMS_KAPPA_BYTES == 16)
-#define SNEIGEN_ROUNDS 4
+#define SNEIGEN_ROUNDS 2
 #elif (PARAMS_KAPPA_BYTES == 24)
-#define SNEIGEN_ROUNDS 5
+#define SNEIGEN_ROUNDS 3
 #elif (PARAMS_KAPPA_BYTES == 32)
-#define SNEIGEN_ROUNDS 6
+#define SNEIGEN_ROUNDS 4
 #else
 #error "Could not determine security level."
 #endif
