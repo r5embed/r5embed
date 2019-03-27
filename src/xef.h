@@ -1,8 +1,8 @@
 //  xef.h
-//  Copyright (c) 2018, PQShield Ltd.
+//  2018-10-25 Markku-Juhani O. Saarinen <mjos@pqshield.com>
+//  (c) 2018   PQShield Ltd. All Rights Reserved.
 
 //  Prototypes for error correction codes
-//  Markku-Juhani O. Saarinen <mjos@pqshield.com>
 
 #ifndef _XEF_H_
 #define _XEF_H_
@@ -10,17 +10,14 @@
 #include <stdint.h>
 #include <stddef.h>
 
-/*
-
 //  Computes the parity code, XORs it at the end of payload
 //  len = payload (bytes). Returns (payload | xef) length in *bits*.
-size_t xef_compute(void *block, size_t len, unsigned f);
+//  size_t xef_compute(void *block, size_t len, unsigned f);
 
 //  Fixes errors based on parity code. Call xef_compute() first to get delta.
 //  len = payload (bytes). Returns (payload | xef) length in *bits*.
-size_t xef_fixerr(void *block, size_t len, unsigned f);
+//  size_t xef_fixerr(void *block, size_t len, unsigned f);
 
-*/
 
 void xe2_53_compute(void *block);       // xe2_c16.c
 void xe2_53_fixerr(void *block);

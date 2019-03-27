@@ -5,7 +5,6 @@
 //  Abstract interface to an extensible output function ("XOF") type hash.
 //  Allows only one "input", but you can call "squeeze" many times.
 
-
 #ifndef _R5_XOF_H_
 #define _R5_XOF_H_
 

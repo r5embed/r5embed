@@ -1,4 +1,7 @@
 //  r5_addsub.h
+//  2019-03-10  Markku-Juhani O. Saarinen <mjos@pqshield.com>
+//  Low-level functions for handling ternary vectors.
+
 //  Copyright (c) 2019, PQShield Ltd.
 
 #ifndef _R5_ADDSUB_H_

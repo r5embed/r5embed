@@ -15,7 +15,7 @@ int r5_dem_enc(uint8_t *c, size_t *c_len,
     const uint8_t *m, size_t m_len,
     const uint8_t *key, size_t key_len);
 
-//  Decrypt and verify (nonzero on failure)
+//  Decrypt and verify (return nonzero on failure)
 
 int r5_dem_dec(uint8_t *m, size_t *m_len,
     const uint8_t *c, size_t c_len,

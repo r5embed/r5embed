@@ -1,8 +1,8 @@
 //  aesgcm.h
+//  2019-03-04  Markku-Juhani O. Saarinen <mjos@pqshield.com>
 //  Copyright (c) 2019, PQShield Ltd.
 
-//  2019-03-04  Markku-Juhani O. Saarinen <mjos@pqshield.com>
-//  Simple GCM functionality. No support of associated data.
+//  Simple GCM functionality. (No support of associated data.)
 
 #ifndef _AESGCM_H_
 #define _AESGCM_H_

@@ -10,7 +10,7 @@
 #include <stdint.h>
 #include "api.h"
 
-// Compression function prototype
+// Cryptographic permutation prototype
 void sneik_f512(void *state, uint8_t dom, uint8_t rounds);
 
 // Parameters (sizes are in bytes)
@@ -60,7 +60,7 @@ void sneik_f512(void *state, uint8_t dom, uint8_t rounds);
 
 #define SNEIGEN_RATE (BLNK_BLOCK - PARAMS_KAPPA_BYTES)
 
-//  number of rounds for non-cryptographic prng
+//  number of rounds for a non-cryptographic prng
 #if (PARAMS_KAPPA_BYTES == 16)
 #define SNEIGEN_ROUNDS 2
 #elif (PARAMS_KAPPA_BYTES == 24)

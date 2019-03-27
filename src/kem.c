@@ -32,13 +32,13 @@ int crypto_kem_enc(uint8_t *ct, uint8_t *k, const uint8_t *pk)
     uint8_t m[PARAMS_KAPPA_BYTES];
     uint8_t rho[PARAMS_KAPPA_BYTES];
 
-    /* Generate a random m and rho */
+    // Generate a random m and rho
     randombytes(m, PARAMS_KAPPA_BYTES);
     randombytes(rho, PARAMS_KAPPA_BYTES);
 
     r5_cpa_pke_encrypt(ct, pk, m, rho);
 
-    /* k = H(m, ct) */
+    // k = H(m, ct)
     memcpy(hash_input, m, PARAMS_KAPPA_BYTES);
     memcpy(hash_input + PARAMS_KAPPA_BYTES, ct, PARAMS_CT_SIZE);
     r5_xof(k, PARAMS_KAPPA_BYTES, hash_input,
@@ -54,10 +54,10 @@ int crypto_kem_dec(uint8_t *k, const uint8_t *ct, const uint8_t *sk)
     uint8_t hash_input[PARAMS_KAPPA_BYTES + PARAMS_CT_SIZE];
     uint8_t m[PARAMS_KAPPA_BYTES];
 
-    /* Decrypt m */
+    // Decrypt m
     r5_cpa_pke_decrypt(m, sk, ct);
 
-    /* k = H(m, ct) */
+    // k = H(m, ct)
     memcpy(hash_input, m, PARAMS_KAPPA_BYTES);
     memcpy(hash_input + PARAMS_KAPPA_BYTES, ct, PARAMS_CT_SIZE);
     r5_xof(k, PARAMS_KAPPA_BYTES, hash_input,
@@ -68,7 +68,9 @@ int crypto_kem_dec(uint8_t *k, const uint8_t *ct, const uint8_t *sk)
 
 #else
 
-//  We also provide an alternative KEM interface for CCA parameter sets
+//  We also provide an alternative KEM interface for CCA parameter sets.
+//  (Note that CRYPTO_* macro variables are not set appropriately since they
+//  are set for the NIST PKE interface when CCA is used.)
 
 #include "nist_kem.h"
 #include "r5_cca_kem.h"

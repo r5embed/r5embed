@@ -1,5 +1,5 @@
 //  keccakf1600.h
-//  From public domain sources.
+//  Raw Keccak f-1600 interface. (Derived From public domain sources.)
 
 #ifndef _KECCAKF1600_H_
 #define _KECCAKF1600_H_

@@ -50,9 +50,9 @@ and verify the (sha256 hashes of) KAT outputs against known good ones
 contained in file `test/good.kat`. The script launches all kat generation
 threads at once (fast testing if you have a lot of cores in your system).
 
-For performance testing, you can use `test/speed.sh` script. It also should
-also create the simple "tv" test vector checksums that our embedded test
-programs use.
+For performance testing on your native system, you can use the 
+`test/speed.sh` script. It also computes the simple "tv" test vector 
+checksums that our embedded test programs display.
 
 ## Emulation: ARM, MIPS, POWERPC, etc
 
