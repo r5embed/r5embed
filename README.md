@@ -6,6 +6,9 @@
 A highly portable, self-contained version of Round5 post-quantum algorithms 
 for embedded platforms.
 
+Also optionally integrates with SNEIK family of lightweight permutation-based 
+cryptographic primitives (about 33% performance improvement).
+
 ## Supported variants
 
 Otherwise the variants supported are the same as in the "submission":
