@@ -33,7 +33,9 @@ int crypto_encrypt(unsigned char *ct, unsigned long long *ct_len,
 	memcpy(ct, c1, sizeof(c1));
 
 	/* Apply DEM to get second part of ct */
-	if (round5_dem(ct + sizeof(c1), &c2_len, k, PARAMS_KAPPA_BYTES, m, m_len))
+	if (r5_dem_enc(ct + sizeof(c1), &c2_len, 
+			m, m_len, 
+			k, PARAMS_KAPPA_BYTES))
 		return -1;
 
 	*ct_len = sizeof(c1) + c2_len;
@@ -56,9 +58,10 @@ int crypto_encrypt_open(unsigned char *m, unsigned long long *m_len,
 	r5_cca_kem_decapsulate(k, ct, sk);
 
 	/* Apply DEM-inverse to get m */
-	if (round5_dem_inverse(m, &m2_len, k, PARAMS_KAPPA_BYTES,
+	if (r5_dem_dec(m, &m2_len, 
 			&ct[PARAMS_CT_SIZE + PARAMS_KAPPA_BYTES],
-			ct_len - (PARAMS_CT_SIZE + PARAMS_KAPPA_BYTES))) {
+			ct_len - (PARAMS_CT_SIZE + PARAMS_KAPPA_BYTES),
+			k, PARAMS_KAPPA_BYTES)) {
 		*m_len = 0;
 		return -1;
 	}

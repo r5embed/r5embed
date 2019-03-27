@@ -11,10 +11,9 @@
 
 #include "r5_parameter_sets.h"
 
-
 #ifndef BLNK2
 
-// -- Keccak-based functionality --
+//	-- Keccak-based functionality --
 
 #include "keccakf1600.h"
 
@@ -33,14 +32,16 @@ typedef struct {
 	size_t idx;
 } r5_xof_ctx_t;
 
-#else
+#else	/* !BLNK2 */
 
-// -- SNEIK-based functionality --
+//	-- SNEIK-based functionality --
 
 #include "blnk.h"
 typedef blnk_t r5_xof_ctx_t;
 
-#endif /* !BLNK2 */
+#endif	/* BLNK2 */
+
+//	Common interface
 
 void r5_xof(void *out, const size_t out_len,
 	const void *in, const size_t in_len);

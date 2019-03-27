@@ -2,7 +2,7 @@
 //	2019-02-20	Markku-Juhani O. Saarinen <mjos@pqshield.com>
 //	Copyright (C) 2019, PQShield Ltd. Please see LICENSE.
 
-//	The BLNK2 core.
+//	The BLNK2 "core" state manipulation functions.
 
 #ifdef BLNK2
 
@@ -15,7 +15,7 @@ void blnk_clr(blnk_t *ctx, size_t rate, uint8_t rounds)
 	size_t i;
 
 	for (i = 0; i < BLNK_BLOCK; i++)
-		ctx->st[i] = 0;
+		ctx->st.u8[i] = 0;
 
 	ctx->pos = 0;
 	ctx->rate = rate;
@@ -30,7 +30,7 @@ void blnk_fin(blnk_t *ctx, blnk_dom_t dom)
 
 	blnk_put(ctx, dom, pad, 1);							// padding bit
 	if ((dom & BLNK_FULL) == 0) {						// not full-state ?
-		ctx->st[ctx->rate - 1] ^= 0x80;					// indicate capacity
+		ctx->st.u8[ctx->rate - 1] ^= 0x80;				// indicate capacity
 	}
 
 	BLNK_PI(&ctx->st, dom | BLNK_LAST, ctx->rounds);	// finalize
@@ -52,7 +52,7 @@ void blnk_put(blnk_t *ctx, blnk_dom_t dom, const void *in, size_t len)
 			BLNK_PI(&ctx->st, dom, ctx->rounds);
 			i = 0;
 		}
-		ctx->st[i++] ^= ((const uint8_t *) in)[j];
+		ctx->st.u8[i++] ^= ((const uint8_t *) in)[j];
 	}
 	ctx->pos = i;
 }
@@ -71,7 +71,7 @@ void blnk_get(blnk_t *ctx, blnk_dom_t dom, void *out, size_t len)
 			BLNK_PI(&ctx->st, dom, ctx->rounds);
 			i = 0;
 		}
-		((uint8_t *) out)[j] = ctx->st[i++];
+		((uint8_t *) out)[j] = ctx->st.u8[i++];
 	}
 
 	ctx->pos = i;
@@ -92,8 +92,8 @@ void blnk_enc(blnk_t *ctx, blnk_dom_t dom,
 			BLNK_PI(&ctx->st, dom, ctx->rounds);
 			i = 0;
 		}
-		ctx->st[i] ^= ((const uint8_t *) in)[j];
-		((uint8_t *) out)[j] = ctx->st[i++];
+		ctx->st.u8[i] ^= ((const uint8_t *) in)[j];
+		((uint8_t *) out)[j] = ctx->st.u8[i++];
 	}
 
 	ctx->pos = i;
@@ -116,8 +116,8 @@ void blnk_dec(blnk_t *ctx, blnk_dom_t dom,
 			i = 0;
 		}
 		t = ((const uint8_t *) in)[j];
-		((uint8_t *) out)[j] = ctx->st[i] ^ t;
-		ctx->st[i++] = t;
+		((uint8_t *) out)[j] = ctx->st.u8[i] ^ t;
+		ctx->st.u8[i++] = t;
 	}
 
 	ctx->pos = i;
@@ -139,7 +139,7 @@ int blnk_cmp(blnk_t *ctx, blnk_dom_t dom, const void *in, size_t len)
 			BLNK_PI(&ctx->st, dom, ctx->rounds);
 			i = 0;
 		}
-		t |= ((const uint8_t *) in)[j] ^ ctx->st[i++];
+		t |= ((const uint8_t *) in)[j] ^ ctx->st.u8[i++];
 	}
 
 	ctx->pos = i;
@@ -156,7 +156,7 @@ void blnk_ratchet(blnk_t *ctx)
 	r = ctx->rate;
 
 	for (i = 0; i < r; i++) {
-		ctx->st[i] = 0;
+		ctx->st.u8[i] = 0;
 	}
 
 	ctx->pos = 0;

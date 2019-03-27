@@ -13,15 +13,18 @@
 #include "r5_xof.h"
 #include "aesgcm.h"
 
-int round5_dem(uint8_t *c, size_t *c_len,
-	const uint8_t *key, size_t key_len,
-	const uint8_t *m, size_t m_len)
+//	Encrypt and add authentication information
+
+int r5_dem_enc(uint8_t *c, size_t *c_len,
+	const uint8_t *m, size_t m_len,
+	const uint8_t *key, size_t key_len)
 {
 	uint8_t final_key_iv[32 + 12];
 	const uint8_t * const iv = final_key_iv + key_len;
 
-	assert(key_len <= 32);
+	assert(key_len == 16 || key_len == 24 || key_len == 32);
 
+	//	process the input key to get a key/iv pair
 	r5_xof(final_key_iv, (size_t) (key_len + 12), key, key_len);
 
 	//	set ciphertext size
@@ -47,19 +50,22 @@ int round5_dem(uint8_t *c, size_t *c_len,
 	return 0;
 }
 
-int round5_dem_inverse(uint8_t *m, size_t *m_len,
-	const uint8_t *key, size_t key_len,
-	const uint8_t *c, size_t c_len)
+//	Decrypt and verify (nonzero on failure)
+
+int r5_dem_dec(uint8_t *m, size_t *m_len,
+	const uint8_t *c, size_t c_len,
+	const uint8_t *key, size_t key_len)
 {
 	uint8_t final_key_iv[32 + 12];
 	const uint8_t * const iv = final_key_iv + key_len;
 
-	assert(key_len <= 32);
+	assert(key_len == 16 || key_len == 24 || key_len == 32);
 
 	if (c_len < 16)
 		return -1;
 	*m_len = c_len - 16;
 
+	//	process the input key to get a key/iv pair
 	r5_xof(final_key_iv, (size_t) (key_len + 12), key, key_len);
 
 	switch (key_len) {
@@ -77,9 +83,6 @@ int round5_dem_inverse(uint8_t *m, size_t *m_len,
 			if (aes256_dec_vfy_gcm(m, c, c_len, final_key_iv, iv))
 				return -1;
 			break;
-
-		default:
-			return -1;
 	}
 
 	return 0;

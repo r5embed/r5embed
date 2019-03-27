@@ -2,7 +2,7 @@
 //	2019-02-23	Markku-Juhani O. Saarinen <mjos@pqshield.com>
 //	Copyright (C) 2019, PQShield Ltd. Please see LICENSE.
 
-//	BLNK2 state update mechanism
+//	The BLNK2 "core" state manipulation functions.
 
 #ifdef BLNK2
 
@@ -12,10 +12,13 @@
 #include <stdint.h>
 #include <stddef.h>
 
-// Internal errors indicate a line in the code
+//	Get instantiation
+#include "sneik_param.h"
+
+//	Internal errors indicate a line in the code
 #define BLNK_ERR   (-(__LINE__))
 
-//	padding identifiers
+//	Padding identifiers
 #define BLNK_LAST	0x01					// Last (padded) block of domain
 #define BLNK_FULL	0x02					// Full state input (0: RATE input)
 #define BLNK_A2B	0x04					// Alice -> Bob
@@ -28,18 +31,15 @@
 #define BLNK_PTCT	0x70					// Plaintext or Ciphertext (in/out)
 #define BLNK_BIT7	0x80					// Reserved
 
-// Compression function prototype
-void sneik_f512(void *state, uint8_t dom, uint8_t rounds);
-
-#define BLNK_BLOCK 64
-#define BLNK_PI(x, dom, rounds) sneik_f512(x, dom, rounds)
-
 // Domain indicator
 typedef uint8_t blnk_dom_t;
 
 //	State
 typedef struct {
-	uint8_t st[BLNK_BLOCK];					// state
+	union {
+		uint8_t  u8[BLNK_BLOCK];			// permutation state
+		uint32_t u32[(BLNK_BLOCK + 3) / 4];	// for alignment
+	} st;	
 	uint8_t pos, rate;						// data position and rate
 	uint8_t rounds;							// number of rounds
 } blnk_t;
@@ -58,11 +58,11 @@ void blnk_get(blnk_t *st, blnk_dom_t dom, void *out, size_t len);
 
 //	Encrypt data
 void blnk_enc(blnk_t *st, blnk_dom_t dom,
-		void *out, const void *in, size_t len);
+	void *out, const void *in, size_t len);
 
 //	Decrypt data
 void blnk_dec(blnk_t *st, blnk_dom_t dom,
-		void *out, const void *in, size_t len);
+	void *out, const void *in, size_t len);
 
 //	Compare to output (0 == equal)
 int blnk_cmp(blnk_t *st, blnk_dom_t dom, const void *in, size_t len);

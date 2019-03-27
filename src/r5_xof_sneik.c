@@ -6,24 +6,8 @@
 
 //	A XOF using "Sneigen" -- a lightweight XOF
 
-#include "r5_parameter_sets.h"
-#include "blnk.h"
-
-// rate is set by secret size
-#define SNEIGEN_RATE (BLNK_BLOCK - PARAMS_KAPPA_BYTES)
-
-// same with rounds
-#if (PARAMS_KAPPA_BYTES == 16)
-#define SNEIGEN_ROUNDS 4
-#elif (PARAMS_KAPPA_BYTES == 24)
-#define SNEIGEN_ROUNDS 5
-#elif (PARAMS_KAPPA_BYTES == 32)
-#define SNEIGEN_ROUNDS 6
-#else
-#error "Could not determine security level."
-#endif
-
 #include "r5_xof.h"
+#include "blnk.h"
 
 //	Initialize and absorb a message
 
@@ -73,3 +57,4 @@ void r5_xof(void *out, const size_t out_len,
 }
 
 #endif /* BLNK2 */
+
