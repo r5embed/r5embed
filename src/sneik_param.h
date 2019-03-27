@@ -23,7 +23,7 @@ void sneik_f512(void *state, uint8_t dom, uint8_t rounds);
 
 #define SNEIKEN_RATE (BLNK_BLOCK - CRYPTO_KEYBYTES)
 
-//	number of rounds for encryption
+//  number of rounds for encryption
 #if (CRYPTO_KEYBYTES == 16)
 #define SNEIKEN_ROUNDS 6
 #elif (CRYPTO_KEYBYTES == 24)
@@ -34,14 +34,14 @@ void sneik_f512(void *state, uint8_t dom, uint8_t rounds);
 #error "Could not determine security level."
 #endif
 
-#endif	/* CRYPTO_KEYBYTES */
+#endif  /* CRYPTO_KEYBYTES */
 
 //  == SNEIKHA Cryptographic Hashes ==
 
 #if defined(CRYPTO_BYTES) && !defined(PARAMS_KAPPA_BYTES)
 #define SNEIKHA_RATE (BLNK_BLOCK - CRYPTO_BYTES)
 
-//	number of rounds for hashing
+//  number of rounds for hashing
 #if (CRYPTO_BYTES == 16)
 #define SNEIKHA_ROUNDS 4
 #elif (CRYPTO_BYTES == 32)
@@ -52,15 +52,15 @@ void sneik_f512(void *state, uint8_t dom, uint8_t rounds);
 #error "Could not determine security level."
 #endif
 
-#endif	/* CRYPTO_BYTES */
+#endif  /* CRYPTO_BYTES */
 
-//	== SNEIGEN Entropy distribution function ==
+//  == SNEIGEN Entropy distribution function ==
 
 #ifdef PARAMS_KAPPA_BYTES
 
 #define SNEIGEN_RATE (BLNK_BLOCK - PARAMS_KAPPA_BYTES)
 
-//	number of rounds for non-cryptographic prng
+//  number of rounds for non-cryptographic prng
 #if (PARAMS_KAPPA_BYTES == 16)
 #define SNEIGEN_ROUNDS 2
 #elif (PARAMS_KAPPA_BYTES == 24)
@@ -73,5 +73,5 @@ void sneik_f512(void *state, uint8_t dom, uint8_t rounds);
 
 #endif /* PARAMS_KAPPA_BYTES */
 
-#endif	/* _SNEIK_PARAM_H_ */
+#endif  /* _SNEIK_PARAM_H_ */
 

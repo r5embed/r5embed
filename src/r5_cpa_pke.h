@@ -1,5 +1,5 @@
-//	Copyright (c) 2019, PQShield Ltd. and Koninklijke Philips N.V.
-//	Markku-Juhani O. Saarinen, Koninklijke Philips N.V.
+//  Copyright (c) 2019, PQShield Ltd. and Koninklijke Philips N.V.
+//  Markku-Juhani O. Saarinen, Koninklijke Philips N.V.
 
 #ifndef _R5_CPA_PKE_H_
 #define _R5_CPA_PKE_H_

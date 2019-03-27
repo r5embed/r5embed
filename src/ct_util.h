@@ -1,7 +1,7 @@
-//	ct_util.h
-//	Copyright (c) 2019, PQShield Ltd.
+//  ct_util.h
+//  Copyright (c) 2019, PQShield Ltd.
 
-//	Constant-time utility functions.
+//  Constant-time utility functions.
 
 #ifndef _CT_UTIL_H_
 #define _CT_UTIL_H_

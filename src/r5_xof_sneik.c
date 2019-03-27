@@ -1,59 +1,59 @@
-//	r5_xof_sneik.c
-//	2019-03-26	Markku-Juhani O. Saarinen <mjos@pqshield.com>
-//	Copyright (c) 2019, PQShield Ltd.
+//  r5_xof_sneik.c
+//  2019-03-26  Markku-Juhani O. Saarinen <mjos@pqshield.com>
+//  Copyright (c) 2019, PQShield Ltd.
 
 #ifdef BLNK2
 
-//	A XOF using "Sneigen" entropy expansion function
+//  A XOF using "Sneigen" entropy expansion function
 
 #include "r5_xof.h"
 #include "blnk.h"
 
-//	Initialize and absorb a message
+//  Initialize and absorb a message
 
 void r5_xof_input(r5_xof_ctx_t *ctx,
-	const void *in, size_t in_len)
+    const void *in, size_t in_len)
 {
-	blnk_clr(ctx, SNEIGEN_RATE, SNEIGEN_ROUNDS);	// initialize
+    blnk_clr(ctx, SNEIGEN_RATE, SNEIGEN_ROUNDS);    // initialize
 
-	blnk_put(ctx, BLNK_AD, in, in_len);				// absorb input
-	blnk_fin(ctx, BLNK_AD);
+    blnk_put(ctx, BLNK_AD, in, in_len);             // absorb input
+    blnk_fin(ctx, BLNK_AD);
 }
 
-//	Additional customizer "S"
+//  Additional customizer "S"
 
 void r5_xof_s_input(r5_xof_ctx_t *ctx,
-	const void *in, size_t in_len,
-	const void *sstr, size_t sstr_len)
+    const void *in, size_t in_len,
+    const void *sstr, size_t sstr_len)
 {
-	blnk_clr(ctx, SNEIGEN_RATE, SNEIGEN_ROUNDS);	// initialize
+    blnk_clr(ctx, SNEIGEN_RATE, SNEIGEN_ROUNDS);    // initialize
 
-	blnk_put(ctx, BLNK_AD, sstr, sstr_len);			// absorb s
-	blnk_fin(ctx, BLNK_AD);							// padding
-	blnk_put(ctx, BLNK_AD, in, in_len);				// absorb main input
-	blnk_fin(ctx, BLNK_AD);							// another padding
+    blnk_put(ctx, BLNK_AD, sstr, sstr_len);         // absorb s
+    blnk_fin(ctx, BLNK_AD);                         // padding
+    blnk_put(ctx, BLNK_AD, in, in_len);             // absorb main input
+    blnk_fin(ctx, BLNK_AD);                         // another padding
 }
 
-//	Output bytes
+//  Output bytes
 
 void r5_xof_squeeze(r5_xof_ctx_t *ctx,
-	void *out, size_t out_len)
+    void *out, size_t out_len)
 {
-	blnk_get(ctx, BLNK_HASH, out, out_len);			// squeeze output
+    blnk_get(ctx, BLNK_HASH, out, out_len);         // squeeze output
 }
 
-//	Single-call interface
+//  Single-call interface
 
 void r5_xof(void *out, const size_t out_len,
-	const void *in, const size_t in_len)
+    const void *in, const size_t in_len)
 {
-	blnk_t ctx;
+    blnk_t ctx;
 
-	blnk_clr(&ctx, SNEIGEN_RATE, SNEIGEN_ROUNDS);	// initialize
+    blnk_clr(&ctx, SNEIGEN_RATE, SNEIGEN_ROUNDS);   // initialize
 
-	blnk_put(&ctx, BLNK_AD, in, in_len);			// absorb input
-	blnk_fin(&ctx, BLNK_AD);
-	blnk_get(&ctx, BLNK_HASH, out, out_len);		// squeeze output
+    blnk_put(&ctx, BLNK_AD, in, in_len);            // absorb input
+    blnk_fin(&ctx, BLNK_AD);
+    blnk_get(&ctx, BLNK_HASH, out, out_len);        // squeeze output
 }
 
 #endif /* BLNK2 */
