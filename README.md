@@ -43,7 +43,7 @@ These instructions were created and tested on an Ubuntu 18.04 LTS system.
 The script `test/testkat.sh` will compile all targets on the local system
 and verify the (sha256 hashes of) KAT outputs against known good ones 
 contained in file `test/good.kat`. The script launches all kat generation
-threads at once (I happen to have 12 cores on my development system).
+threads at once (fast testing if you have a lot of cores in your system).
 
 For performance testing, you can use `test/speed.sh` script. It also should
 also create the simple "tv" test vector checksums that our embedded test
