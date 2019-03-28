@@ -48,6 +48,7 @@ All numbers are in bytes:
 *	**Code**: Code size, excluding "common" components, Flash (ROM) bytes.
 
 	| **Variant**	| **KeyGen** | **Enc** | **Dec** | **PK** | **SK** | **CT** | **Code** |
+	|---------------|-------|-------|-------|-------|-------|-------|-------|
 	| R5ND_1KEM_5d	| 4166	| 4845	| 2668	| 445	| 16	| 549	| 5316	| 
 	| R5ND_3KEM_5d	| 5854	| 6949	| 3716	| 780	| 24	| 859	| 6622	| 
 	| R5ND_5KEM_5d	| 7302	| 8717	| 4660	| 972	| 32	| 1063	| 4324	| 
@@ -115,6 +116,7 @@ All numbers are in bytes:
 *	**Code**: Code size, excluding "common" components, Flash (ROM) bytes.
 
 	| **Variant**	| **KeyGen** | **Enc** | **Dec** | **PK** | **SK** | **CT** | **Code** |
+	|---------------|-------|-------|-------|-------|-------|-------|-------|
 	| R5ND_1KEM_5d	| 3534	| 4461	| 2604	| 445	| 16	| 549	| 4892	| 
 	| R5ND_3KEM_5d	| 5278	| 6653	| 3716	| 780	| 24	| 859	| 6202	| 
 	| R5ND_5KEM_5d	| 6725	| 8445	| 4660	| 972	| 32	| 1063	| 3896	| 
