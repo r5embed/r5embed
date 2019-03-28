@@ -12,6 +12,10 @@ lightweight permutation-based cryptographic primitives (significant
 performance and implementation footprint improvement over SHAKE and AES-GCM). 
 We call these variants R5SNEIK.
 
+Round5 is a currently a 2nd round NIST PQC standardization candidate, while
+SNEIK will be a 1st round NIST LWC standardization candidate, specifically
+designed (in part) to support post-quantum cryptography.
+
 For a summary of performance and code size of all supported variants on 
 Cortex M4, see the [benchmarks](./benchmarks.md) page.
 
