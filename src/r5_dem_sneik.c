@@ -39,7 +39,7 @@ int r5_dem_enc(uint8_t *c, size_t *c_len,
 
     //  Associated Data (full state)
     //  blnk_put(&ctx, BLNK_ADF, ad, (size_t) adlen);
-    blnk_fin(&ctx, BLNK_ADF);           //  (No AD but still do a permutation)
+    blnk_fin(&ctx, BLNK_ADF);           //  Pad and permute even if no AD
 
     // Encrypt Message (this version doesn't handle overlap)
     blnk_enc(&ctx, BLNK_PTCT, c, m, m_len);
@@ -84,7 +84,7 @@ int r5_dem_dec(uint8_t *m, size_t *m_len,
 
     //  Associated Data (full state)
     //  blnk_put(&ctx, BLNK_ADF, ad, (size_t) adlen);
-    blnk_fin(&ctx, BLNK_ADF);           //  (No AD but still do a permutation)
+    blnk_fin(&ctx, BLNK_ADF);           //  Pad and permute even if no AD
 
     //  Decrypt Message (can't handle overlap)
     blnk_dec(&ctx, BLNK_PTCT, m, c, c_len);
