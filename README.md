@@ -16,9 +16,6 @@ R5EMBED also optionally integrates with new SNEIK / BLNK2 family of lightweight
 permutation-based cryptographic primitives (at least 33% performance 
 improvement over SHAKE and AES-GCM). We call these variants R5SNEIK.
 
-For a summary of performance and code size, 
-see the [benchmarks](./benchmarks.md).
-
 ## Supported variants
 
 Otherwise the variants supported are the same as in the "submission":
@@ -46,9 +43,13 @@ which operate in the ring setting and have 2/4 - bit error correction.
 This version does *not* support `R5N1_3PKE_0smallCT` which has very large 
 (165kB) public keys and requires some special implementation techniques.
 
-These instructions were created and tested on an Ubuntu 18.04 LTS system.
+For a summary of performance and code size of all variants on Cortex M4, 
+see the [benchmarks](./benchmarks.md).
 
-## Compiling "natively"
+
+### Compiling "natively"
+
+These instructions were created and tested on an Ubuntu 18.04 LTS system.
 
 The script `test/testkat.sh` will compile all targets on the local system
 and verify the (sha256 hashes of) KAT outputs against known good ones 
@@ -59,7 +60,7 @@ For performance testing on your native system, you can use the
 `test/speed.sh` script. It also computes the simple "tv" test vector 
 checksums that our embedded test programs display.
 
-## Emulation: ARM, MIPS, POWERPC, etc
+### Emulation: ARM, MIPS, POWERPC, etc
 
 QEMU on Linux allows transparent execution of foreign binaries of many
 targets, including 32 and 64 bit MIPS, POWERPC, SPARC, and ARM. This works by
@@ -91,7 +92,7 @@ However, this type of emulation is not cycle accurate and therefore not
 directly useful for performance testing.
 
 
-## Cortex-M4: Compiling and running Round5 on the STM32F407 Discovery board
+### Cortex-M4: Compiling and running Round5 on the STM32F407 Discovery board
 
 We use a very similar, but somewhat simpler set-up than the 
 [PQM4](https://github.com/mupq/pqm4) project. The system requirements are
@@ -189,3 +190,4 @@ The script `run_bench.sh` benchmarks all variants and writes it to
 `run_bench.log`. It uses `codesize.sh`, a *ridiculously* hacky script that 
 computes the relevant code size by summing up the sizes of all functions 
 with `r5_`, `crypto_` or `xe` in their name.
+
