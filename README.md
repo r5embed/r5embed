@@ -3,18 +3,21 @@
 
 2019-03-04  Markku-Juhani O. Saarinen <mjos@pqshield.com>
 
-The aim of the project is to build a production-quality cryptographic 
-library that can serve as a basis for a wide range of lightweight, 
-high-performance cryptographic protocols.
-
-A big part of r5embed is a highly portable, self-contained version of 
-Round5 post-quantum algorithms for embedded platforms. This heavily modified 
-(and 50% smaller) fork is **NOT OFFICIAL** -- but is testvector-compatible 
-with the second-round submission to NIST. 
+A self-contained version of Round5 post-quantum algorithms for embedded 
+platforms. This heavily modified fork is **NOT OFFICIAL** -- but is 
+testvector-compatible with the second-round submission to NIST. 
 
 R5EMBED also optionally integrates with new SNEIK / BLNK2 family of lightweight 
 permutation-based cryptographic primitives (at least 33% performance 
 improvement over SHAKE and AES-GCM). We call these variants R5SNEIK.
+
+The aim of the project is to build a production-quality post-quantum 
+cryptographic library that can serve as a basis for a wide range of 
+new lightweight, high-performance cryptographic protocols.
+
+For a summary of performance and code size of all supported variants on 
+Cortex M4, see the [benchmarks](./benchmarks.md) page.
+
 
 ## Supported variants
 
@@ -43,15 +46,12 @@ which operate in the ring setting and have 2/4 - bit error correction.
 This version does *not* support `R5N1_3PKE_0smallCT` which has very large 
 (165kB) public keys and requires some special implementation techniques.
 
-For a summary of performance and code size of all variants on Cortex M4, 
-see the [benchmarks](./benchmarks.md).
-
 
 ### Compiling "natively"
 
 These instructions were created and tested on an Ubuntu 18.04 LTS system.
 
-The script `test/testkat.sh` will compile all targets on the local system
+The script `./test/testkat.sh` will compile all targets on the local system
 and verify the (sha256 hashes of) KAT outputs against known good ones 
 contained in file `test/good.kat`. The script launches all kat generation
 threads at once (fast testing if you have a lot of cores in your system).
@@ -59,6 +59,7 @@ threads at once (fast testing if you have a lot of cores in your system).
 For performance testing on your native system, you can use the 
 `test/speed.sh` script. It also computes the simple "tv" test vector 
 checksums that our embedded test programs display.
+
 
 ### Emulation: ARM, MIPS, POWERPC, etc
 
@@ -75,7 +76,7 @@ You need to install at least `binfmt-support` `qemu-user-static` packages
 to enable the feature. You may use `update-binfmts --display` to display all 
 of the available interpreters.
 
-The script `misc/qemu-testkat.sh` illustrates how one can run the KAT tests 
+The script `./test/qemu-testkat.sh` illustrates how one can run the KAT tests 
 with various gcc cross-compilers to check the portability of the code.
 The cross compilers must be separately installed, but many are available as
 standard Ubuntu/Debian packages; `apt install gcc-arm-linux-gnueabihf` suffices
