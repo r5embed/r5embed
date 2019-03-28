@@ -8,12 +8,9 @@ platforms. This heavily modified fork is **NOT OFFICIAL** -- but is
 testvector-compatible with the second-round submission to NIST. 
 
 R5EMBED also optionally integrates with new SNEIK / BLNK2 family of lightweight 
-permutation-based cryptographic primitives (at least 33% performance 
-improvement over SHAKE and AES-GCM). We call these variants R5SNEIK.
-
-The aim of the project is to build a production-quality post-quantum 
-cryptographic library that can serve as a basis for a wide range of 
-new lightweight, high-performance cryptographic protocols.
+permutation-based cryptographic primitives (significant performance 
+improvement over SHAKE and AES-GCM since the internal operations are sped up).
+We call these variants R5SNEIK.
 
 For a summary of performance and code size of all supported variants on 
 Cortex M4, see the [benchmarks](./benchmarks.md) page.
