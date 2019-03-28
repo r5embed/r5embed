@@ -3,7 +3,7 @@
 2019-03-28  Markku-Juhani O. Saarinen <mjos@pqshield.com>
 
 
-### Round5 Speed on Cortex M4 (STM32F407) clocked at 24 Mhz
+### Round5 Speed on Cortex M4 (STM32F407) clocked at 24 MHz
 
 Numbers are given in 1000s of cycles:
 
@@ -70,7 +70,7 @@ All numbers are in bytes:
 	| R5ND_0KEM_2iot	| 3494	| 4005	| 2084	| 342	| 16	| 394	| 3772	| 
 	| R5ND_1KEM_4longkey	| 4102	| 4845	| 2780	| 453	| 24	| 563	| 5354	| 
 
-### R5SNEIK Speed on Cortex M4 (STM32F407), clocked at 24 Mhz
+### R5SNEIK Speed on Cortex M4 (STM32F407), clocked at 24 MHz
 
 Numbers are given in 1000s of cycles:
 
