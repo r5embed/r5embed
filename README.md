@@ -167,14 +167,13 @@ themselves. For example:
 ```
 $ cd stm32f4
 $ make ROUND5=R5ND_3KEM_5d run
-[.. output:]
-(RESET)
-				R5ND_3KEM_5d
-R5ND_3KEM_5d kilo cycles  KG 	   784
-R5ND_3KEM_5d kilo cycles  Enc	  1082
-R5ND_3KEM_5d kilo cycles  Dec	   398
-R5ND_3KEM_5d kilo cycles  KEX	  2265
-R5ND_3KEM_5d stack bytes  KG	  5846
+[.. after compiling, flashing, and a 10 second measurement:]
+.				#R5ND_3KEM_5d
+R5ND_3KEM_5d kilo cycles  KG	#784
+R5ND_3KEM_5d kilo cycles  Enc	#1083
+R5ND_3KEM_5d kilo cycles  Dec	#398
+R5ND_3KEM_5d kilo cycles  KEX	#2265
+R5ND_3KEM_5d stack bytes  KG	#5854
 ..
 ```
 The `Makefile` expects ROUND5 variable to be defined as one of the variants
