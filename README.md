@@ -7,9 +7,9 @@ A self-contained version of Round5 post-quantum algorithms for embedded
 platforms. This heavily modified fork is **NOT OFFICIAL** -- but is 
 testvector-compatible with the second-round submission to NIST. 
 
-R5EMBED also optionally integrates with new SNEIK / BLNK2 family of lightweight 
-permutation-based cryptographic primitives (significant performance 
-improvement over SHAKE and AES-GCM since the internal operations are sped up).
+R5EMBED also optionally integrates with the new SNEIK / BLNK2 family of 
+lightweight permutation-based cryptographic primitives (significant 
+performance and implementation footprint improvement over SHAKE and AES-GCM). 
 We call these variants R5SNEIK.
 
 For a summary of performance and code size of all supported variants on 
