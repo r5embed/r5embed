@@ -22,8 +22,8 @@ UARTDEV	= /dev/ttyUSB0
 
 $(PROJECT).elf:	$(SRCS)
 ifndef ROUND5
-	@echo "Which ROUND5 variant do you want? Please set variable."
-	@echo "(e.g. make ROUND5=R5ND_3PKE_5d)"
+	@echo "Which ROUND5 variant do you want? Please set variant."
+	@echo "(There are 20 variants: e.g. make ROUND5=R5ND_3PKE_5d)"
 else
 	$(CC) $(LDFLAGS) $(CFLAGS) $(SRCS) $(LIBS) -o $(PROJECT).elf
 endif
