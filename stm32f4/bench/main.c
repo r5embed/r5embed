@@ -104,11 +104,11 @@ int main(void)
     usart_setup();
 
     //  little wait
-    usart_send_blocking(USART2, '\n');
-    for (i = 0; i < 1000000; i++) {
+    my_print("(RESET)\n");
+    for (i = 0; i < 10000000; i++) {
         __asm__("NOP");
     }
-    my_print("(RESET)\n");
+    usart_send_blocking(USART2, '\n');
 
     test_speed();       // bench.c
     test_stack();

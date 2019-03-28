@@ -13,7 +13,7 @@
 
 //  timeout, five seconds
 #ifndef BENCH_TIMEOUT
-#define BENCH_TIMEOUT (5 * 24000000)
+#define BENCH_TIMEOUT (10 * 24000000)
 #endif
 
 //  message size for PKE variants
@@ -67,9 +67,8 @@ void print_tv(const uint8_t *dat, size_t len, const char *lab)
         x *= 0x01234567;
     }
 
-    my_print(CRYPTO_ALGNAME);
-    snprintf(buf, sizeof(buf), " tv %08X  %s\t%6u\n",
-        (unsigned) x, lab, (unsigned) len);
+    snprintf(buf, sizeof(buf), "%s tv %08X  %s\t#%u\n",
+        CRYPTO_ALGNAME, (unsigned) x, lab, (unsigned) len);
     my_print(buf);
 }
 
@@ -79,13 +78,13 @@ void print_data(char *label, int res)
 {
     char buf[80];
 
-    my_print(CRYPTO_ALGNAME);
-    snprintf(buf, sizeof(buf), " %s\t%6d\n", label, res);
+    snprintf(buf, sizeof(buf), "%s %s\t#%d\n", CRYPTO_ALGNAME, label, res);
     my_print(buf);
 }
 
 //  this stack probe both checks and fills the stack
 //  it's hacky but I don't think that there is a "standard" way of doing this
+//	(If you get 70000, just run it again.)
 
 #define STACK_MAX 70000
 #define STACK_FILL 0xD3
@@ -179,7 +178,7 @@ int test_speed()
 
 
     // banner
-    my_print("\t\t\t\t");
+    my_print("\t\t\t\t#");
     my_print(CRYPTO_ALGNAME);
     my_print("\n");
 

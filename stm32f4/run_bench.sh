@@ -34,7 +34,7 @@ do
 
 	stty -F $UART 115200 cs8 -cstopb -parenb eof \^d
 	cat $UART >> $LOGFILE
-	echo -n $targ $'code bytes      \t ' >> $LOGFILE
+	echo -n $targ $'code bytes      \t#' >> $LOGFILE
 	bash ./codesize.sh >> $LOGFILE
 done
 
