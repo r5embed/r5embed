@@ -43,9 +43,16 @@ fi
 
 # compile and test
 
-CC=arm-linux-gnueabihf-gcc 
+#CC=gcc
+#CC=clang
+#CC=arm-linux-gnueabihf-gcc 
+#CC=aarch64-linux-gnu-gcc
+CC=mips-linux-gnu-gcc
+#CC=powerpc-linux-gnu-gcc
+
 R5_SRC=src
-CFLAGS="-march=armv7-a -DARMV7_ASM -DNDEBUG -DBLNK2 -Wall -Ofast -static"
+#CFLAGS="-march=armv7-a -DARMV7_ASM -DNDEBUG -DBLNK2 -Wall -Ofast -static"
+CFLAGS="-Wall -Wextra -Wshadow -Ofast -static -DBLNK2"
 LIBS=""
 KEM_MAIN=test/mygenkat_kem.c
 PKE_MAIN=test/mygenkat_pke.c
