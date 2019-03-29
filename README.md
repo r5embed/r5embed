@@ -10,10 +10,13 @@ testvector-compatible with the second-round submission to NIST.
 R5EMBED also optionally integrates with the new SNEIK / BLNK2 family of 
 lightweight permutation-based cryptographic primitives (significant 
 performance and implementation footprint improvement over SHAKE and AES-GCM). 
-We call these variants R5SNEIK.
+We call these variants R5SNEIK. They share exactly the same external
+paramaters as Round5 -- just the internal ops are changed. This variant
+is invoked with the `-DBLNK2` flag.
 
-Round5 is a currently a 2nd round [NIST PQC](https://csrc.nist.gov/Projects/Post-Quantum-Cryptography)
-candidate, while SNEIK is a 1st round 
+Round5 is a currently a 2nd round 
+[NIST PQC](https://csrc.nist.gov/Projects/Post-Quantum-Cryptography)
+candidate, while [SNEIK](https://github.com/pqshield/sneik) is a 1st round 
 [NIST LWC](https://csrc.nist.gov/projects/lightweight-cryptography)
 candidate -- specifically designed to support post-quantum cryptography.
 
