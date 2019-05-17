@@ -7,6 +7,15 @@ A self-contained version of Round5 post-quantum algorithms for embedded
 platforms. This heavily modified fork is **NOT OFFICIAL** -- but is 
 testvector-compatible with the second-round submission to NIST. 
 
+Round5 is a currently a 2nd round 
+[NIST PQC](https://csrc.nist.gov/Projects/Post-Quantum-Cryptography)
+candidate.
+
+For a summary of performance and code size of all supported variants on 
+Cortex M4, see the [benchmarks](./benchmarks.md) page.
+
+## The R5SNEIK Option
+
 R5EMBED also optionally integrates with the new SNEIK / BLNK2 family of 
 lightweight permutation-based cryptographic primitives (significant 
 performance and implementation footprint improvement over SHAKE and AES-GCM). 
@@ -14,14 +23,15 @@ We call these variants R5SNEIK. They share exactly the same external
 paramaters as Round5 -- just the internal ops are changed. This variant
 is invoked with the `-DBLNK2` flag.
 
-Round5 is a currently a 2nd round 
-[NIST PQC](https://csrc.nist.gov/Projects/Post-Quantum-Cryptography)
-candidate, while [SNEIK](https://github.com/pqshield/sneik) is a 1st round 
+[SNEIK](https://github.com/pqshield/sneik) is a 1st round 
 [NIST LWC](https://csrc.nist.gov/projects/lightweight-cryptography)
-candidate -- specifically designed to support post-quantum cryptography.
+candidate -- specifically designed to support post-quantum cryptography.    
 
-For a summary of performance and code size of all supported variants on 
-Cortex M4, see the [benchmarks](./benchmarks.md) page.
+nb. SNEIK is currently being upgraded from version 1.0 to 1.1. The new
+version will be released before end of June 2019. However the modification
+is minor and will have minimal impact on performance and implementation
+footprint metrics. Hence the R5SNEIK option is not suitable for production use
+at this time.
 
 
 ## Supported variants
