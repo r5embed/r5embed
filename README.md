@@ -57,8 +57,7 @@ candidate -- specifically designed to support post-quantum cryptography.
 
 **nb.** SNEIK is currently being upgraded from version 1.0 to 1.1. The new
 version will be released before end of June 2019. 
-Hence the R5SNEIK option is not suitable for production use
-at this time. However we note that the modification is very
+However we note that the modification is very
 is minor and will have minimal impact on performance and implementation
 footprint metrics. 
 
