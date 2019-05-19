@@ -102,7 +102,7 @@ big-endian systems (MIPS). It is also noteworthy that since ARMv7-a
 instruction set is basically a superset of the ARMv7-m instruction set used in 
 (Cortex M3/M4) embedded devices, we are able to directly compile and test 
 our ARMv7 optimizations by using the `arm-linux-gnueabihf-gcc` cross compiler
-and compiling with flags `-march=armv7-a -DARMV7_ASM`.
+(`apt install gcc-multilib-arm-linux-gnueabihf`) and compiling with flags `-march=armv7-a -DARMV7_ASM`.
 
 However, this type of emulation is not cycle accurate and therefore not
 directly useful for performance testing.
