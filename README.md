@@ -55,8 +55,8 @@ is invoked with the `-DBLNK2` flag.
 [NIST LWC](https://csrc.nist.gov/projects/lightweight-cryptography)
 candidate -- specifically designed to support post-quantum cryptography.    
 
-**nb.** We now support SNEIK v1.1, which is a minor tweak on the original
-SNEIK proposal to the NIST LWC competition.
+**UPDATE 2019-05-20:** We now support SNEIK v1.1, which is a minor tweak on 
+the original SNEIK proposal to the NIST LWC competition.
 
 
 ### Compiling "natively"
