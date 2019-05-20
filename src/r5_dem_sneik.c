@@ -11,7 +11,7 @@
 //  This is the DEM we're using
 #define CRYPTO_KEYBYTES PARAMS_KAPPA_BYTES
 #define CRYPTO_NPUBBYTES 0
-#define CRYPTO_ABYTES 16
+#define CRYPTO_ABYTES 8
 
 #include "blnk.h"
 

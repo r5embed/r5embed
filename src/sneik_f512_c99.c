@@ -2,9 +2,9 @@
 //  2019-02-18  Markku-Juhani O. Saarinen <mjos@pqshield.com>
 //  Copyright (C) 2019, PQShield Ltd. Please see LICENSE.
 
-//  SNEIK f512 implementation for a generic 32-bit C99 target.
+#if !defined(ARMV7_ASM) && defined(BLNK2)
 
-#if defined(BLNK2) && !defined(ARMV7_ASM)
+//  SNEIK f512 v1.1 implementation for a generic 32-bit C99 target.
 
 #include <stdint.h>
 
@@ -15,7 +15,7 @@
 #define MIX_F(pos, vec, t0, t1, t2, t3) {       \
     t0 += t3;                                   \
     t0 = t0 ^ ROR32(t0, 7) ^ ROR32(t0, 8);      \
-    t0 ^= t2;                                   \
+    t0 ^= ROR32(t2, 31);                        \
     t2 = vec[(pos + 2) & 0xF];                  \
     t0 += t2;                                   \
     t0 = t0 ^ ROR32(t0, 15) ^ ROR32(t0, 23);    \
@@ -75,5 +75,5 @@ void sneik_f512(void *state, uint8_t dom, uint8_t rounds)
     }
 }
 
-#endif /* BLNK2 && !ARMV7_ASM */
+#endif /* !ARMV7_ASM && BLNK2 */
 

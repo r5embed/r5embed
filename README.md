@@ -44,7 +44,7 @@ This version does *not* support `R5N1_3PKE_0smallCT` which has very large
 
 ### The R5SNEIK Option
 
-R5EMBED also optionally integrates with the new SNEIK / BLNK2 family of 
+R5EMBED also optionally integrates with the new SNEIK v1.1 / BLNK2 family of 
 lightweight permutation-based cryptographic primitives (significant 
 performance and implementation footprint improvement over SHAKE and AES-GCM). 
 We call these variants R5SNEIK. They share exactly the same external
@@ -55,11 +55,8 @@ is invoked with the `-DBLNK2` flag.
 [NIST LWC](https://csrc.nist.gov/projects/lightweight-cryptography)
 candidate -- specifically designed to support post-quantum cryptography.    
 
-**nb.** SNEIK is currently being upgraded from version 1.0 to 1.1. The new
-version will be released before end of June 2019. 
-However we note that the modification is very
-is minor and will have minimal impact on performance and implementation
-footprint metrics. 
+**nb.** We now support SNEIK v1.1, which is a minor tweak on the original
+SNEIK proposal to the NIST LWC competition.
 
 
 ### Compiling "natively"
