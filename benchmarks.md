@@ -1,7 +1,8 @@
 # Performance Numbers for r5embed
 
-2019-03-28  Markku-Juhani O. Saarinen <mjos@pqshield.com>
+2019-03-28  Markku-Juhani O. Saarinen <mjos@pqshield.com>    
 
+2019-05-21	Updated to include numbers for R5SNEIK v1.1
 
 ### Round5 Speed on Cortex M4 (STM32F407) clocked at 24 MHz
 
