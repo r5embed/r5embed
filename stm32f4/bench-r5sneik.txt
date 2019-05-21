@@ -57,6 +57,7 @@ R5ND_1PKE_5d tv 02607384  sk	#493
 R5ND_1PKE_5d tv D334B43C  ct	#644
 R5ND_1PKE_5d tv A9A3B3A7  pt	#16
 R5ND_1PKE_5d tv A9A3B3A7  p2	#16
+R5ND_5KEM_5d code bytes      	#5612
 
 				#R5ND_3PKE_5d
 R5ND_3PKE_5d kilo cycles  KG 	#595
