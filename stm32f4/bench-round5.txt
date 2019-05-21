@@ -57,7 +57,8 @@ R5ND_1PKE_5d tv 6B565DBF  sk	#493
 R5ND_1PKE_5d tv 4D5FA0E9  ct	#652
 R5ND_1PKE_5d tv A9A3B3A7  pt	#16
 R5ND_1PKE_5d tv A9A3B3A7  p2	#16
-R5ND_1PKE_5d code bytes      	#5612
+R5ND_1PKE_5d code bytes      	#6156
+
 				#R5ND_3PKE_5d
 R5ND_3PKE_5d kilo cycles  KG 	#785
 R5ND_3PKE_5d kilo cycles  Enc	#1212
@@ -297,4 +298,3 @@ R5ND_1KEM_4longkey tv 21D96724  ct	#563
 R5ND_1KEM_4longkey tv 217ED31B  ss	#24
 R5ND_1KEM_4longkey tv 217ED31B  sr	#24
 R5ND_1KEM_4longkey code bytes      	#5354
-
