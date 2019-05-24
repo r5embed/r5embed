@@ -117,7 +117,6 @@ All numbers are in bytes:
 *	**Code**: Code size, excluding "common" components, Flash (ROM) bytes.
 
 	| **Variant**	| **KeyGen** | **Enc** | **Dec** | **PK** | **SK** | **CT** | **Code** |
-
 	|---------------|-------|-------|-------|-------|-------|-------|-------|
 	| R5ND_1KEM_5d	| 3534	| 4461	| 2604	| 445	| 16	| 549	| 4892	|
 	| R5ND_3KEM_5d	| 5278	| 6653	| 3716	| 780	| 24	| 859	| 6202	|
