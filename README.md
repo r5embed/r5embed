@@ -164,7 +164,7 @@ $ make
 [..]
 $ cd ..
 ```
-If you don't have the submode set-up you can just clone
+If you don't have the submodule set up you can just clone
 `https://github.com/libopencm3/libopencm3.git` under the 
 the `r5embed` directory and build it.
 
