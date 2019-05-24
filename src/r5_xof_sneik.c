@@ -58,7 +58,9 @@ void r5_xof(void *out, const size_t out_len,
 }
 
 
-//  Single-call interface: Hash is SNEIKHA
+//  Single-call interface: Hash is SNEIKHA (only used by CCA transforms)
+
+#ifdef ROUND5_CCA_PKE
 
 void r5_hash(void *out, const size_t out_len,
     const void *in, const size_t in_len)
@@ -72,6 +74,7 @@ void r5_hash(void *out, const size_t out_len,
     blnk_get(&ctx, BLNK_HASH, out, out_len);        // squeeze output
 }
 
+#endif /* ROUND5_CCA_PKE */
 
 #endif /* BLNK2 */
 
