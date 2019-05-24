@@ -19,44 +19,36 @@ void sneik_f512(void *state, uint8_t dom, uint8_t rounds);
 
 // == SNEIKEN AEADs ==
 
-#ifdef CRYPTO_KEYBYTES
-
-#define SNEIKEN_RATE (BLNK_BLOCK - CRYPTO_KEYBYTES)
+#define SNEIKEN_RATE (BLNK_BLOCK - PARAMS_KAPPA_BYTES)
 
 //  number of rounds for encryption
-#if (CRYPTO_KEYBYTES <= 16)
+#if (PARAMS_KAPPA_BYTES <= 16)
 #define SNEIKEN_ROUNDS 6
-#elif (CRYPTO_KEYBYTES <= 24)
+#elif (PARAMS_KAPPA_BYTES <= 24)
 #define SNEIKEN_ROUNDS 7
-#elif (CRYPTO_KEYBYTES <= 32)
+#elif (PARAMS_KAPPA_BYTES <= 32)
 #define SNEIKEN_ROUNDS 8
-#elif (CRYPTO_KEYBYTES <= 48)
+#elif (PARAMS_KAPPA_BYTES <= 48)
 #define SNEIKEN_ROUNDS 8
 #else
 #error "SNEIKEN: Could not determine security level."
 #endif
 
-#endif  /* CRYPTO_KEYBYTES */
-
 //  == SNEIKHA Cryptographic Hashes ==
 
-#if defined(CRYPTO_BYTES) && !defined(PARAMS_KAPPA_BYTES)
-#define SNEIKHA_RATE (BLNK_BLOCK - CRYPTO_BYTES)
-
 //  number of rounds for hashing
-#if (CRYPTO_BYTES <= 16)
+#if (PARAMS_KAPPA_BYTES <= 16)
 #define SNEIKHA_ROUNDS 6
-#elif (CRYPTO_BYTES <= 24)
-#define SNEIKHA_ROUNDS 7
-#elif (CRYPTO_BYTES <= 32)
+#define SNEIKHA_RATE 32
+#elif (PARAMS_KAPPA_BYTES <= 32)
 #define SNEIKHA_ROUNDS 8
-#elif (CRYPTO_BYTES <= 48)
-#define SNEIKHA_ROUNDS 8
+#define SNEIKHA_RATE 16
+#elif (PARAMS_KAPPA_BYTES <= 48)
+#define SNEIKHA_ROUNDS 12
+#define SNEIKHA_RATE 8
 #else
 #error "SNEIKHA: Could not determine security level."
 #endif
-
-#endif  /* CRYPTO_BYTES */
 
 //  == SNEIGEN Entropy distribution function ==
 

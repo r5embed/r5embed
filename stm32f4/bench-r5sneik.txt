@@ -12,7 +12,7 @@ R5ND_1KEM_5d tv E2677786  sk	#16
 R5ND_1KEM_5d tv A339F693  ct	#549
 R5ND_1KEM_5d tv DBDA8FBA  ss	#16
 R5ND_1KEM_5d tv DBDA8FBA  sr	#16
-R5ND_1KEM_5d code bytes      	#4892
+R5ND_1KEM_5d code bytes      	#4950
 
 				#R5ND_3KEM_5d
 R5ND_3KEM_5d kilo cycles  KG 	#594
@@ -27,7 +27,7 @@ R5ND_3KEM_5d tv 04B4667B  sk	#24
 R5ND_3KEM_5d tv 8822CE25  ct	#859
 R5ND_3KEM_5d tv 5A79A2CF  ss	#24
 R5ND_3KEM_5d tv 5A79A2CF  sr	#24
-R5ND_3KEM_5d code bytes      	#6202
+R5ND_3KEM_5d code bytes      	#6260
 
 				#R5ND_5KEM_5d
 R5ND_5KEM_5d kilo cycles  KG 	#1224
@@ -42,52 +42,52 @@ R5ND_5KEM_5d tv 1A54416D  sk	#32
 R5ND_5KEM_5d tv 74168490  ct	#1063
 R5ND_5KEM_5d tv 3876C08C  ss	#32
 R5ND_5KEM_5d tv 3876C08C  sr	#32
-R5ND_5KEM_5d code bytes      	#3896
+R5ND_5KEM_5d code bytes      	#3954
 
 				#R5ND_1PKE_5d
 R5ND_1PKE_5d kilo cycles  KG 	#255
-R5ND_1PKE_5d kilo cycles  Enc	#401
-R5ND_1PKE_5d kilo cycles  Dec	#530
-R5ND_1PKE_5d kilo cycles  KEX	#1188
+R5ND_1PKE_5d kilo cycles  Enc	#434
+R5ND_1PKE_5d kilo cycles  Dec	#563
+R5ND_1PKE_5d kilo cycles  KEX	#1252
 R5ND_1PKE_5d stack bytes  KG	#3634
 R5ND_1PKE_5d stack bytes  Enc	#5321
 R5ND_1PKE_5d stack bytes  Dec	#5320
 R5ND_1PKE_5d tv DDE4A4C5  pk	#461
 R5ND_1PKE_5d tv 02607384  sk	#493
-R5ND_1PKE_5d tv D334B43C  ct	#644
+R5ND_1PKE_5d tv 85C2BAFC  ct	#644
 R5ND_1PKE_5d tv A9A3B3A7  pt	#16
 R5ND_1PKE_5d tv A9A3B3A7  p2	#16
-R5ND_5KEM_5d code bytes      	#5612
+R5ND_1PKE_5d code bytes      	#5670
 
 				#R5ND_3PKE_5d
 R5ND_3PKE_5d kilo cycles  KG 	#595
-R5ND_3PKE_5d kilo cycles  Enc	#874
-R5ND_3PKE_5d kilo cycles  Dec	#1121
-R5ND_3PKE_5d kilo cycles  KEX	#2591
+R5ND_3PKE_5d kilo cycles  Enc	#1041
+R5ND_3PKE_5d kilo cycles  Dec	#1289
+R5ND_3PKE_5d kilo cycles  KEX	#2926
 R5ND_3PKE_5d stack bytes  KG	#5338
 R5ND_3PKE_5d stack bytes  Enc	#7793
-R5ND_3PKE_5d stack bytes  Dec	#7792
+R5ND_3PKE_5d stack bytes  Dec	#7820
 R5ND_3PKE_5d tv BDDFF79E  pk	#780
 R5ND_3PKE_5d tv 5256474B  sk	#828
-R5ND_3PKE_5d tv B1AB02BC  ct	#958
+R5ND_3PKE_5d tv D6F32C8D  ct	#958
 R5ND_3PKE_5d tv A9A3B3A7  pt	#16
 R5ND_3PKE_5d tv A9A3B3A7  p2	#16
-R5ND_3PKE_5d code bytes      	#7020
+R5ND_3PKE_5d code bytes      	#7078
 
 				#R5ND_5PKE_5d
 R5ND_5PKE_5d kilo cycles  KG 	#1159
-R5ND_5PKE_5d kilo cycles  Enc	#1665
-R5ND_5PKE_5d kilo cycles  Dec	#2127
-R5ND_5PKE_5d kilo cycles  KEX	#4952
+R5ND_5PKE_5d kilo cycles  Enc	#1856
+R5ND_5PKE_5d kilo cycles  Dec	#2317
+R5ND_5PKE_5d kilo cycles  KEX	#5333
 R5ND_5PKE_5d stack bytes  KG	#6778
 R5ND_5PKE_5d stack bytes  Enc	#10065
 R5ND_5PKE_5d stack bytes  Dec	#10064
 R5ND_5PKE_5d tv 4A0A4AF9  pk	#978
 R5ND_5PKE_5d tv C5D8D1DA  sk	#1042
-R5ND_5PKE_5d tv 8189A021  ct	#1309
+R5ND_5PKE_5d tv 72970CFE  ct	#1309
 R5ND_5PKE_5d tv A9A3B3A7  pt	#16
 R5ND_5PKE_5d tv A9A3B3A7  p2	#16
-R5ND_5PKE_5d code bytes      	#4790
+R5ND_5PKE_5d code bytes      	#4848
 
 				#R5ND_1KEM_0d
 R5ND_1KEM_0d kilo cycles  KG 	#233
@@ -102,7 +102,7 @@ R5ND_1KEM_0d tv E2677786  sk	#16
 R5ND_1KEM_0d tv A1648625  ct	#682
 R5ND_1KEM_0d tv 80C05200  ss	#16
 R5ND_1KEM_0d tv 80C05200  sr	#16
-R5ND_1KEM_0d code bytes      	#2178
+R5ND_1KEM_0d code bytes      	#2236
 
 				#R5ND_3KEM_0d
 R5ND_3KEM_0d kilo cycles  KG 	#950
@@ -117,7 +117,7 @@ R5ND_3KEM_0d tv 04B4667B  sk	#24
 R5ND_3KEM_0d tv 8EEBB03E  ct	#981
 R5ND_3KEM_0d tv E7B2CEBD  ss	#24
 R5ND_3KEM_0d tv E7B2CEBD  sr	#24
-R5ND_3KEM_0d code bytes      	#2322
+R5ND_3KEM_0d code bytes      	#2380
 
 				#R5ND_5KEM_0d
 R5ND_5KEM_0d kilo cycles  KG 	#1370
@@ -132,52 +132,52 @@ R5ND_5KEM_0d tv 1A54416D  sk	#32
 R5ND_5KEM_0d tv FE7347D0  ct	#1274
 R5ND_5KEM_0d tv FD2DEA80  ss	#32
 R5ND_5KEM_0d tv FD2DEA80  sr	#32
-R5ND_5KEM_0d code bytes      	#2342
+R5ND_5KEM_0d code bytes      	#2400
 
 				#R5ND_1PKE_0d
 R5ND_1PKE_0d kilo cycles  KG 	#366
-R5ND_1PKE_0d kilo cycles  Enc	#518
-R5ND_1PKE_0d kilo cycles  Dec	#647
-R5ND_1PKE_0d kilo cycles  KEX	#1532
+R5ND_1PKE_0d kilo cycles  Enc	#561
+R5ND_1PKE_0d kilo cycles  Dec	#690
+R5ND_1PKE_0d kilo cycles  KEX	#1618
 R5ND_1PKE_0d stack bytes  KG	#4194
 R5ND_1PKE_0d stack bytes  Enc	#6297
-R5ND_1PKE_0d stack bytes  Dec	#6296
+R5ND_1PKE_0d stack bytes  Dec	#6324
 R5ND_1PKE_0d tv C53AF2EF  pk	#676
 R5ND_1PKE_0d tv 098E6718  sk	#708
-R5ND_1PKE_0d tv 60A51612  ct	#764
+R5ND_1PKE_0d tv 88784506  ct	#764
 R5ND_1PKE_0d tv A9A3B3A7  pt	#16
 R5ND_1PKE_0d tv A9A3B3A7  p2	#16
-R5ND_1PKE_0d code bytes      	#3016
+R5ND_1PKE_0d code bytes      	#3074
 
 				#R5ND_3PKE_0d
 R5ND_3PKE_0d kilo cycles  KG 	#608
-R5ND_3PKE_0d kilo cycles  Enc	#868
-R5ND_3PKE_0d kilo cycles  Dec	#1073
-R5ND_3PKE_0d kilo cycles  KEX	#2551
+R5ND_3PKE_0d kilo cycles  Enc	#1070
+R5ND_3PKE_0d kilo cycles  Dec	#1275
+R5ND_3PKE_0d kilo cycles  KEX	#2954
 R5ND_3PKE_0d stack bytes  KG	#5866
 R5ND_3PKE_0d stack bytes  Enc	#9013
 R5ND_3PKE_0d stack bytes  Dec	#8984
 R5ND_3PKE_0d tv 8A2DF018  pk	#983
 R5ND_3PKE_0d tv FC69F7C3  sk	#1031
-R5ND_3PKE_0d tv BFA112CC  ct	#1127
+R5ND_3PKE_0d tv F98699F8  ct	#1127
 R5ND_3PKE_0d tv A9A3B3A7  pt	#16
 R5ND_3PKE_0d tv A9A3B3A7  p2	#16
-R5ND_3PKE_0d code bytes      	#3126
+R5ND_3PKE_0d code bytes      	#3184
 
 				#R5ND_5PKE_0d
 R5ND_5PKE_0d kilo cycles  KG 	#888
-R5ND_5PKE_0d kilo cycles  Enc	#1282
-R5ND_5PKE_0d kilo cycles  Dec	#1561
-R5ND_5PKE_0d kilo cycles  KEX	#3732
-R5ND_5PKE_0d stack bytes  KG	#7802
+R5ND_5PKE_0d kilo cycles  Enc	#1517
+R5ND_5PKE_0d kilo cycles  Dec	#1796
+R5ND_5PKE_0d kilo cycles  KEX	#4202
+R5ND_5PKE_0d stack bytes  KG	#7822
 R5ND_5PKE_0d stack bytes  Enc	#12041
 R5ND_5PKE_0d stack bytes  Dec	#12040
 R5ND_5PKE_0d tv 3742D7EF  pk	#1349
 R5ND_5PKE_0d tv 4E790506  sk	#1413
-R5ND_5PKE_0d tv 02A88439  ct	#1533
+R5ND_5PKE_0d tv AE3BFA21  ct	#1533
 R5ND_5PKE_0d tv A9A3B3A7  pt	#16
 R5ND_5PKE_0d tv A9A3B3A7  p2	#16
-R5ND_5PKE_0d code bytes      	#3120
+R5ND_5PKE_0d code bytes      	#3178
 
 				#R5N1_1KEM_0d
 R5N1_1KEM_0d kilo cycles  KG 	#5878
@@ -192,7 +192,7 @@ R5N1_1KEM_0d tv E2677786  sk	#16
 R5N1_1KEM_0d tv DBDE46CD  ct	#5236
 R5N1_1KEM_0d tv 90A3464F  ss	#16
 R5N1_1KEM_0d tv 90A3464F  sr	#16
-R5N1_1KEM_0d code bytes      	#2738
+R5N1_1KEM_0d code bytes      	#2796
 
 				#R5N1_3KEM_0d
 R5N1_3KEM_0d kilo cycles  KG 	#9119
@@ -207,7 +207,7 @@ R5N1_3KEM_0d tv 04B4667B  sk	#24
 R5N1_3KEM_0d tv C3512FDE  ct	#8866
 R5N1_3KEM_0d tv 35BBEEF1  ss	#24
 R5N1_3KEM_0d tv 35BBEEF1  sr	#24
-R5N1_3KEM_0d code bytes      	#2778
+R5N1_3KEM_0d code bytes      	#2836
 
 				#R5N1_5KEM_0d
 R5N1_5KEM_0d kilo cycles  KG 	#33280
@@ -222,52 +222,52 @@ R5N1_5KEM_0d tv 1A54416D  sk	#32
 R5N1_5KEM_0d tv EF263D94  ct	#14288
 R5N1_5KEM_0d tv D6A795BA  ss	#32
 R5N1_5KEM_0d tv D6A795BA  sr	#32
-R5N1_5KEM_0d code bytes      	#2898
+R5N1_5KEM_0d code bytes      	#2956
 
 				#R5N1_1PKE_0d
 R5N1_1PKE_0d kilo cycles  KG 	#3540
-R5N1_1PKE_0d kilo cycles  Enc	#2206
-R5N1_1PKE_0d kilo cycles  Dec	#2463
-R5N1_1PKE_0d kilo cycles  KEX	#8210
+R5N1_1PKE_0d kilo cycles  Enc	#2534
+R5N1_1PKE_0d kilo cycles  Dec	#2791
+R5N1_1PKE_0d kilo cycles  KEX	#8867
 R5N1_1PKE_0d stack bytes  KG	#19234
 R5N1_1PKE_0d stack bytes  Enc	#31033
 R5N1_1PKE_0d stack bytes  Dec	#31040
 R5N1_1PKE_0d tv BC6E46F3  pk	#5740
 R5N1_1PKE_0d tv 05C406DC  sk	#5772
-R5N1_1PKE_0d tv 6EDBA543  ct	#5812
+R5N1_1PKE_0d tv D05F80B7  ct	#5812
 R5N1_1PKE_0d tv A9A3B3A7  pt	#16
 R5N1_1PKE_0d tv A9A3B3A7  p2	#16
-R5N1_1PKE_0d code bytes      	#3272
+R5N1_1PKE_0d code bytes      	#3330
 
 				#R5N1_3PKE_0d
 R5N1_3PKE_0d kilo cycles  KG 	#15829
-R5N1_3PKE_0d kilo cycles  Enc	#8834
-R5N1_3PKE_0d kilo cycles  Dec	#9820
-R5N1_3PKE_0d kilo cycles  KEX	#34484
+R5N1_3PKE_0d kilo cycles  Enc	#10474
+R5N1_3PKE_0d kilo cycles  Dec	#11461
+R5N1_3PKE_0d kilo cycles  KEX	#37765
 R5N1_3PKE_0d stack bytes  KG	#29354
 R5N1_3PKE_0d stack bytes  Enc	#49049
 R5N1_3PKE_0d stack bytes  Dec	#49048
 R5N1_3PKE_0d tv 65B6A1B1  pk	#9660
 R5N1_3PKE_0d tv 645E51DE  sk	#9708
-R5N1_3PKE_0d tv FBF897D6  ct	#9740
+R5N1_3PKE_0d tv BB44D90C  ct	#9740
 R5N1_3PKE_0d tv A9A3B3A7  pt	#16
 R5N1_3PKE_0d tv A9A3B3A7  p2	#16
-R5N1_3PKE_0d code bytes      	#3628
+R5N1_3PKE_0d code bytes      	#3686
 
 				#R5N1_5PKE_0d
 R5N1_5PKE_0d kilo cycles  KG 	#22141
-R5N1_5PKE_0d kilo cycles  Enc	#13241
-R5N1_5PKE_0d kilo cycles  Dec	#14391
-R5N1_5PKE_0d kilo cycles  KEX	#49774
+R5N1_5PKE_0d kilo cycles  Enc	#15369
+R5N1_5PKE_0d kilo cycles  Dec	#16520
+R5N1_5PKE_0d kilo cycles  KEX	#54031
 R5N1_5PKE_0d stack bytes  KG	#36450
 R5N1_5PKE_0d stack bytes  Enc	#66177
 R5N1_5PKE_0d stack bytes  Dec	#66176
 R5N1_5PKE_0d tv B944CEA4  pk	#14636
 R5N1_5PKE_0d tv 29DC1C35  sk	#14700
-R5N1_5PKE_0d tv AB73E00E  ct	#14732
+R5N1_5PKE_0d tv 6221DE36  ct	#14732
 R5N1_5PKE_0d tv A9A3B3A7  pt	#16
 R5N1_5PKE_0d tv A9A3B3A7  p2	#16
-R5N1_5PKE_0d code bytes      	#3488
+R5N1_5PKE_0d code bytes      	#3546
 
 				#R5ND_0KEM_2iot
 R5ND_0KEM_2iot kilo cycles  KG 	#243
@@ -282,7 +282,7 @@ R5ND_0KEM_2iot tv E2677786  sk	#16
 R5ND_0KEM_2iot tv 0ACDD48B  ct	#394
 R5ND_0KEM_2iot tv 7F4130FE  ss	#16
 R5ND_0KEM_2iot tv 7F4130FE  sr	#16
-R5ND_0KEM_2iot code bytes      	#3340
+R5ND_0KEM_2iot code bytes      	#3398
 
 				#R5ND_1KEM_4longkey
 R5ND_1KEM_4longkey kilo cycles  KG 	#294
@@ -297,4 +297,4 @@ R5ND_1KEM_4longkey tv 04B4667B  sk	#24
 R5ND_1KEM_4longkey tv D5E2F453  ct	#563
 R5ND_1KEM_4longkey tv F59880D0  ss	#24
 R5ND_1KEM_4longkey tv F59880D0  sr	#24
-R5ND_1KEM_4longkey code bytes      	#4930
+R5ND_1KEM_4longkey code bytes      	#4988

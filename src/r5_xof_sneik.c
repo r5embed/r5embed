@@ -4,7 +4,8 @@
 
 #ifdef BLNK2
 
-//  A XOF using "Sneigen" entropy expansion function
+//  For XOF we use the SNEIGEN entropy expansion function
+//  The hash used in CCA transform is SNEIKHA
 
 #include "r5_xof.h"
 #include "blnk.h"
@@ -42,7 +43,7 @@ void r5_xof_squeeze(r5_xof_ctx_t *ctx,
     blnk_get(ctx, BLNK_HASH, out, out_len);         // squeeze output
 }
 
-//  Single-call interface
+//  Single-call interface: XOF is SNEIGEN
 
 void r5_xof(void *out, const size_t out_len,
     const void *in, const size_t in_len)
@@ -55,6 +56,22 @@ void r5_xof(void *out, const size_t out_len,
     blnk_fin(&ctx, BLNK_AD);
     blnk_get(&ctx, BLNK_HASH, out, out_len);        // squeeze output
 }
+
+
+//  Single-call interface: Hash is SNEIKHA
+
+void r5_hash(void *out, const size_t out_len,
+    const void *in, const size_t in_len)
+{
+    blnk_t ctx;
+
+    blnk_clr(&ctx, SNEIKHA_RATE, SNEIKHA_ROUNDS);   // initialize
+
+    blnk_put(&ctx, BLNK_AD, in, in_len);            // absorb input
+    blnk_fin(&ctx, BLNK_AD);
+    blnk_get(&ctx, BLNK_HASH, out, out_len);        // squeeze output
+}
+
 
 #endif /* BLNK2 */
 

@@ -1,4 +1,3 @@
-//  r5_cca_kem.c
 //  Copyright (c) 2019, PQShield Ltd. and Koninklijke Philips N.V.
 //  Markku-Juhani O. Saarinen, Koninklijke Philips N.V.
 
@@ -45,7 +44,7 @@ int r5_cca_kem_encapsulate(uint8_t *ct, uint8_t *k, const uint8_t *pk)
 
     memcpy(hash_in, m, PARAMS_KAPPA_BYTES); // G: (l | g | rho) = h(m | pk);
     memcpy(hash_in + PARAMS_KAPPA_BYTES, pk, PARAMS_PK_SIZE);
-    r5_xof(L_g_rho, 3 * PARAMS_KAPPA_BYTES, hash_in,
+    r5_hash(L_g_rho, 3 * PARAMS_KAPPA_BYTES, hash_in,
         PARAMS_KAPPA_BYTES + PARAMS_PK_SIZE);
 
     /* Encrypt  */
@@ -58,7 +57,7 @@ int r5_cca_kem_encapsulate(uint8_t *ct, uint8_t *k, const uint8_t *pk)
     memcpy(hash_in, L_g_rho[0], PARAMS_KAPPA_BYTES);
     memcpy(hash_in + PARAMS_KAPPA_BYTES,
             ct, PARAMS_CT_SIZE + PARAMS_KAPPA_BYTES);
-    r5_xof(k, PARAMS_KAPPA_BYTES, hash_in,
+    r5_hash(k, PARAMS_KAPPA_BYTES, hash_in,
         PARAMS_KAPPA_BYTES + PARAMS_CT_SIZE + PARAMS_KAPPA_BYTES);
 
     return 0;
@@ -79,7 +78,7 @@ int r5_cca_kem_decapsulate(uint8_t *k, const uint8_t *ct, const uint8_t *sk)
     memcpy(hash_in, m_prime, PARAMS_KAPPA_BYTES);
     memcpy(hash_in + PARAMS_KAPPA_BYTES, // (L | g | rho) = h(m | pk)
             sk + PARAMS_KAPPA_BYTES + PARAMS_KAPPA_BYTES, PARAMS_PK_SIZE);
-    r5_xof(L_g_rho_prime, 3 * PARAMS_KAPPA_BYTES, hash_in,
+    r5_hash(L_g_rho_prime, 3 * PARAMS_KAPPA_BYTES, hash_in,
         PARAMS_KAPPA_BYTES + PARAMS_PK_SIZE);
 
     // Encrypt m: ct' = (U',v')
@@ -100,7 +99,7 @@ int r5_cca_kem_decapsulate(uint8_t *k, const uint8_t *ct, const uint8_t *sk)
 
     memcpy(hash_in + PARAMS_KAPPA_BYTES, ct_prime,
         PARAMS_CT_SIZE + PARAMS_KAPPA_BYTES);
-    r5_xof(k, PARAMS_KAPPA_BYTES, hash_in,
+    r5_hash(k, PARAMS_KAPPA_BYTES, hash_in,
         PARAMS_KAPPA_BYTES + PARAMS_CT_SIZE + PARAMS_KAPPA_BYTES);
 
     return 0;
