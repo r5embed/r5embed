@@ -15,7 +15,17 @@ void sneik_f512(void *state, uint8_t dom, uint8_t rounds);
 
 // Parameters (sizes are in bytes)
 #define BLNK_BLOCK 64
+
+// Profile the permutation ?
+#ifdef XOF_PROF
+extern uint32_t perm_count[];
+#define BLNK_PI(x, dom, rounds) {\
+    perm_count[rounds]++;\
+    sneik_f512(x, dom, rounds); }
+#else
+// no profiling
 #define BLNK_PI(x, dom, rounds) sneik_f512(x, dom, rounds)
+#endif /* XOF_PROF */
 
 // == SNEIKEN AEADs ==
 

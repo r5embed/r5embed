@@ -14,7 +14,7 @@ static void keccak_absorb(r5_xof_ctx_t *ctx,
 {
     while (len >= R5_XOF_RATE) {
         KeccakF1600_StateXORBytes(ctx->st, in, 0, R5_XOF_RATE);
-        KeccakF1600_StatePermute(ctx->st);
+        KECCAKF1600_24(ctx->st);
         len -= R5_XOF_RATE;
         in += R5_XOF_RATE;
     }
@@ -41,7 +41,7 @@ void r5_xof_squeeze(r5_xof_ctx_t *ctx,
     i = ctx->idx;
     for (j = 0; j < out_len; j++) {
         if (i >= R5_XOF_RATE) {
-            KeccakF1600_StatePermute(ctx->st);
+            KECCAKF1600_24(ctx->st);
             KeccakF1600_StateExtractBytes(ctx->st, ctx->buf, 0, R5_XOF_RATE);
             i = 0;
         }
@@ -75,7 +75,7 @@ void r5_xof_s_input(r5_xof_ctx_t *ctx,
     memset(ctx->buf + 6 + sstr_len, 0x00, R5_XOF_RATE - 6 - sstr_len);
 
     KeccakF1600_StateXORBytes(ctx->st, ctx->buf, 0, R5_XOF_RATE);
-    KeccakF1600_StatePermute(ctx->st);
+    KECCAKF1600_24(ctx->st);
 
     keccak_absorb(ctx, in, in_len, 0x04);
 
