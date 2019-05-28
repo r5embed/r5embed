@@ -11,6 +11,7 @@ CFLAGS	= -Wall -Ofast
 CFLAGS	+= -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16
 CFLAGS	+= -DSTM32F4 -DSTM32F4CCM -DSTM32F407VGT6 -DARMV7_ASM
 # Add this for R5SNEIK: -DBLNK2
+# For permutation profiling: -DXOF_PROF
 CFLAGS	+= -D$(ROUND5) -I../src
 CFLAGS	+= -I. -I../libopencm3/include
 LDFLAGS	= -Tstm32f407vgt6.ld -L../libopencm3/lib -nostartfiles

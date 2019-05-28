@@ -13,7 +13,7 @@
 
 //  timeout, five seconds
 #ifndef BENCH_TIMEOUT
-#define BENCH_TIMEOUT (10 * 24000000)
+#define BENCH_TIMEOUT (3 * 24000000)
 #endif
 
 //  message size for PKE variants
@@ -24,9 +24,8 @@
 #define KEM_TEST
 #else
 
-#define PKE_TEST
-
 // -- if we are testing the PKE algorithm as a KEM --
+
 /*
 #define KEM_TEST
 #undef CRYPTO_BYTES
@@ -67,7 +66,7 @@ void print_tv(const uint8_t *dat, size_t len, const char *lab)
         x *= 0x01234567;
     }
 
-    snprintf(buf, sizeof(buf), "%s tv %08X  %s\t#%u\n",
+    snprintf(buf, sizeof(buf), "%s\ttv %08X\t%s\t#%u\n",
         CRYPTO_ALGNAME, (unsigned) x, lab, (unsigned) len);
     my_print(buf);
 }
@@ -78,16 +77,64 @@ void print_data(char *label, int res)
 {
     char buf[80];
 
-    snprintf(buf, sizeof(buf), "%s %s\t#%d\n", CRYPTO_ALGNAME, label, res);
+    snprintf(buf, sizeof(buf), "%s\t%s\t#%d\n", CRYPTO_ALGNAME, label, res);
     my_print(buf);
 }
 
+//  profile permutation calls (no output if not enabled)
+
+#ifndef PROFC_MAXROUNDS
+#define PROFC_MAXROUNDS 32
+#endif
+
+uint32_t perm_count[PROFC_MAXROUNDS];
+
+void permc_init()
+{
+    int i;
+
+    for (i = 0; i < PROFC_MAXROUNDS; i++) {
+        perm_count[i] = 0;
+    }
+}
+
+void permc_show(uint32_t n)
+{
+    int i;
+    uint32_t tot;
+    char buf[80];
+
+    tot = 0;
+    for (i = 0; i < PROFC_MAXROUNDS; i++) {
+
+        if (perm_count[i] > 0) {
+
+            snprintf(buf, sizeof(buf), "%s\tpi in kex\tpi%02d\t#%d\n",
+                CRYPTO_ALGNAME, i, (int) (perm_count[i] / n));
+            my_print(buf);
+
+            tot += i * perm_count[i];
+        }
+
+    }
+    if (tot > 0) {
+        snprintf(buf, sizeof(buf), "%s\tperm rounds\trnd\t#%d\n",
+            CRYPTO_ALGNAME, (int) (tot / n));
+        my_print(buf);
+    }
+}
+
+
 //  this stack probe both checks and fills the stack
 //  it's hacky but I don't think that there is a "standard" way of doing this
-//	(If you get 70000, just run it again.)
+//  (If you get 70000, just run it again.)
 
+#ifndef STACK_MAX
 #define STACK_MAX 70000
+#endif
+#ifndef STACK_FILL
 #define STACK_FILL 0xD3
+#endif
 
 volatile uint8_t *sp;
 
@@ -126,7 +173,6 @@ int test_stack()
     //  test vectors and stack usage
 
 #ifdef KEM_TEST
-
     kg = stack_probe();
     crypto_kem_keypair(pk, sk);
     kg = stack_probe();
@@ -149,9 +195,9 @@ int test_stack()
     de = stack_probe();
 #endif
 
-    print_data("stack bytes  KG", kg);
-    print_data("stack bytes  Enc", en);
-    print_data("stack bytes  Dec", de);
+    print_data("stack bytes\tKG", kg);
+    print_data("stack bytes\tEnc", en);
+    print_data("stack bytes\tDec", de);
 
     print_tv(pk, CRYPTO_PUBLICKEYBYTES, "pk");
     print_tv(sk, CRYPTO_SECRETKEYBYTES, "sk");
@@ -169,24 +215,86 @@ int test_stack()
     return 0;
 }
 
+#ifdef BLNK2
+#include "sneik_param.h"
+#else
+#include "keccakf1600.h"
+#endif
+
 //  speed benchmark
 
 int test_speed()
 {
-    static uint64_t n, beg, kg, en, de;
+    int i;
+    uint64_t n, beg, kg, en, de;
     uint64_t t0, t1, t2, t3;
 
+#ifdef BLNK2
+    // SNEIK
+
+    uint32_t st[16], dom;
+
+    for (i = 0; i < 16; i++) {
+        st[i] = 111 + i;
+    }
+    dom = 234;
+#else
+
+    // Keccak
+    uint64_t st[25];
+
+    for (i = 0; i < 25; i++) {
+        st[i] = i;
+    }
+#endif
 
     // banner
-    my_print("\t\t\t\t#");
+    my_print("\t\t\t\t\t#");
     my_print(CRYPTO_ALGNAME);
     my_print("\n");
+
+    // time permutation speed
+
+    n = 0;
+    t0 = get_cycles();
+    do {
+
+        for (i = 0; i < 100; i++) {
+#ifdef BLNK2
+            sneik_f512(st, dom, 8);
+            sneik_f512(st, dom, 8);
+            sneik_f512(st, dom, 8);
+            sneik_f512(st, dom, 8);
+            sneik_f512(st, dom, 8);
+            n += 5;
+#else
+            KECCAKF1600_24(st);
+            KECCAKF1600_24(st);
+            KECCAKF1600_24(st);
+            KECCAKF1600_24(st);
+            KECCAKF1600_24(st);
+/*
+            KeccakF1600_StatePermute(st);
+            KeccakF1600_StatePermute(st);
+            KeccakF1600_StatePermute(st);
+            KeccakF1600_StatePermute(st);
+            KeccakF1600_StatePermute(st);
+*/
+
+            n += 5;
+#endif
+        }
+        t1 = get_cycles() - t0;
+    } while (t1 < BENCH_TIMEOUT);
+
+    print_data("permutation\tperm ", t1 / n);
 
     n = 0;
     kg = 0;
     en = 0;
     de = 0;
 
+    permc_init();
     beg = get_cycles();
     do {
 
@@ -225,12 +333,14 @@ int test_speed()
 
     } while ((t3 - beg) < BENCH_TIMEOUT);
 
+    permc_show(n);
+
     // scale to kilocycles in case of overflow
     n *= 1000;
-    print_data("kilo cycles  KG ", kg / n);
-    print_data("kilo cycles  Enc", en / n);
-    print_data("kilo cycles  Dec", de / n);
-    print_data("kilo cycles  KEX", (kg + en + de) / n);
+    print_data("kilo cycles\tKG ", kg / n);
+    print_data("kilo cycles\tEnc", en / n);
+    print_data("kilo cycles\tDec", de / n);
+    print_data("kilo cycles\tKEX", (kg + en + de) / n);
 
 /*
     print_data("PK\t", CRYPTO_PUBLICKEYBYTES);
