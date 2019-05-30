@@ -13,7 +13,7 @@
         .syntax unified
         .type   sneik_f512, %function
 
-//      mixing function for 4 rotating registers (r3 is temporary)
+//  mixing function for 4 rotating registers (r3 is temporary)
 
 .macro  mix_f   pos, t0, t1, t2, t3
         add     \t0, \t0, \t3               // t0 += t3;
@@ -67,7 +67,7 @@ sneik_f512:
         .align  2
 .rcptr: .word   .rc
 
-        .size       sneik_f512, .-sneik_f512
+        .size       sneik_f512, .-sneik_f512 + 8
         .section    .rodata
 
 .rc:    .byte   0xEF, 0xE0, 0xD9, 0xD6, 0xBA, 0xB5, 0x8C, 0x83
