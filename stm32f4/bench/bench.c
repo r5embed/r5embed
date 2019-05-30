@@ -2,7 +2,7 @@
 //  2019-03-10  Markku-Juhani O. Saarinen <mjos@pqshield.com>
 //  Copyright (c) 2019, PQShield Ltd.
 
-//  Compiled form OpenCM3 examples and PQM4 source
+//  Partially from OpenCM3 examples and PQM4 source
 
 #include <stdio.h>
 #include <string.h>
