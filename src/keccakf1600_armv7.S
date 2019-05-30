@@ -481,7 +481,7 @@
 .global   KeccakF1600_Initialize
 KeccakF1600_Initialize:
     bx      lr
-	.size	KeccakF1600_Initialize, .-KeccakF1600_Initialize
+    .size   KeccakF1600_Initialize, .-KeccakF1600_Initialize
 
 @----------------------------------------------------------------------------
 @
@@ -520,7 +520,7 @@ KeccakF1600_StateXORBytes_Exit:
     pop     {r4 - r8, pc}
 KeccakF1600_StateXORBytes_Exit1:
     bx      lr
-	.size	KeccakF1600_StateXORBytes, .-KeccakF1600_StateXORBytes
+    .size   KeccakF1600_StateXORBytes, .-KeccakF1600_StateXORBytes
 
 @----------------------------------------------------------------------------
 @
@@ -548,7 +548,7 @@ __KeccakF1600_StateXORLanes_LoopAligned:
     subs    r2, r2, #1
     bne     __KeccakF1600_StateXORLanes_LoopAligned
     bx      lr
-	.size	__KeccakF1600_StateXORLanes, .-__KeccakF1600_StateXORLanes
+    .size   __KeccakF1600_StateXORLanes, .-__KeccakF1600_StateXORLanes
 
 @----------------------------------------------------------------------------
 @
@@ -582,7 +582,7 @@ __KeccakF1600_StateXORBytesInLane_Loop:
     toBitInterleaving   r4, r5, r6, r7, r3, 0
     strd    r6, r7, [r0], #8
     bx      lr
-	.size	__KeccakF1600_StateXORBytesInLane, .-__KeccakF1600_StateXORBytesInLane
+    .size   __KeccakF1600_StateXORBytesInLane, .-__KeccakF1600_StateXORBytesInLane
 
 @----------------------------------------------------------------------------
 @
@@ -621,7 +621,7 @@ KeccakF1600_StateExtractBytes_Exit:
     pop     {r4 - r8, pc}
 KeccakF1600_StateExtractBytes_Exit1:
     bx      lr
-	.size	KeccakF1600_StateExtractBytes, .-KeccakF1600_StateExtractBytes
+    .size   KeccakF1600_StateExtractBytes, .-KeccakF1600_StateExtractBytes
 
 @----------------------------------------------------------------------------
 @
@@ -648,7 +648,7 @@ __KeccakF1600_StateExtractLanes_LoopAligned:
     str     r5, [r1], #4
     bne     __KeccakF1600_StateExtractLanes_LoopAligned
     bx      lr
-	.size	__KeccakF1600_StateExtractLanes, .-__KeccakF1600_StateExtractLanes
+    .size   __KeccakF1600_StateExtractLanes, .-__KeccakF1600_StateExtractLanes
 
 @----------------------------------------------------------------------------
 @
@@ -679,9 +679,9 @@ __KeccakF1600_StateExtractBytesInLane_Loop:
     bne     __KeccakF1600_StateExtractBytesInLane_Loop
     add     sp, #8
     bx      lr
-	.size	__KeccakF1600_StateExtractBytesInLane, .-__KeccakF1600_StateExtractBytesInLane
+    .size   __KeccakF1600_StateExtractBytesInLane, .-__KeccakF1600_StateExtractBytesInLane
 
-	.align 8
+    .align 8
 KeccakF1600_StatePermute_RoundConstantsWithTerminator:
     @       0           1
         .long       0x00000001, 0x00000000
@@ -736,7 +736,7 @@ KeccakF1600_StatePermute_RoundLoop:
     add     sp, #mSize
     pop     { r4 - r12, pc }
 
-	.size	KeccakF1600_StatePermute, .-KeccakF1600_StatePermute_RoundConstantsWithTerminator
+    .size   KeccakF1600_StatePermute, .-KeccakF1600_StatePermute_RoundConstantsWithTerminator
 
 
 #endif /* ARMV7_ASM && !BLNK2 */
