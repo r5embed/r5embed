@@ -10,9 +10,9 @@
 //	type for ternary vector
 typedef uint16_t r5_ternv_t[PARAMS_H / 2][2];
 
-//	create dim" sparse ternary vectors from a seed
+//	create n sparse ternary vectors from a seed
 void r5_create_secret_vecs(r5_ternv_t sv[],
-	const uint8_t seed[PARAMS_KAPPA_BYTES], size_t dim);
+	const uint8_t seed[PARAMS_KAPPA_BYTES], size_t n);
 
 #endif /* _R5_SECRETV_H_ */
 

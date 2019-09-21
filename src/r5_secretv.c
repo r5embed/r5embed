@@ -11,10 +11,10 @@
 
 #include <string.h>
 
-//	create dim" sparse ternary vectors from a seed
+//	create n sparse ternary vectors from a seed
 
 void r5_create_secret_vecs(r5_ternv_t sv[],
-	const uint8_t seed[PARAMS_KAPPA_BYTES], size_t dim)
+	const uint8_t seed[PARAMS_KAPPA_BYTES], size_t n)
 {
 	size_t i, j;
 	uint16_t x;
@@ -24,7 +24,7 @@ void r5_create_secret_vecs(r5_ternv_t sv[],
 
 	r5_xof_input(&xof, seed, PARAMS_KAPPA_BYTES);
 
-	for (j = 0; j < dim; j++) {
+	for (j = 0; j < n; j++) {
 		memset(v, 0, sizeof(v));		// reset table
 		for (i = 0; i < PARAMS_H; i++) {
 			do {
