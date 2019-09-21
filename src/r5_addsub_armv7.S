@@ -1,7 +1,6 @@
 //  r5_addsub_armv7.S
-//  Copyright (c) 2019, PQShield Ltd.
-
 //  2019-03-07  Markku-Juhani O. Saarinen <mjos@pqshield.com>
+//	Copyright (C) 2019, PQShield Ltd. Please see LICENSE.
 
 #ifdef ARMV7_ASM
 

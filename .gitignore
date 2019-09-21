@@ -3,6 +3,7 @@
 *.hex
 *.a
 *.elf
+*.pyc
 .DS_Store
 .project
 .idea/

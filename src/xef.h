@@ -1,8 +1,8 @@
-//  xef.h
-//  2018-10-25 Markku-Juhani O. Saarinen <mjos@pqshield.com>
-//  (c) 2018   PQShield Ltd. All Rights Reserved.
+//	xef.h
+//	2018-10-25 Markku-Juhani O. Saarinen <mjos@pqshield.com>
+//	Copyright (C) 2018, PQShield Ltd. Please see LICENSE.
 
-//  Prototypes for error correction codes
+//	Prototypes for error correction codes
 
 #ifndef _XEF_H_
 #define _XEF_H_
@@ -10,22 +10,22 @@
 #include <stdint.h>
 #include <stddef.h>
 
-//  Computes the parity code, XORs it at the end of payload
-//  len = payload (bytes). Returns (payload | xef) length in *bits*.
-//  size_t xef_compute(void *block, size_t len, unsigned f);
+//	Computes the parity code, XORs it at the end of payload
+//	len = payload (bytes). Returns (payload | xef) length in *bits*.
+//	size_t xef_compute(void *block, size_t len, unsigned f);
 
-//  Fixes errors based on parity code. Call xef_compute() first to get delta.
-//  len = payload (bytes). Returns (payload | xef) length in *bits*.
-//  size_t xef_fixerr(void *block, size_t len, unsigned f);
+//	Fixes errors based on parity code. Call xef_compute() first to get delta.
+//	len = payload (bytes). Returns (payload | xef) length in *bits*.
+//	size_t xef_fixerr(void *block, size_t len, unsigned f);
 
 
-void xe2_53_compute(void *block);       // xe2_c16.c
+void xe2_53_compute(void *block);		// xe2_c16.c
 void xe2_53_fixerr(void *block);
 
-void xe4_163_compute(void *block);      // xe4_c64.c
+void xe4_163_compute(void *block);		// xe4_c64.c
 void xe4_163_fixerr(void *block);
 
-void xe5_190_compute(void *block);      // xe5_c64.c
+void xe5_190_compute(void *block);		// xe5_c64.c
 void xe5_190_fixerr(void *block);
 void xe5_218_compute(void *block);
 void xe5_218_fixerr(void *block);

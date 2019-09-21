@@ -1,8 +1,8 @@
-//  sneik_param.h
-//  2019-02-19  Markku-Juhani O. Saarinen <mjos@pqshield.com>
-//  Copyright (C) 2019, PQShield Ltd. Please see LICENSE.
+//	sneik_param.h
+//	2019-02-19	Markku-Juhani O. Saarinen <mjos@pqshield.com>
+//	Copyright (C) 2019, PQShield Ltd. Please see LICENSE.
 
-//  This file provides a BLNK2 instantations with the SNEIK permutation.
+//	This file provides a BLNK2 instantations with the SNEIK permutation.
 
 #ifndef _SNEIK_PARAM_H_
 #define _SNEIK_PARAM_H_
@@ -20,8 +20,8 @@ void sneik_f512(void *state, uint8_t dom, uint8_t rounds);
 #ifdef XOF_PROF
 extern uint32_t perm_count[];
 #define BLNK_PI(x, dom, rounds) {\
-    perm_count[rounds]++;\
-    sneik_f512(x, dom, rounds); }
+	perm_count[rounds]++;\
+	sneik_f512(x, dom, rounds); }
 #else
 // no profiling
 #define BLNK_PI(x, dom, rounds) sneik_f512(x, dom, rounds)
@@ -31,7 +31,7 @@ extern uint32_t perm_count[];
 
 #define SNEIKEN_RATE (BLNK_BLOCK - PARAMS_KAPPA_BYTES)
 
-//  number of rounds for encryption
+//	number of rounds for encryption
 #if (PARAMS_KAPPA_BYTES <= 16)
 #define SNEIKEN_ROUNDS 6
 #elif (PARAMS_KAPPA_BYTES <= 24)
@@ -44,9 +44,9 @@ extern uint32_t perm_count[];
 #error "SNEIKEN: Could not determine security level."
 #endif
 
-//  == SNEIKHA Cryptographic Hashes ==
+//	== SNEIKHA Cryptographic Hashes ==
 
-//  number of rounds for hashing
+//	number of rounds for hashing
 #if (PARAMS_KAPPA_BYTES <= 16)
 #define SNEIKHA_ROUNDS 6
 #define SNEIKHA_RATE 32
@@ -60,13 +60,13 @@ extern uint32_t perm_count[];
 #error "SNEIKHA: Could not determine security level."
 #endif
 
-//  == SNEIGEN Entropy distribution function ==
+//	== SNEIGEN Entropy distribution function ==
 
 #ifdef PARAMS_KAPPA_BYTES
 
 #define SNEIGEN_RATE (BLNK_BLOCK - PARAMS_KAPPA_BYTES)
 
-//  number of rounds for entropy diffusion
+//	number of rounds for entropy diffusion
 #if (PARAMS_KAPPA_BYTES <= 8)
 #define SNEIGEN_ROUNDS 2
 #elif (PARAMS_KAPPA_BYTES <= 16)
@@ -81,5 +81,5 @@ extern uint32_t perm_count[];
 
 #endif /* PARAMS_KAPPA_BYTES */
 
-#endif  /* _SNEIK_PARAM_H_ */
+#endif	/* _SNEIK_PARAM_H_ */
 
