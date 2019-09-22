@@ -18,8 +18,8 @@
 #ifdef R5_CT
 //	slow constant-time type
 #define TVEC_WORDS DIV_CEIL(PARAMS_D, 64)
-typedef	uint64_t r5_ternv_t[TVEC_WORDS][2];
-#else 
+typedef uint64_t r5_ternv_t[TVEC_WORDS][2];
+#else
 //	fast index type
 typedef uint16_t r5_ternv_t[PARAMS_H / 2][2];
 #endif

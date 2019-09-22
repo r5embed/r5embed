@@ -13,7 +13,7 @@
 
 #ifndef R5_CT
 
-//	create a sparse ternary vectorc (faster index type)
+//	create a sparse ternary vector (faster index type)
 
 void r5_sparse_tern(r5_xof_ctx_t *xof, r5_ternv_t tv)
 {
@@ -32,13 +32,13 @@ void r5_sparse_tern(r5_xof_ctx_t *xof, r5_ternv_t tv)
 			x /= PARAMS_RS_DIV;
 		} while (v[x]);
 		v[x] = 1;
-		tv[i >> 1][i & 1] = x; 			// addition / subtract index
+		tv[i >> 1][i & 1] = x;			// addition / subtract index
 	}
 }
 
 #else
 
-
+//	create a sparse ternary vector (slower constant time version)
 
 void r5_sparse_tern(r5_xof_ctx_t *xof, r5_ternv_t tv)
 {
@@ -49,7 +49,7 @@ void r5_sparse_tern(r5_xof_ctx_t *xof, r5_ternv_t tv)
 
 	memset(tv, 0, sizeof(r5_ternv_t));
 
-//	mark >=d slots as occupied (uniform sampling)
+	//	mark >=d slots as occupied (uniform sampling)
 #if (PARAMS_D & 0x3F) != 0
 	tv[TVEC_WORDS - 1][0] = (~0llu) << (PARAMS_D & 0x3F);
 #endif
@@ -65,7 +65,7 @@ void r5_sparse_tern(r5_xof_ctx_t *xof, r5_ternv_t tv)
 		a = 1llu << (x & 0x3F);
 		b = 1llu << (x >> 6);
 
-		a &= (((int64_t) h) >> 63);			// 	extend sign bit to mask
+		a &= (((int64_t) h) >> 63);			//	extend sign bit to mask
 
 		for (j = 0; j < TVEC_WORDS; j++) {
 			t = (-(b & 1llu)) & a;

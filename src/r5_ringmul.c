@@ -67,7 +67,7 @@ void r5_ringmul_p(modp_t d[PARAMS_MU],
 	size_t i;
 
 	//	note: order of coefficients p[1..N] is *NOT* reversed!
-#if (PARAMS_XE == 0) && (PARAMS_F == 0)
+#if (PARAMS_XE == 0)
 	//	without error correction we "lift" -- i.e. multiply by (x - 1)
 	a[PARAMS_D] = a[PARAMS_D - 1];
 	for (i = PARAMS_D - 1; i >= 1; i--) {
@@ -90,7 +90,7 @@ void r5_ringmul_p(modp_t d[PARAMS_MU],
 			&a[PARAMS_D + 1 - sv[i][0]], &a[PARAMS_D + 1 - sv[i][1]]);
 	}
 
-#if (PARAMS_XE == 0) && (PARAMS_F == 0)
+#if (PARAMS_XE == 0)
 	//	without error correction we "lifted" so we now need to "unlift"
 	d[0] = -d[0];
 	for (i = 1; i < PARAMS_MU; ++i) {
