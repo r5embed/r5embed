@@ -52,8 +52,8 @@ def compute_hi(d, h, alg):
 		wp[0] = mp.mpf(0);
 		for j in range(h):
 			b = wp[j + 1];
-			wp[j] += (mp.mpf(1) - bp[j]) * a
-			wp[j+1] = bp[j] * a
+			wp[j] += (mp.mpf(1) - bp[j]) * a	# h unchanged probability
+			wp[j+1] = bp[j] * a					# h++ probability
 			a = b
 		wp[h] += a								# wp[h] mass does not decrease
 
