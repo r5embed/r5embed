@@ -72,8 +72,8 @@ void r5_sparse_tern(r5_xof_ctx_t *xof, r5_ternv_t tv)
 			t &= ~tv[j][0];
 			tv[j][0] |= t;
 			tv[j][1] |= (-((uint64_t) (h & 1))) & t;
-			t |= t >> 1;					// t == 0 ? 0 : 1 (faster ?)
-			t = (t^(-t)) >> 63;
+			t |= t >> 1;					//	t == 0 ? 0 : 1
+			t = (t^(-t)) >> 63;				//	(is there a faster way ?)
 			h += t;
 			b >>= 1;
 		}
