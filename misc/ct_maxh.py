@@ -44,7 +44,7 @@ def maxh(d, h, alg):
 			break;
 
 		# Bernoulli:
-		p = r * mp.mpf(d-min(i,h))/mp.mpf(d)	# step (w++)
+		p = r * mp.mpf(d-min(i,h))/mp.mpf(d)	# step (w++ if w<h)
 		q = mp.mpf(1) - p						# no step (w does not change)
 
 		a = wp[0];								# probability convolution
