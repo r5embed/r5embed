@@ -10,7 +10,7 @@
 import numpy as np
 import mpmath as mp
 
-# precision (number of decimal digits) -- more than enough for all fp > 2^-256
+# precision (in decimal digits) -- 100 is more than enough for fp > 2^-256
 
 mp.mp.dps = 100
 
@@ -28,34 +28,33 @@ def compute_hi(d, h, alg):
 	fp = mp.mpf(2)**(-128)
 
 	#	rejection rate of the uniform sampler part
-	div = 65536 / d				# PARAMS_RS_DIV
-	lim = div * d				# PARAMS_RS_LIM
+	div = 65536 / d								# PARAMS_RS_DIV
+	lim = div * d								# PARAMS_RS_LIM
 	r = mp.mpf(lim)/mp.mpf(65536)
 
-	# 	"Bernoulli" transition probabilities
-	bp = np.array([mp.mpf(0)] * h)
-	for i in range(h):
-		bp[i] = r * mp.mpf(d-i)/mp.mpf(d)
+	# 	bp[i] is the "Bernoulli" transition probabililiy from weight i to i+1
+	bp = np.array([r * mp.mpf(d-i)/mp.mpf(d) for i in range(h)])
 
-	#	initial distribution is P(w=0) = 1, P(w>0) = 0
-	wp = np.array([mp.mpf(0)] * (h+1))
+	#	initial distribution is Pr(w=0) = 1, Pr(w>0) = 0
+	wp = np.array([mp.mpf(0)] * (h+1))			# wp[i] = Pr(w=i)
 	wp[0] = mp.mpf(1);
 
 	#	i is the number of passes
 	for i in range(9999):
 
-		# end condition; P(w=h) > 1-fp or equivalently P(w<h or w>h) < fp
+		# end condition; Pr(w=h) > 1-fp or equivalently Pr(w<h or w>h) < fp
 		if (wp[h] > mp.mpf(1) - fp):
 			break;
 
-		a = wp[0];								# probability convolution
+		# probability convolution; can be done in place
+		a = wp[0];
 		wp[0] = mp.mpf(0);
 		for j in range(h):
 			b = wp[j + 1];
-			wp[j] += (mp.mpf(1) - bp[j]) * a	# h unchanged probability
-			wp[j+1] = bp[j] * a					# h++ probability
+			wp[j] += (mp.mpf(1) - bp[j]) * a	# w unchanged probability
+			wp[j + 1] = bp[j] * a				# w++ probability
 			a = b
-		wp[h] += a								# wp[h] mass does not decrease
+		wp[h] += b								# wp[h] mass does not decrease
 
 	# verbose information
 	print alg.ljust(20) + "d=" + str(d).ljust(6) + "h=" + str(h).ljust(6),
