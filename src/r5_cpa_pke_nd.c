@@ -14,6 +14,17 @@
 #include "rng.h"
 #include "xef.h"
 
+//	secret vector
+
+static void r5_create_secret_vec(r5_ternv_t sv,
+	const uint8_t seed[PARAMS_KAPPA_BYTES])
+{
+	r5_xof_ctx_t xof;
+
+	r5_xof_input(&xof, seed, PARAMS_KAPPA_BYTES);
+	r5_sparse_tern(&xof, sv);
+}
+
 //	master random
 
 static void r5_ring_a_random(modq_t *a_random,
@@ -96,7 +107,7 @@ int r5_cpa_pke_keygen(uint8_t *pk, uint8_t *sk)
 	r5_ring_a_random(a, pk);
 
 	randombytes(sk, PARAMS_KAPPA_BYTES); // secret key -- Random S
-	r5_create_secret_vecs((r5_ternv_t *) &s_v, sk, 1);
+	r5_create_secret_vec(s_v, sk);
 
 	r5_ringmul_q(b, a, s_v); // B = A * S
 
@@ -131,7 +142,7 @@ int r5_cpa_pke_encrypt(uint8_t *ct, const uint8_t *pk,
 #endif
 
 	// Create R
-	r5_create_secret_vecs((r5_ternv_t *) &r_v, rho, 1);
+	r5_create_secret_vec(r_v, rho);
 
 	r5_ringmul_q(vec.u_t, a, r_v);		// U^T = U = A^T * R = A * R (mod q)
 	r5_pack_q_p(ct, vec.u_t, PARAMS_H2);	// ct = U^T | v
@@ -178,7 +189,7 @@ int r5_cpa_pke_decrypt(uint8_t *m, const uint8_t *sk, const uint8_t *ct)
 	modp_t t, x_prime[PARAMS_MU];
 	uint8_t m1[BITS_TO_BYTES(PARAMS_MU * PARAMS_B_BITS)];
 
-	r5_create_secret_vecs((r5_ternv_t *) &s_v, sk, 1);
+	r5_create_secret_vec(s_v, sk);
 
 	r5_unpack_p(u_t, ct); // ct = U^T | v
 

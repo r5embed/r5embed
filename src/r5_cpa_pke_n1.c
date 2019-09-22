@@ -14,6 +14,20 @@
 #include "xef.h"
 #include "little_endian.h"
 
+//	secret matrix
+
+static void r5_create_secret_mat(r5_ternv_t sm[],
+	const uint8_t seed[PARAMS_KAPPA_BYTES], size_t n)
+{
+	size_t i;
+
+	r5_xof_ctx_t xof;
+	r5_xof_input(&xof, seed, PARAMS_KAPPA_BYTES);
+
+	for (i = 0; i < n; i++)
+		r5_sparse_tern(&xof, sm[i]);
+}
+
 //	create "matrix row" a_random
 
 static void r5_matrow_a_random(modq_t *a_random,
@@ -146,7 +160,7 @@ int r5_cpa_pke_keygen(uint8_t *pk, uint8_t *sk)
 
 	randombytes(sk, PARAMS_KAPPA_BYTES); // secret key -- Random S
 
-	r5_create_secret_vecs(s_t, sk, PARAMS_N_BAR);
+	r5_create_secret_mat(s_t, sk, PARAMS_N_BAR);
 
 	r5_matmul_as_q(b, a_random, a_perm, s_t); // B = A * S
 
@@ -175,7 +189,7 @@ int r5_cpa_pke_encrypt(uint8_t *ct, const uint8_t *pk, const uint8_t *m,
 	modp_t t, tm;
 
 	//	Create R
-	r5_create_secret_vecs(r_t, rho, PARAMS_M_BAR);
+	r5_create_secret_mat(r_t, rho, PARAMS_M_BAR);
 
 	//	unpack public key
 	r5_unpack_p(&mat.b[0][0], PARAMS_D * PARAMS_N_BAR, pk + PARAMS_KAPPA_BYTES);
@@ -245,7 +259,7 @@ int r5_cpa_pke_decrypt(uint8_t *m, const uint8_t *sk, const uint8_t *ct)
 	uint8_t m1[BITS_TO_BYTES(PARAMS_MU * PARAMS_B_BITS)];
 	modp_t t;
 
-	r5_create_secret_vecs(s_t, sk, PARAMS_N_BAR);
+	r5_create_secret_mat(s_t, sk, PARAMS_N_BAR);
 
 	r5_unpack_p((modp_t *) u_t, PARAMS_M_BAR *	 PARAMS_D, ct);	 // ct = U^T | v
 

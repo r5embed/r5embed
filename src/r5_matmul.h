@@ -5,7 +5,7 @@
 #define _R5_MATMUL_H_
 
 #include "r5_parameter_sets.h"
-#include "r5_secretv.h"
+#include "r5_ternvec.h"
 
 #if (PARAMS_N == 1)
 

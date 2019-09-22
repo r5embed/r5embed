@@ -24,7 +24,7 @@ fi
 
 CC=gcc
 R5_SRC=src
-CFLAGS="-Wall -march=native -Ofast -DNDEBUG -DBLNK2"
+CFLAGS="-Wall -march=native -Ofast -DNDEBUG -DBLNK2 -DXOF_PROF"
 LIBS=""
 TEST_MAIN=test/speed.c
 RNG_SRC=test/myfastrng.c

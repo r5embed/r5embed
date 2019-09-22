@@ -17,6 +17,7 @@
 #define PARAMS_D			618
 #define PARAMS_N			618
 #define PARAMS_H			104
+#define PARAMS_HI			204
 #define PARAMS_Q_BITS		11
 #define PARAMS_P_BITS		8
 #define PARAMS_T_BITS		4
@@ -32,6 +33,7 @@
 #define PARAMS_D			786
 #define PARAMS_N			786
 #define PARAMS_H			384
+#define PARAMS_HI			936
 #define PARAMS_Q_BITS		13
 #define PARAMS_P_BITS		9
 #define PARAMS_T_BITS		4
@@ -47,6 +49,7 @@
 #define PARAMS_D			1018
 #define PARAMS_N			1018
 #define PARAMS_H			428
+#define PARAMS_HI			900
 #define PARAMS_Q_BITS		14
 #define PARAMS_P_BITS		9
 #define PARAMS_T_BITS		4
@@ -63,6 +66,7 @@
 #define PARAMS_D			586
 #define PARAMS_N			586
 #define PARAMS_H			182
+#define PARAMS_HI			395
 #define PARAMS_Q_BITS		13
 #define PARAMS_P_BITS		9
 #define PARAMS_T_BITS		4
@@ -79,6 +83,7 @@
 #define PARAMS_D			852
 #define PARAMS_N			852
 #define PARAMS_H			212
+#define PARAMS_HI			401
 #define PARAMS_Q_BITS		12
 #define PARAMS_P_BITS		9
 #define PARAMS_T_BITS		5
@@ -95,6 +100,7 @@
 #define PARAMS_D			1170
 #define PARAMS_N			1170
 #define PARAMS_H			222
+#define PARAMS_HI			369
 #define PARAMS_Q_BITS		13
 #define PARAMS_P_BITS		9
 #define PARAMS_T_BITS		5
@@ -110,6 +116,7 @@
 #define PARAMS_D			490
 #define PARAMS_N			490
 #define PARAMS_H			162
+#define PARAMS_HI			376
 #define PARAMS_Q_BITS		10
 #define PARAMS_P_BITS		7
 #define PARAMS_T_BITS		3
@@ -125,6 +132,7 @@
 #define PARAMS_D			756
 #define PARAMS_N			756
 #define PARAMS_H			242
+#define PARAMS_HI			494
 #define PARAMS_Q_BITS		12
 #define PARAMS_P_BITS		8
 #define PARAMS_T_BITS		2
@@ -140,6 +148,7 @@
 #define PARAMS_D			940
 #define PARAMS_N			940
 #define PARAMS_H			414
+#define PARAMS_HI			915
 #define PARAMS_Q_BITS		12
 #define PARAMS_P_BITS		8
 #define PARAMS_T_BITS		2
@@ -156,6 +165,7 @@
 #define PARAMS_D			508
 #define PARAMS_N			508
 #define PARAMS_H			136
+#define PARAMS_HI			295
 #define PARAMS_Q_BITS		10
 #define PARAMS_P_BITS		7
 #define PARAMS_T_BITS		4
@@ -172,6 +182,7 @@
 #define PARAMS_D			756
 #define PARAMS_N			756
 #define PARAMS_H			242
+#define PARAMS_HI			494
 #define PARAMS_Q_BITS		12
 #define PARAMS_P_BITS		8
 #define PARAMS_T_BITS		3
@@ -188,6 +199,7 @@
 #define PARAMS_D			946
 #define PARAMS_N			946
 #define PARAMS_H			388
+#define PARAMS_HI			816
 #define PARAMS_Q_BITS		11
 #define PARAMS_P_BITS		8
 #define PARAMS_T_BITS		5
@@ -203,6 +215,7 @@
 #define PARAMS_D			594
 #define PARAMS_N			1
 #define PARAMS_H			238
+#define PARAMS_HI			557
 #define PARAMS_Q_BITS		13
 #define PARAMS_P_BITS		10
 #define PARAMS_T_BITS		7
@@ -218,6 +231,7 @@
 #define PARAMS_D			881
 #define PARAMS_N			1
 #define PARAMS_H			238
+#define PARAMS_HI			447
 #define PARAMS_Q_BITS		13
 #define PARAMS_P_BITS		10
 #define PARAMS_T_BITS		7
@@ -233,6 +247,7 @@
 #define PARAMS_D			1186
 #define PARAMS_N			1
 #define PARAMS_H			712
+#define PARAMS_HI			1916
 #define PARAMS_Q_BITS		15
 #define PARAMS_P_BITS		12
 #define PARAMS_T_BITS		7
@@ -249,6 +264,7 @@
 #define PARAMS_D			636
 #define PARAMS_N			1
 #define PARAMS_H			114
+#define PARAMS_HI			222
 #define PARAMS_Q_BITS		12
 #define PARAMS_P_BITS		9
 #define PARAMS_T_BITS		6
@@ -265,6 +281,7 @@
 #define PARAMS_D			876
 #define PARAMS_N			1
 #define PARAMS_H			446
+#define PARAMS_HI			1104
 #define PARAMS_Q_BITS		15
 #define PARAMS_P_BITS		11
 #define PARAMS_T_BITS		7
@@ -281,6 +298,7 @@
 #define PARAMS_D			1217
 #define PARAMS_N			1
 #define PARAMS_H			462
+#define PARAMS_HI			908
 #define PARAMS_Q_BITS		15
 #define PARAMS_P_BITS		12
 #define PARAMS_T_BITS		9
@@ -296,6 +314,7 @@
 #define PARAMS_D			372
 #define PARAMS_N			372
 #define PARAMS_H			178
+#define PARAMS_HI			530
 #define PARAMS_Q_BITS		11
 #define PARAMS_P_BITS		7
 #define PARAMS_T_BITS		3
@@ -311,6 +330,7 @@
 #define PARAMS_D			490
 #define PARAMS_N			490
 #define PARAMS_H			162
+#define PARAMS_HI			376
 #define PARAMS_Q_BITS		10
 #define PARAMS_P_BITS		7
 #define PARAMS_T_BITS		3
@@ -326,7 +346,7 @@
 #endif
 
 // helper functions
-#define CEIL_DIV(a,b) ((a+b-1)/b)
+#define DIV_CEIL(a,b) ((a+b-1)/b)
 #define BITS_TO_BYTES(b) ((b + 7) / 8)
 
 // appropriate types
@@ -343,7 +363,7 @@ typedef uint8_t modt_t;
 #define PARAMS_P		(1 << PARAMS_P_BITS)
 #define PARAMS_P_MASK	(PARAMS_P - 1)
 #define PARAMS_KAPPA	(8 * PARAMS_KAPPA_BYTES)
-#define PARAMS_MU		CEIL_DIV((PARAMS_KAPPA + PARAMS_XE), PARAMS_B_BITS)
+#define PARAMS_MU		DIV_CEIL((PARAMS_KAPPA + PARAMS_XE), PARAMS_B_BITS)
 #define PARAMS_MUT_SIZE BITS_TO_BYTES(PARAMS_MU * PARAMS_T_BITS)
 
 #define PARAMS_RS_DIV	(0x10000 / PARAMS_D)

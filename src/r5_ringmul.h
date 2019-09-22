@@ -6,7 +6,7 @@
 #define _R5_RINGMUL_H_
 
 #include "r5_parameter_sets.h"
-#include "r5_secretv.h"
+#include "r5_ternvec.h"
 
 #if (PARAMS_N == PARAMS_D)
 
