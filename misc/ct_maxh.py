@@ -10,7 +10,8 @@
 import numpy as np
 import mpmath as mp
 
-# 	100 decimal digits of precision; more than enough
+# precision (number of decimal digits) -- more than enough for fp > 2^-256
+
 mp.mp.dps = 100
 
 # base-2 logarithm string
@@ -19,36 +20,32 @@ def str_log2(x):
     x = mp.fabs(x)
     return ("2^" + mp.nstr(mp.log(x, 2), 6, strip_zeros=False)).ljust(12)
 
-# precision (number of decimal digits) -- more than enough for fp > 2^-256
+#	given dimens d and weight h, determine number of "passes" required
 
 def maxh(d, h, alg):
 
-	div = 65536 / d				# PARAMS_RS_DIV
-	lim = div * d				# PARAMS_RS_LIM
-
-	#	failure probability threshold
+	#	failure probability threshold 2^-128
 	fp = mp.mpf(2)**(-128)
 
 	#	rejection rate of the uniform sampler part
+	div = 65536 / d				# PARAMS_RS_DIV
+	lim = div * d				# PARAMS_RS_LIM
 	r = mp.mpf(lim)/mp.mpf(65536)
 
 	#	initial distribution is P(w=0) = 1, P(w>0) = 0
 	wp = np.array([mp.mpf(0)] * (h+1))
 	wp[0] = mp.mpf(1);
 
+	#	i is the number of passes
 	for i in range(9999):
 
-		if (wp[h] > 1):
-			print alg, "OVERFLOW"
-			return -1;
-
-		# end condition; P(w=h) > 1-fp and by implication P(w<h) < fp
+		# end condition; P(w=h) > 1-fp or equivalently P(w<h or w>h) < fp
 		if (wp[h] > mp.mpf(1) - fp):
 			break;
 
 		# Bernoulli:
-		p = r * mp.mpf(d-min(i,h))/mp.mpf(d)	# step
-		q = mp.mpf(1) - p						# no step
+		p = r * mp.mpf(d-min(i,h))/mp.mpf(d)	# step (w++)
+		q = mp.mpf(1) - p						# no step (w does not change)
 
 		a = wp[0];								# probability convolution
 		wp[0] = mp.mpf(0);
