@@ -32,6 +32,11 @@ def compute_hi(d, h, alg):
 	lim = div * d				# PARAMS_RS_LIM
 	r = mp.mpf(lim)/mp.mpf(65536)
 
+	# 	"Bernoulli" transition probabilities
+	bp = np.array([mp.mpf(0)] * h)
+	for i in range(h):
+		bp[i] = r * mp.mpf(d-i)/mp.mpf(d)
+
 	#	initial distribution is P(w=0) = 1, P(w>0) = 0
 	wp = np.array([mp.mpf(0)] * (h+1))
 	wp[0] = mp.mpf(1);
@@ -43,16 +48,12 @@ def compute_hi(d, h, alg):
 		if (wp[h] > mp.mpf(1) - fp):
 			break;
 
-		# Bernoulli:
-		p = r * mp.mpf(d-min(i,h))/mp.mpf(d)	# step (w++ if w<h)
-		q = mp.mpf(1) - p						# no step (w does not change)
-
 		a = wp[0];								# probability convolution
 		wp[0] = mp.mpf(0);
 		for j in range(h):
 			b = wp[j + 1];
-			wp[j] += q * a
-			wp[j+1] = p * a
+			wp[j] += (mp.mpf(1) - bp[j]) * a
+			wp[j+1] = bp[j] * a
 			a = b
 		wp[h] += a								# wp[h] mass does not decrease
 
