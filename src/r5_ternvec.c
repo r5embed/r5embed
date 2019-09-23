@@ -56,26 +56,27 @@ void r5_sparse_tern(r5_xof_ctx_t *xof, r5_ternv_t tv)
 
 	h = -PARAMS_H;							//	dummy rounds once h reaches 0
 
-	for (i = 0; i < PARAMS_HI; i++) {
+	for (i = 0; i < PARAMS_HI; i++) {		//	see "ct_compute_hi.py"
 
 		r5_xof_squeeze(xof, &x, sizeof (x));
 		x = LITTLE_ENDIAN16(x);
-		x /= PARAMS_RS_DIV;
+		x /= PARAMS_RS_DIV;					//	no uniform rejection here
 
-		a = 1llu << (x & 0x3F);
-		b = 1llu << (x >> 6);
+		a = 1llu << (x & 0x3F);				//	bit selector
+		b = 1llu << (x >> 6);				//	word selector
 
-		a &= (((int64_t) h) >> 63);			//	extend sign bit to mask
+		a &= (((int64_t) h) >> 63);			//	set a to zero if h >= 0
 
 		for (j = 0; j < TVEC_WORDS; j++) {
-			t = (-(b & 1llu)) & a;
-			t &= ~tv[j][0];
-			tv[j][0] |= t;
+			t = (-(b & 1llu)) & a;			//	bit selector
+			t &= ~tv[j][0];					//	is empty ?
+			tv[j][0] |= t;					//	set as occupied (x1)
+			//	-1 (11) or +1 (01), depending on the parity of h
 			tv[j][1] |= (-((uint64_t) (h & 1))) & t;
 			t |= t >> 1;					//	t == 0 ? 0 : 1
 			t = (t^(-t)) >> 63;				//	(is there a faster way ?)
-			h += t;
-			b >>= 1;
+			h += t;							//	optional increment
+			b >>= 1;						//	b & 1 == 1 when j == x >> 6
 		}
 	}
 }
