@@ -21,18 +21,18 @@ void r5_sparse_tern(r5_xof_ctx_t *xof, r5_ternv_t tv)
 	uint16_t x;
 	uint8_t v[PARAMS_D];
 
-	memset(v, 0, sizeof(v));			// reset table
+	memset(v, 0, sizeof(v));				//	reset table
 
 	for (i = 0; i < PARAMS_H; i++) {
 		do {
-			do {
+			do {							//	uniform sampling
 				r5_xof_squeeze(xof, &x, sizeof (x));
 				x = LITTLE_ENDIAN16(x);
-			} while (x >= PARAMS_RS_LIM);
+			} while (x >= PARAMS_RS_LIM);	//	RS_LIM = d * RS_DIV
 			x /= PARAMS_RS_DIV;
-		} while (v[x]);
-		v[x] = 1;
-		tv[i >> 1][i & 1] = x;			// addition / subtract index
+		} while (v[x]);						//	is occupied ?
+		v[x] = 1;							//	mark as occupied
+		tv[i >> 1][i & 1] = x;				//	addition / subtract index
 	}
 }
 
