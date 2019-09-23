@@ -42,6 +42,23 @@ which operate in the ring setting and have 2/4 - bit error correction.
 This version does *not* support `R5N1_3PKE_0smallCT` which has very large 
 (165kB) public keys and requires some special implementation techniques.
 
+
+### Constant Time Option
+
+**EXPERIMENTAL** 2019-09-23  Markku
+
+I've added a "truly constant time" option to this implementation; this is 
+enabled with the `C5_CT` compile-time flag and currently applies only for the 
+ring variant. You may run `./test/testkat_ct.sh` to verify that it matches with 
+the test vectors.
+
+The script [ct_compute_hi.py](misc/ct_compute_hi.py) was used to compute
+the number of rounds `PARAMS_HI` required to reach desired Hamming weight.
+
+The option makes litte difference for embedded targets; don't use it
+if you don't need it. It just makes the code run a lot slower.
+
+
 ### The R5SNEIK Option
 
 R5EMBED also optionally integrates with the new SNEIK v1.1 / BLNK2 family of 
