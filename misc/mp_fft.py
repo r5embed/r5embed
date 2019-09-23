@@ -92,6 +92,6 @@ def test_fft():
     return eps
 
 # run the test
-mp.mp.dps = 100
-print test_fft()
+#mp.mp.dps = 100
+#print test_fft()
 
