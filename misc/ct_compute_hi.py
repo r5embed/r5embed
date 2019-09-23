@@ -24,7 +24,7 @@ def str_log2(x):
 
 def compute_hi(d, h, alg):
 
-	# failure probability threshold 2^-128
+	# failure probability threshold 2^-128; XXX change to 2^-256 for L5 etc?
 	fp = mp.mpf(2)**(-128)
 
 	# rejection rate of the uniform sampler part
