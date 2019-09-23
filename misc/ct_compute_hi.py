@@ -32,17 +32,17 @@ def compute_hi(d, h, alg):
 	lim = div * d								# PARAMS_RS_LIM
 	r = mp.mpf(lim)/mp.mpf(65536)
 
-	#  bp[w] is the "Bernoulli" transition probabililiy from weight w to w+1
+	# bp[w] is the "Bernoulli" transition probabililiy from weight w to w+1
 	bp = np.array([r * mp.mpf(d-i)/mp.mpf(d) for i in range(h)])
 
-	# initial distribution is Pr(w=0) = 1, Pr(w>0) = 0
-	wp = np.array([mp.mpf(0)] * (h+1))			# wp[i] = Pr(w=i)
+	# wp[i] = Pr(w=i). initial distribution is Pr(w=0) = 1, Pr(w>0) = 0
+	wp = np.array([mp.mpf(0)] * (h+1))
 	wp[0] = mp.mpf(1);
 
 	# i is the number of passes
 	for i in range(9999):
 
-		# end condition; Pr(w=h) > 1-fp or equivalently Pr(w<h or w>h) < fp
+		# end condition; Pr(w=h) > 1-fp or equivalently Pr(w<h)+Pr(w>h) < fp
 		if (wp[h] > mp.mpf(1) - fp):
 			break;
 
@@ -54,7 +54,7 @@ def compute_hi(d, h, alg):
 			wp[j] += (mp.mpf(1) - bp[j]) * a	# w unchanged probability
 			wp[j + 1] = bp[j] * a				# w++ probability
 			a = b
-		wp[h] += b								# wp[h] mass does not decrease
+		wp[h] += b								# wp[h] mass approaches 1
 
 	# verbose information
 	print alg.ljust(20) + "d=" + str(d).ljust(6) + "h=" + str(h).ljust(6),
