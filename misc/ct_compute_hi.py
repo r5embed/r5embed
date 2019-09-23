@@ -20,33 +20,33 @@ def str_log2(x):
 	x = mp.fabs(x)
 	return ("2^" + mp.nstr(mp.log(x, 2), 6, strip_zeros=False)).ljust(12)
 
-#	given dimens d and weight h, determine number of "passes" required
+# given dimension d and weight h, determine number of "passes" required
 
 def compute_hi(d, h, alg):
 
-	#	failure probability threshold 2^-128
+	# failure probability threshold 2^-128
 	fp = mp.mpf(2)**(-128)
 
-	#	rejection rate of the uniform sampler part
+	# rejection rate of the uniform sampler part
 	div = 65536 / d								# PARAMS_RS_DIV
 	lim = div * d								# PARAMS_RS_LIM
 	r = mp.mpf(lim)/mp.mpf(65536)
 
-	# 	bp[i] is the "Bernoulli" transition probabililiy from weight i to i+1
+	#  bp[w] is the "Bernoulli" transition probabililiy from weight w to w+1
 	bp = np.array([r * mp.mpf(d-i)/mp.mpf(d) for i in range(h)])
 
-	#	initial distribution is Pr(w=0) = 1, Pr(w>0) = 0
+	# initial distribution is Pr(w=0) = 1, Pr(w>0) = 0
 	wp = np.array([mp.mpf(0)] * (h+1))			# wp[i] = Pr(w=i)
 	wp[0] = mp.mpf(1);
 
-	#	i is the number of passes
+	# i is the number of passes
 	for i in range(9999):
 
 		# end condition; Pr(w=h) > 1-fp or equivalently Pr(w<h or w>h) < fp
 		if (wp[h] > mp.mpf(1) - fp):
 			break;
 
-		# probability convolution; can be done in place
+		# redistribute probability mass; can be done in place
 		a = wp[0];
 		wp[0] = mp.mpf(0);
 		for j in range(h):
