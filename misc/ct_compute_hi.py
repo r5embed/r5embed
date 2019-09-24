@@ -32,7 +32,7 @@ def compute_hi(d, h, alg):
 	lim = div * d								# PARAMS_RS_LIM
 	r = mp.mpf(lim)/mp.mpf(65536)
 
-	# bp[w] is the "Bernoulli" transition probabililiy from weight w to w+1
+	# bp[w] is the "Bernoulli" transition probability from weight w to w+1
 	bp = np.array([r * mp.mpf(d-i)/mp.mpf(d) for i in range(h)])
 
 	# wp[i] = Pr(w=i). initial distribution is Pr(w=0) = 1, Pr(w>0) = 0
