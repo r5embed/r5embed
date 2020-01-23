@@ -1,26 +1,36 @@
 //	r5_ringmul.c
-//	Copyright (c) 2019, PQShield Ltd. and Koninklijke Philips N.V.
+//	2019-07-16	Markku-Juhani O. Saarinen <mjos@pqshield.com>
+//	Copyright (c) 2019, PQShield Ltd. All rights reserved.
 
 //	Fast ring arithmetic (without cache attack countermeasures)
 
 #include "r5_parameter_sets.h"
 
-#if (PARAMS_N == PARAMS_D) && !defined(R5_CT)
+#if (PARAMS_N == PARAMS_D) && !defined(ROUND5_CT) && !defined(PQSOC)
 
 #include <string.h>
 
 #include "r5_ringmul.h"
 #include "r5_xof.h"
 #include "r5_addsub.h"
+#include "r5_pack.h"
 #include "little_endian.h"
 
 // multiplication mod q, result length n
 
 void r5_ringmul_q(modq_t d[PARAMS_D],
-	modq_t a[2 * (PARAMS_D + 1)],
+	const uint8_t sigma[PARAMS_KAPPA_BYTES],
 	const r5_ternv_t sv)
 {
+	modq_t a[2 * (PARAMS_D + 1)];
 	size_t i;
+
+	//	expand a
+	r5_xof(a, PARAMS_D * sizeof (modq_t), sigma, PARAMS_KAPPA_BYTES);
+#if __BYTE_ORDER__ != __ORDER_LITTLE_ENDIAN__
+	for (i = 0; i < PARAMS_D; i++) {
+		a[i] = LITTLE_ENDIAN16(a[i]);
+#endif
 
 	//	note: order of coefficients a[1..n] is *NOT* reversed!
 	//	"lift" -- multiply by (x - 1)
@@ -61,10 +71,13 @@ void r5_ringmul_q(modq_t d[PARAMS_D],
 // multiplication mod p, result length mu
 
 void r5_ringmul_p(modp_t d[PARAMS_MU],
-	modp_t a[PARAMS_D + PARAMS_MU + 2],
-	const r5_ternv_t sv)
+	const uint8_t *pv, const r5_ternv_t sv)
 {
 	size_t i;
+	modp_t aa[PARAMS_D + PARAMS_MU + 2];
+	modp_t *a = aa;
+
+	r5_unpack_p(a, pv);					//	unpack a
 
 	//	note: order of coefficients p[1..N] is *NOT* reversed!
 #if (PARAMS_XE == 0)

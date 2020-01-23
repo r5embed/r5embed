@@ -72,7 +72,7 @@ do
 
 	cd $MYDIR
 #	enable constant time flag R5_CT
-	$CC $CFLAGS -o $WORKD/$targ/genkat -DR5_CT -D$targ -Inist -I$R5_SRC \
+	$CC $CFLAGS -o $WORKD/$targ/genkat -DROUND5_CT -D$targ -Inist -I$R5_SRC \
 		$TEST_MAIN $RNG_SRC $R5_SRC/*.c $LIBS
 
 	cd $WORKD/$targ

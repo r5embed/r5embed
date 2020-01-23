@@ -6,11 +6,14 @@
 //	depends on the register file structure of the target -- ARM allows
 //	basically any register to be used as a pointer, which is a benefit.
 
+//	PQSOC implementations do not use these
+
 #include "r5_parameter_sets.h"
+#include "r5_ternvec.h"
 #include "r5_addsub.h"
 
-#ifndef ARMV7_ASM
-#ifndef __AVX2__
+#if !defined(ROUND5_CT)
+#if (!defined(PQSOC) || (PARAMS_N == 1))
 
 //	Basic generic C versions
 
@@ -38,7 +41,11 @@ void r5_modq_addsub3_d(modq_t *dst,
 	}
 }
 
-#endif /* !__AVX2__ */
+#endif /* !defined(PQSOC) && (PARAMS_N == PARAMS_D) */
+
+#if (PARAMS_N == 1)
+
+//	only used in r5_matmul.c
 
 void r5_modq_addsub_perm_nbar_d(modq_t *dst, const uint16_t *perm,
 	const modq_t *p_add, const modq_t *p_sub)
@@ -52,6 +59,8 @@ void r5_modq_addsub_perm_nbar_d(modq_t *dst, const uint16_t *perm,
 		i += PARAMS_N_BAR;
 	}
 }
+
+//	only used in r5_matmul.c
 
 void r5_modq_addsub3_perm_nbar_d(modq_t *dst, const uint16_t *perm,
 	const modq_t *p_add1, const modq_t *p_sub1,
@@ -70,6 +79,8 @@ void r5_modq_addsub3_perm_nbar_d(modq_t *dst, const uint16_t *perm,
 	}
 }
 
+#else  /* PARAMS_N != 1 */
+
 void r5_modp_addsub_mu(modp_t *dst,
 	const modp_t *p_add, const modp_t *p_sub)
 {
@@ -80,4 +91,6 @@ void r5_modp_addsub_mu(modp_t *dst,
 	}
 }
 
-#endif /* !ARMV7_ASM */
+#endif /* PARAMS_N == 1 */
+
+#endif /* (!defined(ARMV7_ASM) && !defined(ROUND5_CT)) */

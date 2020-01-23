@@ -1,13 +1,12 @@
-//	kem.c
-//	Copyright (c) 2019, PQShield Ltd. and Koninklijke Philips N.V.
+//	r5_cpa_kem.c
+//	2020-01-23	Markku-Juhani O. Saarinen <mjos@pqshield.com>
+//	Copyright (c) 2020, PQShield Ltd. and Koninklijke Philips N.V.
 
-//	Implementation of NIST KEM API
+//	Implementation of NIST KEM API -- **CPA** KEMs
 
 #include "r5_parameter_sets.h"
 
-#ifndef ROUND5_CCA_PKE
-
-//	This is the normal CPA KEM interface
+#ifndef ROUND5_CCA
 
 #include <string.h>
 
@@ -66,29 +65,5 @@ int crypto_kem_dec(uint8_t *k, const uint8_t *ct, const uint8_t *sk)
 	return 0;
 }
 
-#else
-
-//	We also provide an alternative KEM interface for CCA parameter sets.
-//	(Note that CRYPTO_* macro variables are not set appropriately since they
-//	are set for the NIST PKE interface when CCA is used.)
-
-#include "nist_kem.h"
-#include "r5_cca_kem.h"
-
-int crypto_kem_keypair(uint8_t *pk, uint8_t *sk)
-{
-	return r5_cca_kem_keygen(pk, sk);
-}
-
-int crypto_kem_enc(uint8_t *ct, uint8_t *k, const uint8_t *pk)
-{
-	return r5_cca_kem_encapsulate(ct, k, pk);
-}
-
-int crypto_kem_dec(uint8_t *k, const uint8_t *ct, const uint8_t *sk)
-{
-	return r5_cca_kem_decapsulate(k, ct, sk);
-}
-
-#endif /* !defined ROUND5_CCA_PKE */
+#endif /* defined ROUND5_CCA */
 
