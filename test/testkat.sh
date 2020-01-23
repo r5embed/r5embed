@@ -2,20 +2,21 @@
 
 #	Simple (quick) KAT/Correctness testing script.
 
-KEM_ND_5D="R5ND_1KEM_5d R5ND_3KEM_5d R5ND_5KEM_5d"
-PKE_ND_5D="R5ND_1PKE_5d R5ND_3PKE_5d R5ND_5PKE_5d"
-KEM_ND_0D="R5ND_1KEM_0d R5ND_3KEM_0d R5ND_5KEM_0d"
-PKE_ND_0D="R5ND_1PKE_0d R5ND_3PKE_0d R5ND_5PKE_0d"
-KEM_N1_0D="R5N1_1KEM_0d R5N1_3KEM_0d R5N1_5KEM_0d"
-PKE_N1_0D="R5N1_1PKE_0d R5N1_3PKE_0d R5N1_5PKE_0d"
+CPA_ND_5D="R5ND_1CPA_5d R5ND_3CPA_5d R5ND_5CPA_5d"
+CCA_ND_5D="R5ND_1CCA_5d R5ND_3CCA_5d R5ND_5CCA_5d"
+CPA_ND_0D="R5ND_1CPA_0d R5ND_3CPA_0d R5ND_5CPA_0d"
+CCA_ND_0D="R5ND_1CCA_0d R5ND_3CCA_0d R5ND_5CCA_0d"
+CPA_N1_0D="R5N1_1CPA_0d R5N1_3CPA_0d R5N1_5CPA_0d"
+CCA_N1_0D="R5N1_1CCA_0d R5N1_3CCA_0d R5N1_5CCA_0d"
 
-KEM_EXTRA="R5ND_0KEM_2iot R5ND_1KEM_4longkey" 
+CPA_EXTRA="R5ND_0CPA_2iot R5ND_1CPA_4longkey" 
 
 # Command line ?
 
 if [ ! -n "$1" ]
 then
-	TARGETS="$KEM_ND_5D $PKE_ND_5D $KEM_ND_0D $PKE_ND_0D $KEM_N1_0D $PKE_N1_0D $KEM_EXTRA"
+#	TARGETS="$CPA_ND_5D $CCA_ND_5D $CPA_ND_0D $CCA_ND_0D $CPA_N1_0D $CCA_N1_0D $CPA_EXTRA"
+	TARGETS="$CPA_ND_5D $CPA_ND_0D $CPA_N1_0D $CPA_EXTRA"
 else
 	TARGETS=$@
 fi
@@ -47,9 +48,8 @@ CC=gcc
 R5_SRC=src
 CFLAGS="-march=native -Wall -Wextra -Wshadow -fsanitize=address,undefined -O2"
 LIBS=""
-KEM_MAIN=test/mygenkat_kem.c
-PKE_MAIN=test/mygenkat_pke.c
-RNG_SRC=test/mynistrng.c
+TEST_MAIN=test/mygenkat_kem.c
+RNG_SRC="test/mynistrng.c test/aesenc-1kt.c"
 GOOD_KAT=test/good.kat
 MYDIR=`pwd`
 
@@ -60,13 +60,6 @@ do
 	rm -rf $WORKD/$targ
 	mkdir -p $WORKD/$targ
 	
-	if [ "${targ:6:3}" = "KEM" ]
-	then
-		TEST_MAIN=$KEM_MAIN
-	else
-		TEST_MAIN=$PKE_MAIN
-	fi
-
 	kat1=`grep $targ $GOOD_KAT`
 	kat1=${kat1:0:64}
 
@@ -77,6 +70,8 @@ do
 	cd $WORKD/$targ
 	./genkat
 	cd ..
+
+#	echo $WORKD/$targ
 
 	kat2=`sha256sum $targ/*.rsp`
 	kat2=${kat2:0:64}

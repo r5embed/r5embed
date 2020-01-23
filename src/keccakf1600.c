@@ -1,7 +1,7 @@
 //	keccakf1600.c
 //	Flag for alternative implementation: keccakf1600_armv7m.S
 
-#if !defined(ARMV7_ASM) && !defined(BLNK2)
+#if !defined(ARMV7_ASM) 
 
 /* Based on the public domain implementation in
  * crypto_hash/keccakc512/simple/ from http://bench.cr.yp.to/supercop.html
@@ -345,5 +345,5 @@ void KeccakF1600_StatePermute(uint64_t * state)
 	#undef	  round
 }
 
-#endif /* !ARMV7_ASM && !BLNK2 */
+#endif /* !ARMV7_ASM */
 
