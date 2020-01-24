@@ -6,7 +6,7 @@
 Documentation is not up to date yet.
 
 *	Matches with the new parameters, have CPA KEM, CCA KEM, no PKE.
-*	AES-GCM and SNEIK code are gone.
+*	AES-GCM and SNEIK code is gone.
 *	Matches Oscar's test vectors for those -- as of above date.
 
 
