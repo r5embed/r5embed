@@ -1,3 +1,13 @@
+## new_params branch 
+
+2020-01-24	Markku-Juhani O. Saarinen <mjos@pqshield.com>
+
+**NOTE** You're in the development branch of the r5embed distribution.
+Documentation is not up to date yet.
+
+*	Matches with the new parameters, have CPA KEM, CCA KEM, no PKE.
+*	Matches Oscar's test vectors for those as of today.
+
 
 # r5embed
 
