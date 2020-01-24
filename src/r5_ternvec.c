@@ -56,7 +56,7 @@ void r5_sparse_tern(r5_xof_ctx_t *xof, r5_ternv_t tv)
 
 	h = -PARAMS_H;							//	dummy rounds once h reaches 0
 
-	for (i = 0; i < PARAMS_HI; i++) {		//	see "ct_compute_hi.py"
+	for (i = 0; i < PARAMS_HMAX; i++) {		//	see "ct_compute_hi.py"
 
 		r5_xof_squeeze(xof, &x, sizeof (x));
 		x = LITTLE_ENDIAN16(x);

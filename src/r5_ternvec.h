@@ -10,7 +10,7 @@
 
 //	currently constant time support only for ring variants
 #if defined(ROUND5_CT) && (PARAMS_N == 1)
-#warning "Disabling ROUND5_CT for non-ring variant."
+//#warning "Disabling ROUND5_CT for non-ring variant."
 #undef ROUND5_CT
 #endif
 

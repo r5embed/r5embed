@@ -15,6 +15,8 @@
 #if !defined(ROUND5_CT)
 #if (!defined(PQSOC) || (PARAMS_N == 1))
 
+#if !defined(ARMV7_ASM)
+
 //	Basic generic C versions
 
 void r5_modq_addsub_d(modq_t *dst,
@@ -40,12 +42,15 @@ void r5_modq_addsub3_d(modq_t *dst,
 				+ p_add3[i] - p_sub3[i];
 	}
 }
+#endif
 
 #endif /* !defined(PQSOC) && (PARAMS_N == PARAMS_D) */
 
 #if (PARAMS_N == 1)
 
 //	only used in r5_matmul.c
+
+#if !defined(ARMV7_ASM)
 
 void r5_modq_addsub_perm_nbar_d(modq_t *dst, const uint16_t *perm,
 	const modq_t *p_add, const modq_t *p_sub)
@@ -78,8 +83,11 @@ void r5_modq_addsub3_perm_nbar_d(modq_t *dst, const uint16_t *perm,
 		i += PARAMS_N_BAR;
 	}
 }
+#endif
 
 #else  /* PARAMS_N != 1 */
+
+#if !defined(ARMV7_ASM)
 
 void r5_modp_addsub_mu(modp_t *dst,
 	const modp_t *p_add, const modp_t *p_sub)
@@ -90,6 +98,8 @@ void r5_modp_addsub_mu(modp_t *dst,
 		dst[i] += p_add[i] - p_sub[i];
 	}
 }
+
+#endif
 
 #endif /* PARAMS_N == 1 */
 

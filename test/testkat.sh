@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#	testkat.sh
+#	2020-01-24	Markku-Juhani O. Saarinen <mjos@pqshield.com>
 #	Simple (quick) KAT/Correctness testing script.
 
 CPA_ND_5D="R5ND_1CPA_5d R5ND_3CPA_5d R5ND_5CPA_5d"
@@ -8,15 +10,32 @@ CPA_ND_0D="R5ND_1CPA_0d R5ND_3CPA_0d R5ND_5CPA_0d"
 CCA_ND_0D="R5ND_1CCA_0d R5ND_3CCA_0d R5ND_5CCA_0d"
 CPA_N1_0D="R5N1_1CPA_0d R5N1_3CPA_0d R5N1_5CPA_0d"
 CCA_N1_0D="R5N1_1CCA_0d R5N1_3CCA_0d R5N1_5CCA_0d"
-
 CPA_EXTRA="R5ND_0CPA_2iot R5ND_1CPA_4longkey" 
 
-# Command line ?
+#	standard flags
+
+CC=gcc
+CFLAGS="-march=native -Wall -Wextra -Wshadow -fsanitize=address,undefined -O2"
+LIBS=""
+TEST_MAIN=test/mygenkat_kem.c
+R5_SRC=src
+RNG_SRC="test/mynistrng.c test/aesenc-1kt.c"
+GOOD_KAT=test/good.kat
+
+#	cross compiler tests
+
+#CC=arm-linux-gnueabihf-gcc
+#CC=aarch64-linux-gnu-gcc
+#CC=mips-linux-gnu-gcc
+#CC=powerpc-linux-gnu-gcc
+#CFLAGS="-Wall -Wextra -Wshadow -Ofast -static"
+#CFLAGS="-Wall -Wextra -Wshadow -Ofast -static -march=armv7-a -DARMV7_ASM"
+
+#	targets specified on command line ?
 
 if [ ! -n "$1" ]
 then
 	TARGETS="$CPA_ND_5D $CCA_ND_5D $CPA_ND_0D $CCA_ND_0D $CPA_N1_0D $CCA_N1_0D $CPA_EXTRA"
-#	TARGETS="$CPA_ND_5D $CPA_ND_0D $CPA_N1_0D $CPA_EXTRA"
 else
 	TARGETS=$@
 fi
@@ -42,15 +61,7 @@ then
 	exit
 fi
 
-# compile and test
 
-CC=gcc
-R5_SRC=src
-CFLAGS="-march=native -Wall -Wextra -Wshadow -fsanitize=address,undefined -O2"
-LIBS=""
-TEST_MAIN=test/mygenkat_kem.c
-RNG_SRC="test/mynistrng.c test/aesenc-1kt.c"
-GOOD_KAT=test/good.kat
 MYDIR=`pwd`
 
 WORKD=`mktemp -d /tmp/r5test.XXXXXXXXXX`
@@ -65,13 +76,11 @@ do
 
 	cd $MYDIR
 	$CC $CFLAGS -o $WORKD/$targ/genkat -D$targ -Inist -I$R5_SRC \
-		$TEST_MAIN $RNG_SRC $R5_SRC/*.c $LIBS
+		$TEST_MAIN $RNG_SRC $R5_SRC/*.c $R5_SRC/*.S $LIBS
 
 	cd $WORKD/$targ
 	./genkat
 	cd ..
-
-#	echo $WORKD/$targ
 
 	kat2=`sha256sum $targ/*.rsp`
 	kat2=${kat2:0:64}

@@ -1,6 +1,6 @@
 //  speed.c
-//  Copyright (c) 2019, PQShield Ltd.
 //  2019-03-02  Markku-Juhani O. Saarinen <mjos@pqshield.com>
+//	Copyright (c) 2019, PQShield Ltd. All rights reserved.
 
 //  Simplified speed testing for KEM and PKE algorithms.
 
@@ -19,22 +19,6 @@
 
 #include "api.h"
 #include "rng.h"
-
-// KEM or PKE ?
-#if defined(CRYPTO_CIPHERTEXTBYTES) && (CRYPTO_CIPHERTEXTBYTES > 0)
-#define KEM_TEST
-#else
-
-//#define PKE_TEST
-// -- we are testing the PKE algorithm as a KEM --
-#define KEM_TEST
-#undef CRYPTO_BYTES
-#undef CRYPTO_CIPHERTEXTBYTES
-#define CRYPTO_BYTES           PARAMS_KAPPA_BYTES
-#define CRYPTO_CIPHERTEXTBYTES (PARAMS_CT_SIZE + PARAMS_KAPPA_BYTES)
-
-//#define PKE_TEST
-#endif
 
 // for __rdtsc()
 #ifdef __x86_64__
@@ -62,45 +46,7 @@
 #define MY_MSG_SIZE 48
 #endif
 
-
-// For XOF profiling
-
-#ifndef XOF_PROF_MAX
-#define XOF_PROF_MAX 32
-#endif
-
-uint32_t perm_count[XOF_PROF_MAX];
-
-void permc_init()
-{
-    int i;
-    for (i = 0; i < XOF_PROF_MAX; i++)
-        perm_count[i] = 0;
-}
-
-void permc_show(uint64_t n)
-{
-    int i;
-    uint64_t sum;
-
-    if (n == 0)
-        return;
-
-    sum = 0;
-    for (i = 0; i < XOF_PROF_MAX; i++) {
-        if (perm_count[i] > 0) {
-            printf("\t%3d rounds:\t%.2f\n",
-                i, ((double) perm_count[i]) / ((double) n));
-        }
-        sum += i * perm_count[i];
-    }
-    if (sum > 0) {
-        printf("\ttot rounds:\t%.2f\n",
-            ((double) sum) / ((double) n));
-    }
-}
-
-// Gives roughly 2 microsecond precision on my system
+// gives roughly 2 microsecond precision on my system
 
 static double clk_now()
 {
@@ -137,29 +83,17 @@ int main(int argc, char **argv)
     double tim1, tim2;
     uint8_t *pk[XBENCH_REPS], *sk[XBENCH_REPS], *ct[XBENCH_REPS],
             *ss[XBENCH_REPS], *sr[XBENCH_REPS];
-#ifdef PKE_TEST
-    unsigned long long clen[XBENCH_REPS], mlen[XBENCH_REPS], mlen2;
-#endif
 
     // allocate multiple of everything
 
     for (i = 0; i < XBENCH_REPS; i++) {
         pk[i] = (uint8_t *) malloc(CRYPTO_PUBLICKEYBYTES);
         sk[i] = (uint8_t *) malloc(CRYPTO_SECRETKEYBYTES);
-#ifdef KEM_TEST
         ct[i] = (uint8_t *) malloc(CRYPTO_CIPHERTEXTBYTES);
         ss[i] = (uint8_t *) malloc(CRYPTO_BYTES);
         sr[i] = (uint8_t *) malloc(CRYPTO_BYTES);
         memset(ss[i], 0x55, CRYPTO_BYTES);
         memset(sr[i], 0xAA, CRYPTO_BYTES);
-#else
-        ct[i] = (uint8_t *) malloc(MY_MSG_SIZE + CRYPTO_BYTES);
-        ss[i] = (uint8_t *) malloc(MY_MSG_SIZE);
-        randombytes(ss[i], MY_MSG_SIZE);
-        mlen[i] = random() % (MY_MSG_SIZE - 1) + 1;     // random short msg
-        sr[i] = (uint8_t *) malloc(MY_MSG_SIZE);
-        memset(sr[i], 0xAA, MY_MSG_SIZE);
-#endif
     }
 
     // init random
@@ -168,7 +102,6 @@ int main(int argc, char **argv)
         seed[i] = i;
     randombytes_init(seed, NULL, 256);
 
-#ifdef KEM_TEST
     crypto_kem_keypair(pk[0], sk[0]);
     crypto_kem_enc(ct[0], ss[0], pk[0]);
     crypto_kem_dec(sr[0], ct[0], sk[0]);
@@ -178,33 +111,19 @@ int main(int argc, char **argv)
     dump_tv(ct[0], CRYPTO_CIPHERTEXTBYTES, "ct");
     dump_tv(ss[0], CRYPTO_BYTES, "ss");
     dump_tv(sr[0], CRYPTO_BYTES, "sr");
-#else
-    mlen2 = 0;
-    crypto_encrypt_keypair(pk[0], sk[0]);
-    crypto_encrypt(ct[0], &clen[0], seed, 16, pk[0]);
-    crypto_encrypt_open(sr[0], &mlen2, ct[0], clen[0], sk[0]);
-
-    dump_tv(pk[0], CRYPTO_PUBLICKEYBYTES, "pk");
-    dump_tv(sk[0], CRYPTO_SECRETKEYBYTES, "sk");
-    dump_tv(ct[0], clen[0], "ct");
-    dump_tv(seed, 16, "pt");
-    dump_tv(sr[0], mlen2, "p2");
-#endif
 
     fails = 0;
 
-    // test for correctness and benchmark the whole thing
+    //	test for correctness and benchmark the whole thing
 
     n = 0;
     fails = 0;
-    permc_init();
     tim1 = clk_now();
     clk2 = 0;
     do {
         clk1 = GET_CYCLES;
         for (i = 0; i < XBENCH_REPS; i++) {
 
-#ifdef KEM_TEST
             if (crypto_kem_keypair(pk[i], sk[i]) ||
                 crypto_kem_enc(ct[i], ss[i], pk[i]) ||
                 crypto_kem_dec(sr[i], ct[i], sk[i]) ||
@@ -212,17 +131,6 @@ int main(int argc, char **argv)
                 // failed!
                 fails++;
             }
-#else
-            mlen2 = 0;
-            if (crypto_encrypt_keypair(pk[i], sk[i]) ||
-                crypto_encrypt(ct[i], &clen[i], ss[i], mlen[i], pk[i]) ||
-                crypto_encrypt_open(sr[i], &mlen2, ct[i], clen[i], sk[i]) ||
-                mlen2 != mlen[i] ||
-                memcmp(ss[i], sr[i], mlen2) != 0) {
-                // failed!
-                fails++;
-            }
-#endif
         }
         clk2 += GET_CYCLES - clk1;
         tim2 = clk_now() - tim1;
@@ -232,28 +140,21 @@ int main(int argc, char **argv)
 
     printf("Tot %12"PRIu64" clk %12.9f sec\t[%s]\n",
              clk2 / n, tim2 / n, CRYPTO_ALGNAME);
-    permc_show(n);
 
     if (fails > 0) {
         printf("test failed %d/%d times [%s]\n",
             (int) fails, (int) n, CRYPTO_ALGNAME);
     }
 
-
     // time keygen
 
     n = 0;
-    permc_init();
     tim1 = clk_now();
     clk2 = 0;
     do {
         clk1 = GET_CYCLES;
         for (i = 0; i < XBENCH_REPS; i++) {
-#ifdef KEM_TEST
             crypto_kem_keypair(pk[i], sk[i]);
-#else
-            crypto_encrypt_keypair(pk[i], sk[i]);
-#endif
         }
         clk2 += GET_CYCLES - clk1;
         tim2 = clk_now() - tim1;
@@ -262,22 +163,16 @@ int main(int argc, char **argv)
 
     printf("KG  %12"PRIu64" clk %12.9f sec\t[%s]\n",
         clk2 / n, tim2 / n, CRYPTO_ALGNAME);
-    permc_show(n);
 
-    // time Encaps
+    //	time encaps
 
     n = 0;
-    permc_init();
     tim1 = clk_now();
     clk2 = 0;
     do {
         clk1 = GET_CYCLES;
         for (i = 0; i < XBENCH_REPS; i++) {
-#ifdef KEM_TEST
             crypto_kem_enc(ct[i], ss[i], pk[i]);
-#else
-            crypto_encrypt(ct[i], &clen[i], ss[i], mlen[i], pk[i]);
-#endif
         }
         clk2 += GET_CYCLES - clk1;
         tim2 = clk_now() - tim1;
@@ -286,22 +181,16 @@ int main(int argc, char **argv)
 
     printf("Enc %12"PRIu64" clk %12.9f sec\t[%s]\n",
         clk2 / n, tim2 / n, CRYPTO_ALGNAME);
-    permc_show(n);
 
-    // time Decaps
+    //	time decaps
 
     n = 0;
-    permc_init();
     tim1 = clk_now();
     clk2 = 0;
     do {
         clk1 = GET_CYCLES;
         for (i = 0; i < XBENCH_REPS; i++) {
-#ifdef KEM_TEST
             crypto_kem_dec(ss[i], ct[i], sk[i]);
-#else
-            crypto_encrypt_open(sr[i], &mlen2, ct[i], clen[i], sk[i]);
-#endif
         }
         clk2 += GET_CYCLES - clk1;
         tim2 = clk_now() - tim1;
@@ -310,7 +199,6 @@ int main(int argc, char **argv)
 
     printf("Dec %12"PRIu64" clk %12.9f sec\t[%s]\n",
         clk2 / n, tim2 / n, CRYPTO_ALGNAME);
-    permc_show(n);
 
     // free all
 
@@ -321,8 +209,6 @@ int main(int argc, char **argv)
         free(ss[i]);
         free(sr[i]);
     }
-
-    // error test (forever)
 
     return 0;
 }

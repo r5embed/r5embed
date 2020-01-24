@@ -15,17 +15,21 @@
 #include "xef.h"
 #include "little_endian.h"
 
-//	secret matrix
+//	create a secret matrix
 
 static void r5_create_secret_mat(r5_ternv_t sm[],
 	const uint8_t seed[PARAMS_KAPPA_BYTES], size_t n)
 {
 	size_t i;
-
 	r5_xof_ctx_t xof;
-	r5_xof_input(&xof, seed, PARAMS_KAPPA_BYTES);
+	uint64_t x;
 
 	for (i = 0; i < n; i++) {
+
+		//	XXX temporary; unknown size
+		x = LITTLE_ENDIAN64((uint64_t) i);
+		r5_xof_s_input(&xof, seed, PARAMS_KAPPA_BYTES, &x, 8);
+
 		r5_sparse_tern(&xof, sm[i]);
 	}
 }
@@ -58,7 +62,7 @@ static int r5_create_a_perm(uint16_t a_perm[PARAMS_D],
 	r5_xof_ctx_t ctx;
 
 	//	The DRBG customization when creating the tau=1 or tau=2 permutations.
-	static const uint8_t permutation_customization[2] = {0, 1};
+	static const uint8_t permutation_customization[2] = { 0, 1 };
 
 	memset(v, 0, sizeof(v));
 
