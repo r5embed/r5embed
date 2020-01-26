@@ -82,7 +82,7 @@ do
 	./genkat
 	cd ..
 
-	kat2=`sha256sum $targ/*.rsp`
+	kat2=`shasum -a 256 $targ/*.rsp`
 	kat2=${kat2:0:64}
 
 	if [ "$kat1" = "$kat2" ]
