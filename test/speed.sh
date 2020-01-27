@@ -2,7 +2,7 @@
 
 #	speed.sh
 #	2020-01-24	Markku-Juhani O. Saarinen <mjos@pqshield.com>
-#	Simple speed test script.
+#	Simple speed test script. Also generates "small" test vectors.
 
 CPA_ND_5D="R5ND_1CPA_5d R5ND_3CPA_5d R5ND_5CPA_5d"
 CCA_ND_5D="R5ND_1CCA_5d R5ND_3CCA_5d R5ND_5CCA_5d"
