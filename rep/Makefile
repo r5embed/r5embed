@@ -7,6 +7,7 @@ TEXSRC		= $(PROJ).tex
 
 $(PROJ).pdf:	$(TEXSRC)
 	pdflatex $(PROJ)
+	pdflatex $(PROJ)
 
 clean:
 	rm -f	*.aux *.dvi *.bbl *.blg *.log *.toc *.lof \

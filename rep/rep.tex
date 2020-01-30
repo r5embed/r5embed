@@ -23,7 +23,7 @@
 \begin{tabular}{l p{90mm}}
 {\bf Changelog} \\
 \hline
-2019-01-31 	& Markku-Juhani O. Saarinen \verb|<mjos@pqshield.com>| \\
+2019-01-30	& Markku-Juhani O. Saarinen \verb|<mjos@pqshield.com>| \\
 			& {\it File created.}	\\
 \hline
 \end{tabular}
@@ -33,34 +33,34 @@
 
 \section{Round5 on Embedded, Mobile, and IoT}
 
-A separate source distribution of Round5 without external library 
+A separate source distribution of Round5 without external library
 dependencies is available from: \url{https://github.com/r5embed/r5embed}.
 
-This codebase is smaller and more portable than the NIST reference code and has 
-been tested on various architectures (32/64 bit targets, big-endian, etc). IT is 
-the basis of our hardware-software codesign (although those hardware drivers 
+This codebase is smaller and more portable than the NIST reference code and has
+been tested on various architectures (32/64 bit targets, big-endian, etc). IT is
+the basis of our hardware-software codesign (although those hardware drivers
 are not included in the above distribution).
 
 
 \subsection{Leading performance on Cortex M4}
 
 We used the ST STM32F407 Discovery board and the r5embed code base for our
-for Cortex M4 performance and size measurements. This implementation 
+for Cortex M4 performance and size measurements. This implementation
 includes some ARMv7 assembler code for speeding up core ring and matrix
 arithmetic for this ARM Cortex M4 (ARMv7E-M) reference target.
 
-This particular MCU (and Cortex M4 in general) does not deploy a data cache -- 
+This particular MCU (and Cortex M4 in general) does not deploy a data cache --
 a separate flash (program) cache exists so the code execution paths are
-designed to be constant, while there is some variation in the data 
+designed to be constant, while there is some variation in the data
 access paths. Therefore this implementation may be considered \emph{hardened}
 against a time-channel attack, while not strictly constant time.
 
 This updated implementation will be made available to the PQM4 joint Cortex M4
-benchmarking effort\footnote{PQM4: Cortex-M4 post-quantum cryptography library:  
-\url{https://github.com/mupq/pqm4}.}. In the second round of the NIST 
-competition Round5 had overall leading embedded performance according to PQM4 
-data, although the margin is not particularly large. We note that the 
-``r5embed'' implementation is much smaller and more of it is written in a 
+benchmarking effort\footnote{PQM4: Cortex-M4 post-quantum cryptography library:
+\url{https://github.com/mupq/pqm4}.}. In the second round of the NIST
+competition Round5 had overall leading embedded performance according to PQM4
+data, although the margin is not particularly large. We note that the
+``r5embed'' implementation is much smaller and more of it is written in a
 high-level language than with some other candidates, as portability was the
 main concern in its development.
 
@@ -73,38 +73,38 @@ RAM, ROM (Flash), and bandwidth requirements of the ARMv7 implementation.
 \begin{center}
 \begin{tabular}{| l | n{5}{0} n{5}{0} n{5}{0} | n{5}{0} |}
 	\hline
-	\multicolumn{1}{|l|}{\bf Variant} & 
-	\multicolumn{1}{r}{\bf KG} & 
-	\multicolumn{1}{r}{\bf Enc} & 
-	\multicolumn{1}{r|}{\bf Dec} & 
-	\multicolumn{1}{r|}{\bf Tot} \\ 
+	\multicolumn{1}{|l|}{\bf Variant} &
+	\multicolumn{1}{r}{\bf KG} &
+	\multicolumn{1}{r}{\bf Enc} &
+	\multicolumn{1}{r|}{\bf Dec} &
+	\multicolumn{1}{r|}{\bf Tot} \\
 	\hline
-	\verb|R5ND_1CPA_5d|	& 391	& 572	& 244	& 1207	\\
-	\verb|R5ND_3CPA_5d|	& 784	& 1081	& 396	& 2262	\\
-	\verb|R5ND_5CPA_5d|	& 1423	& 1948	& 688	& 4060	\\
-	\verb|R5ND_1CCA_5d|	& 364	& 573	& 731	& 1669	\\
-	\verb|R5ND_3CCA_5d|	& 784	& 1185	& 1493	& 3463	\\
-	\verb|R5ND_5CCA_5d|	& 1354	& 1987	& 2529	& 5871	\\
-	\verb|R5ND_1CPA_0d|	& 356	& 470	& 153	& 981	\\
-	\verb|R5ND_3CPA_0d|	& 1168	& 1560	& 549	& 3277	\\
-	\verb|R5ND_5CPA_0d|	& 1583	& 2131	& 713	& 4428	\\
-	\verb|R5ND_1CCA_0d|	& 486	& 732	& 903	& 2122	\\
-	\verb|R5ND_3CCA_0d|	& 796	& 1204	& 1463	& 3464	\\
-	\verb|R5ND_5CCA_0d|	& 1091	& 1646	& 1973	& 4712	\\
-	\verb|R5N1_1CPA_0d|	& 6705	& 4488	& 1280	& 12474	\\
-	\verb|R5N1_3CPA_0d|	& 10114	& 6749	& 1924	& 18788	\\
-	\verb|R5N1_5CPA_0d|	& 34831	& 19958	& 4460	& 59249	\\
-	\verb|R5N1_1CCA_0d|	& 4252	& 3615	& 4134	& 12002	\\
-	\verb|R5N1_3CCA_0d|	& 17317	& 11714	& 13202	& 42234	\\
-	\verb|R5N1_5CCA_0d|	& 23272	& 16042	& 17645	& 56960	\\
-	\verb|R5ND_0CPA_2iot| & 340	& 465	& 190	& 997	\\
-	\verb|R5ND_1CPA_4longkey| & 418	& 623 & 267	& 1310	\\
+	\verb|R5ND_1CPA_5d| & 391	& 572	& 244	& 1207	\\
+	\verb|R5ND_3CPA_5d| & 784	& 1081	& 396	& 2262	\\
+	\verb|R5ND_5CPA_5d| & 1423	& 1948	& 688	& 4060	\\
+	\verb|R5ND_1CCA_5d| & 364	& 573	& 731	& 1669	\\
+	\verb|R5ND_3CCA_5d| & 784	& 1185	& 1493	& 3463	\\
+	\verb|R5ND_5CCA_5d| & 1354	& 1987	& 2529	& 5871	\\
+	\verb|R5ND_1CPA_0d| & 356	& 470	& 153	& 981	\\
+	\verb|R5ND_3CPA_0d| & 1168	& 1560	& 549	& 3277	\\
+	\verb|R5ND_5CPA_0d| & 1583	& 2131	& 713	& 4428	\\
+	\verb|R5ND_1CCA_0d| & 486	& 732	& 903	& 2122	\\
+	\verb|R5ND_3CCA_0d| & 796	& 1204	& 1463	& 3464	\\
+	\verb|R5ND_5CCA_0d| & 1091	& 1646	& 1973	& 4712	\\
+	\verb|R5N1_1CPA_0d| & 6705	& 4488	& 1280	& 12474 \\
+	\verb|R5N1_3CPA_0d| & 10114 & 6749	& 1924	& 18788 \\
+	\verb|R5N1_5CPA_0d| & 34831 & 19958 & 4460	& 59249 \\
+	\verb|R5N1_1CCA_0d| & 4252	& 3615	& 4134	& 12002 \\
+	\verb|R5N1_3CCA_0d| & 17317 & 11714 & 13202 & 42234 \\
+	\verb|R5N1_5CCA_0d| & 23272 & 16042 & 17645 & 56960 \\
+	\verb|R5ND_0CPA_2iot| & 340 & 465	& 190	& 997	\\
+	\verb|R5ND_1CPA_4longkey| & 418 & 623 & 267 & 1310	\\
 	\hline
 \end{tabular}
 \caption{Round5 performance on ARM Cortex M4 (STM32F407 Discovery)
-	clocked at 24 Mhz. All of these numbers are in 1000s of cycles; 
-	{KG} = keypair generation, {Enc} = encapsulation, {Dec} = decapsulation, 
-	Tot = KG+Enc+Dec measured as a whole (both sides of an ephemeral 
+	clocked at 24 Mhz. All of these numbers are in 1000s of cycles;
+	{KG} = keypair generation, {Enc} = encapsulation, {Dec} = decapsulation,
+	Tot = KG+Enc+Dec measured as a whole (both sides of an ephemeral
 	key exchange). }
 \label{tab:m4cycles}
 \end{center}
@@ -119,41 +119,41 @@ RAM, ROM (Flash), and bandwidth requirements of the ARMv7 implementation.
 	\multicolumn{3}{r|}{RAM (Stack) Usage in}	&
 	\multicolumn{2}{r|}{Bandwidth for}	&
 	\multicolumn{1}{r|}{ROM}		\\
-	\multicolumn{1}{|l|}{\bf Variant} & 
-	\multicolumn{1}{r}{\bf KG} 		& 
-	\multicolumn{1}{r}{\bf Enc} 	& 
-	\multicolumn{1}{r|}{\bf Dec} 	& 
-	\multicolumn{1}{r}{\bf PK} 		& 
-	\multicolumn{1}{r|}{\bf CT} 		& 
+	\multicolumn{1}{|l|}{\bf Variant} &
+	\multicolumn{1}{r}{\bf KG}		&
+	\multicolumn{1}{r}{\bf Enc}		&
+	\multicolumn{1}{r|}{\bf Dec}	&
+	\multicolumn{1}{r}{\bf PK}		&
+	\multicolumn{1}{r|}{\bf CT}			&
 	\multicolumn{1}{r|}{\bf Code} \\
 	\hline
-    \verb|R5ND_1CPA_5d| & 3822  & 4821  & 2564  & 445   & 549   & 4974  \\
-    \verb|R5ND_3CPA_5d| & 5550  & 6989  & 3548  & 780   & 859   & 6410  \\
-    \verb|R5ND_5CPA_5d|	& 6990  & 8733  & 4548  & 972   & 1063  & 4092  \\
-    \verb|R5ND_1CCA_5d|	& 3910  & 4981  & 5596  & 461   & 620   & 5326  \\
-    \verb|R5ND_3CCA_5d|	& 5598  & 7109  & 8052  & 780   & 934   & 6904  \\
-    \verb|R5ND_5CCA_5d|	& 7038  & 9029  & 10428 & 978   & 1285  & 4722  \\
-    \verb|R5ND_1CPA_0d|	& 4478  & 5389  & 2308  & 634   & 682   & 2382  \\
-    \verb|R5ND_3CPA_0d|	& 6006  & 7501  & 4668  & 909   & 981   & 2438  \\
-    \verb|R5ND_5CPA_0d|	& 7494  & 9445  & 5924  & 1178  & 1274  & 2480  \\
-    \verb|R5ND_1CCA_0d|	& 4478  & 5581  & 6316  & 676   & 740   & 2770  \\
-    \verb|R5ND_3CCA_0d|	& 6110  & 7725  & 8836  & 983   & 1103  & 2914  \\
-    \verb|R5ND_5CCA_0d|	& 8046  & 10237 & 11756 & 1349  & 1509  & 2948  \\
-    \verb|R5N1_1CPA_0d|	& 18958 & 24389 & 17852 & 5214  & 5236  & 3136  \\
-    \verb|R5N1_3CPA_0d|	& 26606 & 35749 & 28084 & 8834  & 8866  & 3166  \\
-    \verb|R5N1_5CPA_0d|	& 40590 & 55181 & 46284 & 14264 & 14288 & 3274  \\
-    \verb|R5N1_1CCA_0d|	& 19502 & 25525 & 31316 & 5740  & 5788  & 3310  \\
-    \verb|R5N1_3CCA_0d|	& 29870 & 39853 & 49564 & 9660  & 9716  & 3678  \\
-    \verb|R5N1_5CCA_0d|	& 37406 & 52325 & 67028 & 14636 & 14708 & 3574  \\
-    \verb|R5ND_0CPA_2iot| & 3150  & 3845 & 2036 & 342   & 394   & 3442  \\
-    \verb|R5ND_1CPA_4longkey| & 3790 & 4861 & 2660 & 453 & 563  & 5006  \\
+	\verb|R5ND_1CPA_5d| & 3822	& 4821	& 2564	& 445	& 549	& 4974	\\
+	\verb|R5ND_3CPA_5d| & 5550	& 6989	& 3548	& 780	& 859	& 6410	\\
+	\verb|R5ND_5CPA_5d| & 6990	& 8733	& 4548	& 972	& 1063	& 4092	\\
+	\verb|R5ND_1CCA_5d| & 3910	& 4981	& 5596	& 461	& 620	& 5326	\\
+	\verb|R5ND_3CCA_5d| & 5598	& 7109	& 8052	& 780	& 934	& 6904	\\
+	\verb|R5ND_5CCA_5d| & 7038	& 9029	& 10428 & 978	& 1285	& 4722	\\
+	\verb|R5ND_1CPA_0d| & 4478	& 5389	& 2308	& 634	& 682	& 2382	\\
+	\verb|R5ND_3CPA_0d| & 6006	& 7501	& 4668	& 909	& 981	& 2438	\\
+	\verb|R5ND_5CPA_0d| & 7494	& 9445	& 5924	& 1178	& 1274	& 2480	\\
+	\verb|R5ND_1CCA_0d| & 4478	& 5581	& 6316	& 676	& 740	& 2770	\\
+	\verb|R5ND_3CCA_0d| & 6110	& 7725	& 8836	& 983	& 1103	& 2914	\\
+	\verb|R5ND_5CCA_0d| & 8046	& 10237 & 11756 & 1349	& 1509	& 2948	\\
+	\verb|R5N1_1CPA_0d| & 18958 & 24389 & 17852 & 5214	& 5236	& 3136	\\
+	\verb|R5N1_3CPA_0d| & 26606 & 35749 & 28084 & 8834	& 8866	& 3166	\\
+	\verb|R5N1_5CPA_0d| & 40590 & 55181 & 46284 & 14264 & 14288 & 3274	\\
+	\verb|R5N1_1CCA_0d| & 19502 & 25525 & 31316 & 5740	& 5788	& 3310	\\
+	\verb|R5N1_3CCA_0d| & 29870 & 39853 & 49564 & 9660	& 9716	& 3678	\\
+	\verb|R5N1_5CCA_0d| & 37406 & 52325 & 67028 & 14636 & 14708 & 3574	\\
+	\verb|R5ND_0CPA_2iot| & 3150  & 3845 & 2036 & 342	& 394	& 3442	\\
+	\verb|R5ND_1CPA_4longkey| & 3790 & 4861 & 2660 & 453 & 563	& 5006	\\
 	\hline
 	\end{tabular}
-	\caption{Round5 RAM (Stack) / ROM (Flash) and bandwidth usage on 
-		Cortex M4 (or any ARMv7). All numbers are in bytes: 
-		{KG} = keypair generation RAM,	{Enc} = encapsulation RAM, 
-		{Dec} = decapsulation RAM,		{PK} = public key (transmit), 
-		{CT} ciphertext (transmit), 	{Code} = firmware size excluding 
+	\caption{Round5 RAM (Stack) / ROM (Flash) and bandwidth usage on
+		Cortex M4 (or any ARMv7). All numbers are in bytes:
+		{KG} = keypair generation RAM,	{Enc} = encapsulation RAM,
+		{Dec} = decapsulation RAM,		{PK} = public key (transmit),
+		{CT} ciphertext (transmit),		{Code} = firmware size excluding
 		Keccak and other standard  components (ROM or Flash).}
 	\label{tab:m4size}
 \end{center}
