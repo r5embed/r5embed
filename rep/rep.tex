@@ -37,33 +37,32 @@
 A separate source distribution of Round5 without external library
 dependencies is available from: \url{https://github.com/r5embed/r5embed}.
 
-This codebase is smaller and more portable than the NIST reference code and has
-been tested on various architectures (32/64 bit targets, big-endian, etc). IT is
-the basis of our hardware-software codesign (although those hardware drivers
-are not included in the above distribution).
-
+This codebase is smaller and more portable than the NIST reference code and 
+has been tested on various architectures (32/64 bit targets, big-endian, etc). 
+It forms the basis for our embedded testing and hardware-software codesign 
+(although those hardware drivers are not included in the above distribution).
 
 \subsection{Leading performance on Cortex M4}
 
-We used the ST STM32F407 Discovery board and the r5embed code base for our
+We used the ST STM32F407 Discovery board and the ``r5embed'' code base for our
 for Cortex M4 performance and size measurements. This implementation
 includes some ARMv7 assembler code for speeding up core ring and matrix
 arithmetic for this ARM Cortex M4 (ARMv7E-M) reference target.
 
 This particular MCU (and Cortex M4 in general) does not deploy a data cache --
-a separate flash (program) cache exists so the code execution paths are
-designed to be constant, while there is some variation in the data
-access paths. Therefore this implementation may be considered \emph{hardened}
-against a time-channel attack, while not strictly constant time.
+a separate flash cache exists on the instruction bus. Code execution paths are
+therefore designed to be constant, while there is some variation in the data
+access paths. This implementation may be considered \emph{hardened} or
+\emph{resistant} against a time-channel attack, while not strictly constant 
+time.
 
 This updated implementation will be made available to the PQM4 joint Cortex M4
 benchmarking effort\footnote{PQM4: Cortex-M4 post-quantum cryptography library:
-\url{https://github.com/mupq/pqm4}.}. In the second round of the NIST
-competition Round5 had overall leading embedded performance according to PQM4
-data, although the margin is not particularly large. We note that the
-``r5embed'' implementation is much smaller and more of it is written in a
-high-level language than with some other candidates, as portability was the
-main concern in its development.
+\url{https://github.com/mupq/pqm4}.}. We note that during the second round of 
+the NIST competition Round5 had overall leading embedded performance according 
+to PQM4 data, although the margin is not particularly large. Compared to
+some other candidates, the ``r5embed'' implementation is much smaller and more 
+of it is written in a high-level language, as it was written for portability.
 
 Table \ref{tab:m4cycles} summarizes performance on the Cortex M4 target.
 Note that the \verb|R5N1_3CCA_0smallCT| target has been excluded due to its
@@ -169,10 +168,12 @@ RISC-V Core (RV32IMC ``Pluto'') and other peripherals such as a very
 fast SHA-3 Keccak core.
 
 We synthesized PQSoC with and without the ring arithmetic accelerator on
-a Xilinx Artix-7 platform (Digilent Arty A7-35T board with the
-XC7A35TICSG324-1L chip). Table \ref{tab:fpgasize} indicates its relative
-size, which is very small. However from Table \ref{tab:pqsoc} we see
-that the performance advantage is between $600\%$ and $1152\%$, depending
+a Xilinx Artix-7 platform (Digilent Arty A7-35T board). Table 
+\ref{tab:fpgasize} indicates its relative size, which is very small. 
+Even with the CPU the implementation is smaller than some proposed
+hardware modules; as a codesign it is minuscule.
+From Table \ref{tab:pqsoc} we see that the performance advantage 
+gained from the coprocessor is between $600\%$ and $1152\%$, depending 
 on the variant.
 
 Four DSP units are used by the multiplication unit of the RV32 CPU core,
