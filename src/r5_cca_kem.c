@@ -1,21 +1,52 @@
+//	r5_cca_kem.c
+//	2019-10-31	Markku-Juhani O. Saarinen <mjos@pqshield.com>
 //	Copyright (c) 2019, PQShield Ltd. and Koninklijke Philips N.V.
-//	Markku-Juhani O. Saarinen, Koninklijke Philips N.V.
+
+//	Implementation of NIST KEM API - **CCA** KEMs
 
 #include "r5_parameter_sets.h"
 
-#ifdef ROUND5_CCA_PKE
+#ifdef ROUND5_CCA
 
-#include <stdlib.h>
 #include <string.h>
 
+#include "nist_kem.h"
 #include "r5_cpa_pke.h"
 #include "rng.h"
 #include "r5_xof.h"
-#include "ct_util.h"
 
-// CCA-KEM KeyGen()
+// constant time comparison; return nonzero if not equal
 
-int r5_cca_kem_keygen(uint8_t *pk, uint8_t *sk)
+static uint8_t ct_memcmp(const void *a, const void *b, size_t len)
+{
+	const uint8_t *a8 = (const uint8_t *) a;
+	const uint8_t *b8 = (const uint8_t *) b;
+	uint32_t r = 0;
+	size_t i;
+
+	for (i = 0; i < len; i++) {
+		r |= a8[i] ^ b8[i];
+	}
+
+	return (int) ((-r) >> 31);
+}
+
+// conditional move; overwrite d with a if flag is nonzero
+
+static void ct_cmov(void *d, const void * a, uint8_t flag, size_t len)
+{
+	uint8_t *d8 = (uint8_t *) d;
+	const uint8_t *a8 = (const uint8_t *) a;
+	size_t i;
+	flag = -(flag & 1);						// 0x00 or 0xFF
+	for (i = 0; i < len; i++) {
+		d8[i] ^= flag & (d8[i] ^ a8[i]);
+	}
+}
+
+//	CCA-KEM KeyGen()
+
+int crypto_kem_keypair(uint8_t *pk, uint8_t *sk)
 {
 	uint8_t y[PARAMS_KAPPA_BYTES];
 
@@ -30,9 +61,9 @@ int r5_cca_kem_keygen(uint8_t *pk, uint8_t *sk)
 	return 0;
 }
 
-// CCA-KEM Encaps()
+//	CCA-KEM Encaps()
 
-int r5_cca_kem_encapsulate(uint8_t *ct, uint8_t *k, const uint8_t *pk)
+int crypto_kem_enc(uint8_t *ct, uint8_t *k, const uint8_t *pk)
 {
 	uint8_t hash_in[PARAMS_KAPPA_BYTES +
 		(PARAMS_CT_SIZE + PARAMS_KAPPA_BYTES > PARAMS_PK_SIZE ?
@@ -63,11 +94,13 @@ int r5_cca_kem_encapsulate(uint8_t *ct, uint8_t *k, const uint8_t *pk)
 	return 0;
 }
 
-// CCA-KEM Decaps()
+//	CCA-KEM Decaps()
 
-int r5_cca_kem_decapsulate(uint8_t *k, const uint8_t *ct, const uint8_t *sk)
+int crypto_kem_dec(uint8_t *k, const uint8_t *ct, const uint8_t *sk)
 {
-	uint8_t hash_in[PARAMS_KAPPA_BYTES + (PARAMS_CT_SIZE + PARAMS_KAPPA_BYTES > PARAMS_PK_SIZE ? PARAMS_CT_SIZE + PARAMS_KAPPA_BYTES : PARAMS_PK_SIZE)];
+	uint8_t hash_in[PARAMS_KAPPA_BYTES +
+			(PARAMS_CT_SIZE + PARAMS_KAPPA_BYTES > PARAMS_PK_SIZE ?
+				PARAMS_CT_SIZE + PARAMS_KAPPA_BYTES : PARAMS_PK_SIZE)];
 	uint8_t m_prime[PARAMS_KAPPA_BYTES];
 	uint8_t L_g_rho_prime[3][PARAMS_KAPPA_BYTES];
 	uint8_t ct_prime[PARAMS_CT_SIZE + PARAMS_KAPPA_BYTES];
@@ -95,7 +128,7 @@ int r5_cca_kem_decapsulate(uint8_t *k, const uint8_t *ct, const uint8_t *sk)
 		PARAMS_CT_SIZE + PARAMS_KAPPA_BYTES);
 
 	// k = H(y, ct') depending on fail state
-	ct_cmov(hash_in, sk + PARAMS_KAPPA_BYTES, PARAMS_KAPPA_BYTES, fail);
+	ct_cmov(hash_in, sk + PARAMS_KAPPA_BYTES, fail, PARAMS_KAPPA_BYTES);
 
 	memcpy(hash_in + PARAMS_KAPPA_BYTES, ct_prime,
 		PARAMS_CT_SIZE + PARAMS_KAPPA_BYTES);
@@ -105,5 +138,5 @@ int r5_cca_kem_decapsulate(uint8_t *k, const uint8_t *ct, const uint8_t *sk)
 	return 0;
 }
 
-#endif /* ROUND5_CCA_PKE */
+#endif /* ROUND5_CCA */
 

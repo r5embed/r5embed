@@ -1,4 +1,5 @@
 //	r5_cpa_pke_n1.c
+//	2020-10-23	Markku-Juhani O. Saarinen <mjos@pqhsield.com>
 //	Copyright (c) 2019, PQShield Ltd. and Koninklijke Philips N.V.
 
 #include "r5_parameter_sets.h"
@@ -14,18 +15,23 @@
 #include "xef.h"
 #include "little_endian.h"
 
-//	secret matrix
+//	create a secret matrix
 
 static void r5_create_secret_mat(r5_ternv_t sm[],
 	const uint8_t seed[PARAMS_KAPPA_BYTES], size_t n)
 {
 	size_t i;
-
 	r5_xof_ctx_t xof;
-	r5_xof_input(&xof, seed, PARAMS_KAPPA_BYTES);
+	uint64_t x;
 
-	for (i = 0; i < n; i++)
+	for (i = 0; i < n; i++) {
+
+		//	XXX temporary; unknown size
+		x = LITTLE_ENDIAN64((uint64_t) i);
+		r5_xof_s_input(&xof, seed, PARAMS_KAPPA_BYTES, &x, 8);
+
 		r5_sparse_tern(&xof, sm[i]);
+	}
 }
 
 //	create "matrix row" a_random
@@ -56,7 +62,7 @@ static int r5_create_a_perm(uint16_t a_perm[PARAMS_D],
 	r5_xof_ctx_t ctx;
 
 	//	The DRBG customization when creating the tau=1 or tau=2 permutations.
-	static const uint8_t permutation_customization[2] = {0, 1};
+	static const uint8_t permutation_customization[2] = { 0, 1 };
 
 	memset(v, 0, sizeof(v));
 
@@ -97,7 +103,7 @@ static void r5_pack_q_p_round(uint8_t *pv, const modq_t *vq, size_t len,
 	for (i = 0; i < len; i++) {
 		t = ((vq[i] + rounding_constant) >>
 			(PARAMS_Q_BITS - PARAMS_P_BITS)) & (PARAMS_P - 1);
-		//pack p bits
+		//	pack p bits
 		pv[j >> 3] |= (uint8_t) (t << (j & 7));
 		if ((j & 7) + PARAMS_P_BITS > 8) {
 			pv[(j >> 3) + 1] |= (uint8_t) (t >> (8 - (j & 7)));
@@ -126,10 +132,10 @@ static void r5_unpack_p(modp_t *vp, size_t len, const uint8_t *pv)
 		bit_idx = bits_done & 7;
 		val = (uint16_t) (pv[idx] >> bit_idx);
 		if (bit_idx + PARAMS_P_BITS > 8) {
-			/* Get spill over from next packed byte */
+			//	get spillover from next packed byte
 			val = (uint16_t) (val | (pv[idx + 1] << (8 - bit_idx)));
 			if (bit_idx + PARAMS_P_BITS > 16) {
-				/* Get spill over from next packed byte */
+				//	get spillover from next packed byte
 				val = (uint16_t) (val | (pv[idx + 2] << (16 - bit_idx)));
 			}
 		}
@@ -207,7 +213,7 @@ int r5_cpa_pke_encrypt(uint8_t *ct, const uint8_t *pk, const uint8_t *m,
 	r5_matmul_ra_q(mat.u_t, a_random, a_perm, r_t); // U^T = (R^T x A)^T (mod q)
 
 	r5_pack_q_p_round(ct, &mat.u_t[0][0],
-		PARAMS_M_BAR * PARAMS_D, PARAMS_H2);	// ct = U^T | v
+		PARAMS_M_BAR * PARAMS_D, PARAMS_H2);		// ct = U^T | v
 
 	memset(ct + PARAMS_DPU_SIZE, 0, PARAMS_MUT_SIZE);
 
@@ -270,14 +276,14 @@ int r5_cpa_pke_decrypt(uint8_t *m, const uint8_t *sk, const uint8_t *ct)
 
 	j = 8 * PARAMS_DPU_SIZE;
 	for (i = 0; i < PARAMS_MU; i++) {
-		t = (modp_t) (ct[j >> 3] >> (j & 7));				// unpack t bits
+		t = (modp_t) (ct[j >> 3] >> (j & 7));			// unpack t bits
 		if ((j & 7) + PARAMS_T_BITS > 8) {
 			t |= (modp_t) (ct[(j >> 3) + 1] << (8 - (j & 7)));
 			if ((j & 7) + PARAMS_T_BITS > 16) {
 				t |= (modp_t) ((ct[(j >> 3) + 2]) << (16 - (j & 7)));
 			}
 		}
-		t &= ((1 << PARAMS_T_BITS) - 1);					// "v"
+		t &= ((1 << PARAMS_T_BITS) - 1);				// "v"
 		j += PARAMS_T_BITS;
 
 		//	X' = v - X', compressed to 1 bit

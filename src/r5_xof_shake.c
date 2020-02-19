@@ -2,8 +2,6 @@
 //	2019-03-26	Markku-Juhani O. Saarinen <mjos@pqshield.com>
 //	Copyright (c) 2019, PQShield Ltd.
 
-#ifndef BLNK2
-
 #include "r5_xof.h"
 
 #include <assert.h>
@@ -82,4 +80,3 @@ void r5_xof_s_input(r5_xof_ctx_t *ctx,
 	ctx->idx = R5_XOF_RATE;
 }
 
-#endif /* !BLNK2 */

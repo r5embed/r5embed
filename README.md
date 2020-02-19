@@ -1,4 +1,3 @@
-
 # r5embed
 
 2019-03-04  Markku-Juhani O. Saarinen <mjos@pqshield.com>
@@ -6,14 +5,19 @@
 A self-contained version of Round5 post-quantum algorithms for embedded 
 platforms. This heavily modified fork is **NOT OFFICIAL** -- but is 
 testvector-compatible with the second-round submission to NIST. 
-
 Round5 is a currently a 2nd round 
 [NIST PQC](https://csrc.nist.gov/Projects/Post-Quantum-Cryptography)
-candidate.
+standardization candidate. 
 
 For a summary of performance and code size of all supported variants on 
-Cortex M4, see the [benchmarks](./benchmarks.md) page.
+Cortex M4, see the [benchmarks](./benchmarks.md) page. The raw
+benchmark data is at [stm32f4/bench.txt](stm32f4/bench.txt).
 
+**UPDATE:** 2020-01-27	Markku-Juhani O. Saarinen <mjos@pqshield.com>
+
+This release updates the parameters, removes some the "public key encryption" 
+wrappers (this is KEM only) and alternative symmetric algorithms, and makes 
+CCA variants directly available as KEMs. 
 
 ## Supported variants
 
@@ -21,25 +25,24 @@ Otherwise the variants supported are the same as in the "submission":
 
 | **Sec** | **NIST 1** | **NIST 3**	| **NIST 5** | **Type** | **FEC** |
 | --- | -------------- | -------------- | -------------- | ---- | ----|
-| CPA | `R5ND_1KEM_5d` | `R5ND_3KEM_5d` | `R5ND_5KEM_5d` | Ring | 5   |
-| CCA | `R5ND_1PKE_5d` | `R5ND_3PKE_5d` | `R5ND_5PKE_5d` | Ring | 5   |
-| CPA | `R5ND_1KEM_0d` | `R5ND_3KEM_0d` | `R5ND_5KEM_0d` | Ring | No  |
-| CCA |	`R5ND_1PKE_0d` | `R5ND_3PKE_0d` | `R5ND_5PKE_0d` | Ring | No  |
-| CPA | `R5N1_1KEM_0d` | `R5N1_3KEM_0d`	| `R5N1_5KEM_0d` | Gen  | No  |
-| CCA |	`R5N1_1PKE_0d` | `R5N1_3PKE_0d` | `R5N1_5PKE_0d` | Gen  | No  |
+| CPA | `R5ND_1CPA_5d` | `R5ND_3CPA_5d` | `R5ND_5CPA_5d` | Ring | 5   |
+| CCA | `R5ND_1CCA_5d` | `R5ND_3CCA_5d` | `R5ND_5CCA_5d` | Ring | 5   |
+| CPA | `R5ND_1CPA_0d` | `R5ND_3CPA_0d` | `R5ND_5CPA_0d` | Ring | No  |
+| CCA |	`R5ND_1CCA_0d` | `R5ND_3CCA_0d` | `R5ND_5CCA_0d` | Ring | No  |
+| CPA | `R5N1_1CPA_0d` | `R5N1_3CPA_0d`	| `R5N1_5CPA_0d` | Gen  | No  |
+| CCA |	`R5N1_1CCA_0d` | `R5N1_3CCA_0d` | `R5N1_5CCA_0d` | Gen  | No  |
 
-* **Sec:** indicates security: CPA for KEM algorithms and CCA for public
-key encryption algorithms. The NIST 1/3/5 security classes indicate equivalent
-of 128/192/256 - bit classical security (quantum security is required to be
-at least half of that).
+* **Sec:** CPA or CCA Security. The NIST 1/3/5 security classes indicate 
+equivalent of 128/192/256 - bit classical security (quantum security is 
+required to be at least half of that).
 * **Type:** whe ring-structured or general lattice. 
 * **FEC:** Forward error correction. If used the number indicates how
 many bits are guaranteed to be corrected.
 
-Two special cases are supported: `R5ND_0KEM_2iot` and `R5ND_1KEM_4longkey`
+Two special cases are supported: `R5ND_0CPA_2iot` and `R5ND_1CPA_4longkey`
 which operate in the ring setting and have 2/4 - bit error correction.
 
-This version does *not* support `R5N1_3PKE_0smallCT` which has very large 
+This version does *not* support `R5N1_3CCA_0smallCT` which has very large 
 (165kB) public keys and requires some special implementation techniques.
 
 
@@ -48,30 +51,8 @@ This version does *not* support `R5N1_3PKE_0smallCT` which has very large
 **EXPERIMENTAL** 2019-09-23 mjos
 
 I've added a "truly constant time" option to this implementation; this is 
-enabled with the `C5_CT` compile-time flag and currently applies only for the 
-ring variant. You may run `./test/testkat_ct.sh` to verify that it matches with 
-the test vectors.
-
-The script [ct_compute_hi.py](misc/ct_compute_hi.py) was used to compute
-the number of rounds `PARAMS_HI` required to reach desired Hamming weight.
-The option makes litte difference for embedded targets; don't use it
-if you don't need it. It just makes the code run a lot slower.
-
-
-### The R5SNEIK Option
-
-R5EMBED also optionally integrates with the new SNEIK v1.1 / BLNK2 family of 
-lightweight permutation-based cryptographic primitives (significant 
-performance and implementation footprint improvement over SHAKE and AES-GCM). 
-We call these variants R5SNEIK. They share exactly the same external
-paramaters as Round5 -- just the internal ops are changed. This variant
-is invoked with the `-DBLNK2` flag.
-
-[SNEIK](https://github.com/pqshield/sneik) is a 1st round 
-[NIST LWC](https://csrc.nist.gov/projects/lightweight-cryptography)
-candidate -- specifically designed to support post-quantum cryptography.    
-
-**UPDATE 2019-06-11:** There is an ePrint out: [Exploring NIST LWC/PQC Synergy with R5Sneik: How SNEIK 1.1 Algorithms were Designed to Support Round5](https://eprint.iacr.org/2019/685)
+enabled with the `ROUND5_CT` compile-time flag and currently applies only for the 
+ring variant. 
 
 ### Compiling "natively"
 
@@ -85,7 +66,6 @@ threads at once (fast testing if you have a lot of cores in your system).
 For performance testing on your native system, you can use the 
 `test/speed.sh` script. It also computes the simple "tv" test vector 
 checksums that our embedded test programs display.
-
 
 ### Emulation: ARM, MIPS, POWERPC, etc
 
@@ -102,18 +82,19 @@ You need to install at least `binfmt-support` `qemu-user-static` packages
 to enable the feature. You may use `update-binfmts --display` to display all 
 of the available interpreters.
 
-The script `./test/qemu-testkat.sh` illustrates how one can run the KAT tests 
-with various gcc cross-compilers to check the portability of the code.
-The cross compilers must be separately installed, but many are available as
-standard Ubuntu/Debian packages; `apt install gcc-arm-linux-gnueabihf` suffices
-for the 32-bit emulated ARMv7 target, for example.
+You can comment relevant cross-compiler lines in `./test/testkat.sh` 
+to check the portability of the code. The cross compilers must be separately 
+installed, but many are available as standard Ubuntu/Debian packages; 
+`apt install gcc-arm-linux-gnueabihf` suffices for the 32-bit emulated ARMv7 
+target, for example.
 
 We have used this feature to verify that `r5embed` works correctly on 
 big-endian systems (MIPS). It is also noteworthy that since ARMv7-a 
 instruction set is basically a superset of the ARMv7-m instruction set used in 
 (Cortex M3/M4) embedded devices, we are able to directly compile and test 
 our ARMv7 optimizations by using the `arm-linux-gnueabihf-gcc` cross compiler
-(`apt install gcc-multilib-arm-linux-gnueabihf`) and compiling with flags `-march=armv7-a -DARMV7_ASM`.
+(`apt install gcc-multilib-arm-linux-gnueabihf`) and compiling with flags 
+`-march=armv7-a -DARMV7_ASM`.
 
 However, this type of emulation is not cycle accurate and therefore not
 directly useful for performance testing.
@@ -190,14 +171,14 @@ themselves. For example:
 
 ```
 $ cd stm32f4
-$ make ROUND5=R5ND_3KEM_5d run
-[.. after compiling, flashing, and a 10 second measurement:]
-..				#R5ND_3KEM_5d
-R5ND_3KEM_5d kilo cycles  KG	#784
-R5ND_3KEM_5d kilo cycles  Enc	#1083
-R5ND_3KEM_5d kilo cycles  Dec	#398
-R5ND_3KEM_5d kilo cycles  KEX	#2265
-R5ND_3KEM_5d stack bytes  KG	#5854
+$ make ROUND5=R5ND_3CPA_5d run
+[.. after compiling, flashing, few seconds for measurement:]
+..				#R5ND_3CPA_5d
+R5ND_3CPA_5d	kilo cycles	KG 	#784
+R5ND_3CPA_5d	kilo cycles	Enc	#1081
+R5ND_3CPA_5d	kilo cycles	Dec	#396
+R5ND_3CPA_5d	kilo cycles	KEX	#2262
+R5ND_3CPA_5d	stack bytes	KG	#5550
 ..
 ```
 The `Makefile` expects ROUND5 variable to be defined as one of the variants

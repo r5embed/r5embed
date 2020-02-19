@@ -15,7 +15,7 @@
 #else
 
 // implementation from main body
-#include "aesgcm.h"
+#include "aesenc.h"
 
 #endif
 

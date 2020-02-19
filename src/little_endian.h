@@ -1,5 +1,6 @@
 //	little_endian.h
-//	Copyright (c) 2019, PQShield Ltd. and Koninklijke Philips N.V.
+//	2019-10-29	Markku-Juhani O. Saarinen <mjos@pqshield.com>
+//	Copyright (c) 2019, PQShield Ltd. All rights reserved.
 
 #ifndef _LITTLE_ENDIAN_H_
 #define _LITTLE_ENDIAN_H_
@@ -40,24 +41,5 @@
 	(((x) & 0x00FF) << 8)	 \
 )
 #endif
-
-// can handle non-aligned data
-
-#define GETU32_LE(v) \
-	(((uint32_t) (v)[0])		^	(((uint32_t) (v)[1]) <<	 8) ^ \
-	(((uint32_t) (v)[2]) << 16) ^	(((uint32_t) (v)[3]) << 24))
-
-#define PUTU32_LE(v, x) { \
-	(v)[0] = (uint8_t)	(x);		(v)[1] = (uint8_t) ((x) >>	8); \
-	(v)[2] = (uint8_t) ((x) >> 16); (v)[3] = (uint8_t) ((x) >> 24); }
-
-#define GETU32_BE(v) \
-	(((uint32_t)(v)[0] << 24)	^	((uint32_t)(v)[1] << 16) ^ \
-	 ((uint32_t)(v)[2] <<  8)	^	((uint32_t)(v)[3]))
-
-#define PUTU32_BE(v, x) {\
-	(v)[0] = (uint8_t)((x) >> 24);	(v)[1] = (uint8_t)((x) >> 16); \
-	(v)[2] = (uint8_t)((x) >>  8);	(v)[3] = (uint8_t)(x);	}
-
 
 #endif /* _LITTLE_ENDIAN_H_ */

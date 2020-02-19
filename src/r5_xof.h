@@ -10,7 +10,6 @@
 
 #include "r5_parameter_sets.h"
 
-#ifndef BLNK2
 
 //	-- Keccak-based functionality --
 
@@ -33,19 +32,6 @@ typedef struct {
 
 // In Round5 SHAKE is used for everything, so hash = xof
 #define r5_hash r5_xof
-
-#else	/* !BLNK2 */
-
-//	-- SNEIK-based functionality --
-
-#include "blnk.h"
-typedef blnk_t r5_xof_ctx_t;
-
-// In R5SNEIK the CCA transform uses a SNEIKHA while seed expansion is SNEIGEN
-void r5_hash(void *out, const size_t out_len,
-	const void *in, const size_t in_len);
-
-#endif	/* BLNK2 */
 
 //	Common interface
 

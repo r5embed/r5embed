@@ -1,9 +1,13 @@
 //	r5_matmul.c
 //	Copyright (c) 2019, PQShield Ltd. and Koninklijke Philips N.V.
 
+//	Fast matrix arithmetic (no cache attack countermeasures)
+
 #include "r5_parameter_sets.h"
 
 #if (PARAMS_N == 1)
+// && !defined(ROUND5_CT)
+//	no constant time stuff here
 
 #include <string.h>
 

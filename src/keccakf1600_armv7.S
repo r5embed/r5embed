@@ -1,4 +1,4 @@
-#if defined(ARMV7_ASM) && !defined(BLNK2)
+#if defined(ARMV7_ASM)
 
 @   keccakf1600_armv7.S
 @   Keccak permutation for ARMv7. Generic implementation is in keccakf1600.c
@@ -739,5 +739,5 @@ KeccakF1600_StatePermute_RoundLoop:
     .size   KeccakF1600_StatePermute, .-KeccakF1600_StatePermute_RoundConstantsWithTerminator
 
 
-#endif /* ARMV7_ASM && !BLNK2 */
+#endif /* ARMV7_ASM  */
 

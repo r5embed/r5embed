@@ -1,10 +1,8 @@
 //	aesenc-1kt.c
 //	2019-03-04	Markku-Juhani O. Saarinen <mjos@pqshield.com>
-//	Copyright (c) 2019, PQShield Ltd.
+//	Copyright (c) 2019, PQShield Ltd. All rights reserved.
 
-//	Simple AES implementation for embedded. (ARM has "free" rotations)
-
-#ifndef BLNK2
+//	Simple AES implementation for embedded (encryption only)
 
 /*
  *	Derived from optimised ANSI C code for the Rijndael cipher (now AES)
@@ -13,11 +11,26 @@
  *	Paulo Barreto <paulo.barreto@terra.com.br>
  */
 
-#include "aesgcm.h"
-#include "little_endian.h"
+#include <stdint.h>
+
+//	cyclic rotation
 
 #ifndef ROR32
 #define ROR32(x, y) (((x) >> (y)) | ((x) << (32 - (y))))
+#endif
+
+//	can handle non-aligned data
+
+#ifndef GETU32_LE
+#define GETU32_LE(v) \
+	(((uint32_t) (v)[0])		^	(((uint32_t) (v)[1]) <<	 8) ^ \
+	(((uint32_t) (v)[2]) << 16) ^	(((uint32_t) (v)[3]) << 24))
+#endif
+
+#ifndef PUTU32_LE
+#define PUTU32_LE(v, x) { \
+	(v)[0] = (uint8_t)	(x);		(v)[1] = (uint8_t) ((x) >>	8); \
+	(v)[2] = (uint8_t) ((x) >> 16); (v)[3] = (uint8_t) ((x) >> 24); }
 #endif
 
 static const uint32_t ttab[256] = {
@@ -106,12 +119,12 @@ void aes128_set_key(uint32_t rk[44], const uint8_t key[16])
 	rk[3] = GETU32_LE(key + 12);
 
 	for (i = 0; i < 10; i++) {
-		temp  = rk[3];
+		temp = rk[3];
 		rk[4] = ((uint32_t) rcon[i]) ^ rk[0] ^
-			(((uint32_t) sbox[(temp >>	8) & 0xFF])) ^
-			(((uint32_t) sbox[(temp >> 16) & 0xFF]) <<	8) ^
+			(((uint32_t) sbox[(temp >> 8) & 0xFF])) ^
+			(((uint32_t) sbox[(temp >> 16) & 0xFF]) << 8) ^
 			(((uint32_t) sbox[(temp >> 24) & 0xFF]) << 16) ^
-			(((uint32_t) sbox[ temp		   & 0xFF]) << 24);
+			(((uint32_t) sbox[temp & 0xFF]) << 24);
 		rk[5] = rk[1] ^ rk[4];
 		rk[6] = rk[2] ^ rk[5];
 		rk[7] = rk[3] ^ rk[6];
@@ -125,26 +138,26 @@ void aes192_set_key(uint32_t rk[52], const uint8_t key[24])
 	uint32_t temp;
 
 	rk[0] = GETU32_LE(key);
-	rk[1] = GETU32_LE(key +	 4);
-	rk[2] = GETU32_LE(key +	 8);
+	rk[1] = GETU32_LE(key + 4);
+	rk[2] = GETU32_LE(key + 8);
 	rk[3] = GETU32_LE(key + 12);
 	rk[4] = GETU32_LE(key + 16);
 	rk[5] = GETU32_LE(key + 20);
 
 	for (i = 0;;) {
-		temp = rk[ 5];
-		rk[ 6] = ((uint32_t) rcon[i]) ^ rk[0] ^
-			(((uint32_t) sbox[(temp >>	8) & 0xFF])) ^
-			(((uint32_t) sbox[(temp >> 16) & 0xFF]) <<	8) ^
+		temp = rk[5];
+		rk[6] = ((uint32_t) rcon[i]) ^ rk[0] ^
+			(((uint32_t) sbox[(temp >> 8) & 0xFF])) ^
+			(((uint32_t) sbox[(temp >> 16) & 0xFF]) << 8) ^
 			(((uint32_t) sbox[(temp >> 24) & 0xFF]) << 16) ^
-			(((uint32_t) sbox[ temp		   & 0xFF]) << 24);
-		rk[ 7] = rk[ 1] ^ rk[ 6];
-		rk[ 8] = rk[ 2] ^ rk[ 7];
-		rk[ 9] = rk[ 3] ^ rk[ 8];
+			(((uint32_t) sbox[temp & 0xFF]) << 24);
+		rk[7] = rk[1] ^ rk[6];
+		rk[8] = rk[2] ^ rk[7];
+		rk[9] = rk[3] ^ rk[8];
 		if (++i == 8)
 			break;
-		rk[10] = rk[ 4] ^ rk[ 9];
-		rk[11] = rk[ 5] ^ rk[10];
+		rk[10] = rk[4] ^ rk[9];
+		rk[11] = rk[5] ^ rk[10];
 		rk += 6;
 	}
 }
@@ -155,8 +168,8 @@ void aes256_set_key(uint32_t rk[60], const uint8_t key[32])
 	uint32_t temp;
 
 	rk[0] = GETU32_LE(key);
-	rk[1] = GETU32_LE(key +	 4);
-	rk[2] = GETU32_LE(key +	 8);
+	rk[1] = GETU32_LE(key + 4);
+	rk[2] = GETU32_LE(key + 8);
 	rk[3] = GETU32_LE(key + 12);
 	rk[4] = GETU32_LE(key + 16);
 	rk[5] = GETU32_LE(key + 20);
@@ -164,112 +177,109 @@ void aes256_set_key(uint32_t rk[60], const uint8_t key[32])
 	rk[7] = GETU32_LE(key + 28);
 
 	for (i = 0;;) {
-		temp = rk[ 7];
-		rk[ 8] = ((uint32_t) rcon[i]) ^ rk[0] ^
-			(((uint32_t) sbox[(temp >>	8) & 0xFF])) ^
-			(((uint32_t) sbox[(temp >> 16) & 0xFF]) <<	8) ^
+		temp = rk[7];
+		rk[8] = ((uint32_t) rcon[i]) ^ rk[0] ^
+			(((uint32_t) sbox[(temp >> 8) & 0xFF])) ^
+			(((uint32_t) sbox[(temp >> 16) & 0xFF]) << 8) ^
 			(((uint32_t) sbox[(temp >> 24) & 0xFF]) << 16) ^
-			(((uint32_t) sbox[ temp		   & 0xFF]) << 24);
-		rk[ 9] = rk[ 1] ^ rk[ 8];
-		rk[10] = rk[ 2] ^ rk[ 9];
-		rk[11] = rk[ 3] ^ rk[10];
+			(((uint32_t) sbox[temp & 0xFF]) << 24);
+		rk[9] = rk[1] ^ rk[8];
+		rk[10] = rk[2] ^ rk[9];
+		rk[11] = rk[3] ^ rk[10];
 		if (++i == 7)
 			break;
 		temp = rk[11];
-		rk[12] = rk[ 4] ^
-			(((uint32_t) sbox[ temp		   & 0xFF])) ^
-			(((uint32_t) sbox[(temp >>	8) & 0xFF]) <<	8) ^
+		rk[12] = rk[4] ^
+			(((uint32_t) sbox[temp & 0xFF])) ^
+			(((uint32_t) sbox[(temp >> 8) & 0xFF]) << 8) ^
 			(((uint32_t) sbox[(temp >> 16) & 0xFF]) << 16) ^
 			(((uint32_t) sbox[(temp >> 24) & 0xFF]) << 24);
-		rk[13] = rk[ 5] ^ rk[12];
-		rk[14] = rk[ 6] ^ rk[13];
-		rk[15] = rk[ 7] ^ rk[14];
+		rk[13] = rk[5] ^ rk[12];
+		rk[14] = rk[6] ^ rk[13];
+		rk[15] = rk[7] ^ rk[14];
 		rk += 8;
 	}
 }
 
 void aes_enc_rounds(uint8_t ct[16], const uint8_t pt[16],
-	const uint32_t rk[], int nr)
+					const uint32_t rk[], int nr)
 {
 	uint32_t s0, s1, s2, s3, t0, t1, t2, t3;
 	int r;
 
 	// get bytes -- use initial key
-	s0 = GETU32_LE(pt)		^ rk[0];
-	s1 = GETU32_LE(pt +	 4) ^ rk[1];
-	s2 = GETU32_LE(pt +	 8) ^ rk[2];
+	s0 = GETU32_LE(pt) ^ rk[0];
+	s1 = GETU32_LE(pt + 4) ^ rk[1];
+	s2 = GETU32_LE(pt + 8) ^ rk[2];
 	s3 = GETU32_LE(pt + 12) ^ rk[3];
 
 	// nr - 1 full rounds:
 	r = nr >> 1;
 	for (;;) {
 
-		t0 =	  ttab[ s0 & 0xFF ] ^
-			ROR32(ttab[(s1 >>  8) & 0xFF], 24) ^
+		t0 = ttab[s0 & 0xFF] ^
+			ROR32(ttab[(s1 >> 8) & 0xFF], 24) ^
 			ROR32(ttab[(s2 >> 16) & 0xFF], 16) ^
-			ROR32(ttab[ s3 >> 24 ], 8) ^ rk[4];
-		t1 =	  ttab[ s1 & 0xFF ] ^
-			ROR32(ttab[(s2 >>  8) & 0xFF], 24) ^
+			ROR32(ttab[s3 >> 24], 8) ^ rk[4];
+		t1 = ttab[s1 & 0xFF] ^
+			ROR32(ttab[(s2 >> 8) & 0xFF], 24) ^
 			ROR32(ttab[(s3 >> 16) & 0xFF], 16) ^
-			ROR32(ttab[ s0 >> 24 ], 8) ^ rk[5];
-		t2 =	  ttab[ s2 & 0xFF ] ^
-			ROR32(ttab[(s3 >>  8) & 0xFF], 24) ^
+			ROR32(ttab[s0 >> 24], 8) ^ rk[5];
+		t2 = ttab[s2 & 0xFF] ^
+			ROR32(ttab[(s3 >> 8) & 0xFF], 24) ^
 			ROR32(ttab[(s0 >> 16) & 0xFF], 16) ^
-			ROR32(ttab[ s1 >> 24 ], 8) ^ rk[6];
-		t3 =	  ttab[ s3 & 0xFF ] ^
-			ROR32(ttab[(s0 >>  8) & 0xFF], 24) ^
+			ROR32(ttab[s1 >> 24], 8) ^ rk[6];
+		t3 = ttab[s3 & 0xFF] ^
+			ROR32(ttab[(s0 >> 8) & 0xFF], 24) ^
 			ROR32(ttab[(s1 >> 16) & 0xFF], 16) ^
-			ROR32(ttab[ s2 >> 24 ], 8) ^ rk[7];
+			ROR32(ttab[s2 >> 24], 8) ^ rk[7];
 
 		rk += 8;
 		if (--r == 0) {
 			break;
 		}
-		s0 =	  ttab[ t0 & 0xFF ] ^
-			ROR32(ttab[(t1 >>  8) & 0xFF], 24) ^
+		s0 = ttab[t0 & 0xFF] ^
+			ROR32(ttab[(t1 >> 8) & 0xFF], 24) ^
 			ROR32(ttab[(t2 >> 16) & 0xFF], 16) ^
-			ROR32(ttab[ t3 >> 24 ], 8) ^ rk[0];
-		s1 =	  ttab[ t1 & 0xFF ] ^
-			ROR32(ttab[(t2 >>  8) & 0xFF], 24) ^
+			ROR32(ttab[t3 >> 24], 8) ^ rk[0];
+		s1 = ttab[t1 & 0xFF] ^
+			ROR32(ttab[(t2 >> 8) & 0xFF], 24) ^
 			ROR32(ttab[(t3 >> 16) & 0xFF], 16) ^
-			ROR32(ttab[ t0 >> 24 ], 8) ^ rk[1];
-		s2 =	  ttab[ t2 & 0xFF ] ^
-			ROR32(ttab[(t3 >>  8) & 0xFF], 24) ^
+			ROR32(ttab[t0 >> 24], 8) ^ rk[1];
+		s2 = ttab[t2 & 0xFF] ^
+			ROR32(ttab[(t3 >> 8) & 0xFF], 24) ^
 			ROR32(ttab[(t0 >> 16) & 0xFF], 16) ^
-			ROR32(ttab[ t1 >> 24 ], 8) ^ rk[2];
-		s3 =	  ttab[ t3 & 0xFF ] ^
-			ROR32(ttab[(t0 >>  8) & 0xFF], 24) ^
+			ROR32(ttab[t1 >> 24], 8) ^ rk[2];
+		s3 = ttab[t3 & 0xFF] ^
+			ROR32(ttab[(t0 >> 8) & 0xFF], 24) ^
 			ROR32(ttab[(t1 >> 16) & 0xFF], 16) ^
-			ROR32(ttab[ t2 >> 24 ], 8) ^ rk[3];
+			ROR32(ttab[t2 >> 24], 8) ^ rk[3];
 	}
 
 	// last round, write it back
 
-	s0 = rk[0] ^ (((uint32_t) sbox[t0 & 0xFF]))	 ^
-			(((uint32_t) sbox[(t1 >>  8) & 0xFF]) <<  8) ^
-			(((uint32_t) sbox[(t2 >> 16) & 0xFF]) << 16) ^
-			(((uint32_t) sbox[ t3 >> 24		   ]) << 24);
+	s0 = rk[0] ^ (((uint32_t) sbox[t0 & 0xFF])) ^
+		(((uint32_t) sbox[(t1 >> 8) & 0xFF]) << 8) ^
+		(((uint32_t) sbox[(t2 >> 16) & 0xFF]) << 16) ^
+		(((uint32_t) sbox[t3 >> 24]) << 24);
 
 	s1 = rk[1] ^ (((uint32_t) sbox[t1 & 0xFF])) ^
-			(((uint32_t) sbox[(t2 >>  8) & 0xFF]) <<  8) ^
-			(((uint32_t) sbox[(t3 >> 16) & 0xFF]) << 16) ^
-			(((uint32_t) sbox[ t0 >> 24		   ]) << 24);
+		(((uint32_t) sbox[(t2 >> 8) & 0xFF]) << 8) ^
+		(((uint32_t) sbox[(t3 >> 16) & 0xFF]) << 16) ^
+		(((uint32_t) sbox[t0 >> 24]) << 24);
 
 	s2 = rk[2] ^ (((uint32_t) sbox[t2 & 0xFF])) ^
-			(((uint32_t) sbox[(t3 >>  8) & 0xFF]) <<  8) ^
-			(((uint32_t) sbox[(t0 >> 16) & 0xFF]) << 16) ^
-			(((uint32_t) sbox[ t1 >> 24		   ]) << 24);
+		(((uint32_t) sbox[(t3 >> 8) & 0xFF]) << 8) ^
+		(((uint32_t) sbox[(t0 >> 16) & 0xFF]) << 16) ^
+		(((uint32_t) sbox[t1 >> 24]) << 24);
 
 	s3 = rk[3] ^ (((uint32_t) sbox[t3 & 0xFF])) ^
-			(((uint32_t) sbox[(t0 >>  8) & 0xFF]) <<  8) ^
-			(((uint32_t) sbox[(t1 >> 16) & 0xFF]) << 16) ^
-			(((uint32_t) sbox[ t2 >> 24		   ]) << 24);
+		(((uint32_t) sbox[(t0 >> 8) & 0xFF]) << 8) ^
+		(((uint32_t) sbox[(t1 >> 16) & 0xFF]) << 16) ^
+		(((uint32_t) sbox[t2 >> 24]) << 24);
 
-	PUTU32_LE(ct,	   s0);
-	PUTU32_LE(ct +	4, s1);
-	PUTU32_LE(ct +	8, s2);
+	PUTU32_LE(ct, s0);
+	PUTU32_LE(ct + 4, s1);
+	PUTU32_LE(ct + 8, s2);
 	PUTU32_LE(ct + 12, s3);
 }
-
-#endif /* !BLNK2 */
-

@@ -3,7 +3,6 @@
 //  Copyright (c) 2019, PQShield Ltd.
 
 //  Fast "random-looking number" generator for performance testing.
-//  (Also used for SNEIK test vectors, hence don't change without checking.)
 
 #include <string.h>
 #include <stdint.h>

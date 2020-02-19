@@ -1,21 +1,41 @@
 #!/bin/bash
 
+#	testkat.sh
+#	2020-01-24	Markku-Juhani O. Saarinen <mjos@pqshield.com>
 #	Simple (quick) KAT/Correctness testing script.
 
-KEM_ND_5D="R5ND_1KEM_5d R5ND_3KEM_5d R5ND_5KEM_5d"
-PKE_ND_5D="R5ND_1PKE_5d R5ND_3PKE_5d R5ND_5PKE_5d"
-KEM_ND_0D="R5ND_1KEM_0d R5ND_3KEM_0d R5ND_5KEM_0d"
-PKE_ND_0D="R5ND_1PKE_0d R5ND_3PKE_0d R5ND_5PKE_0d"
-KEM_N1_0D="R5N1_1KEM_0d R5N1_3KEM_0d R5N1_5KEM_0d"
-PKE_N1_0D="R5N1_1PKE_0d R5N1_3PKE_0d R5N1_5PKE_0d"
+CPA_ND_5D="R5ND_1CPA_5d R5ND_3CPA_5d R5ND_5CPA_5d"
+CCA_ND_5D="R5ND_1CCA_5d R5ND_3CCA_5d R5ND_5CCA_5d"
+CPA_ND_0D="R5ND_1CPA_0d R5ND_3CPA_0d R5ND_5CPA_0d"
+CCA_ND_0D="R5ND_1CCA_0d R5ND_3CCA_0d R5ND_5CCA_0d"
+CPA_N1_0D="R5N1_1CPA_0d R5N1_3CPA_0d R5N1_5CPA_0d"
+CCA_N1_0D="R5N1_1CCA_0d R5N1_3CCA_0d R5N1_5CCA_0d"
+CPA_EXTRA="R5ND_0CPA_2iot R5ND_1CPA_4longkey" 
 
-KEM_EXTRA="R5ND_0KEM_2iot R5ND_1KEM_4longkey" 
+#	standard flags
 
-# Command line ?
+CC=gcc
+CFLAGS="-march=native -Wall -Wextra -Wshadow -fsanitize=address,undefined -O2"
+LIBS=""
+TEST_MAIN=test/mygenkat_kem.c
+R5_SRC=src
+RNG_SRC="test/mynistrng.c test/aesenc-1kt.c"
+GOOD_KAT=test/good.kat
+
+#	cross compiler tests
+
+#CC=arm-linux-gnueabihf-gcc
+#CC=aarch64-linux-gnu-gcc
+#CC=mips-linux-gnu-gcc
+#CC=powerpc-linux-gnu-gcc
+#CFLAGS="-Wall -Wextra -Wshadow -Ofast -static"
+#CFLAGS="-Wall -Wextra -Wshadow -Ofast -static -march=armv7-a -DARMV7_ASM"
+
+#	targets specified on command line ?
 
 if [ ! -n "$1" ]
 then
-	TARGETS="$KEM_ND_5D $PKE_ND_5D $KEM_ND_0D $PKE_ND_0D $KEM_N1_0D $PKE_N1_0D $KEM_EXTRA"
+	TARGETS="$CPA_ND_5D $CCA_ND_5D $CPA_ND_0D $CCA_ND_0D $CPA_N1_0D $CCA_N1_0D $CPA_EXTRA"
 else
 	TARGETS=$@
 fi
@@ -41,16 +61,7 @@ then
 	exit
 fi
 
-# compile and test
 
-CC=gcc
-R5_SRC=src
-CFLAGS="-march=native -Wall -Wextra -Wshadow -fsanitize=address,undefined -O2"
-LIBS=""
-KEM_MAIN=test/mygenkat_kem.c
-PKE_MAIN=test/mygenkat_pke.c
-RNG_SRC=test/mynistrng.c
-GOOD_KAT=test/good.kat
 MYDIR=`pwd`
 
 WORKD=`mktemp -d /tmp/r5test.XXXXXXXXXX`
@@ -60,25 +71,18 @@ do
 	rm -rf $WORKD/$targ
 	mkdir -p $WORKD/$targ
 	
-	if [ "${targ:6:3}" = "KEM" ]
-	then
-		TEST_MAIN=$KEM_MAIN
-	else
-		TEST_MAIN=$PKE_MAIN
-	fi
-
 	kat1=`grep $targ $GOOD_KAT`
 	kat1=${kat1:0:64}
 
 	cd $MYDIR
 	$CC $CFLAGS -o $WORKD/$targ/genkat -D$targ -Inist -I$R5_SRC \
-		$TEST_MAIN $RNG_SRC $R5_SRC/*.c $LIBS
+		$TEST_MAIN $RNG_SRC $R5_SRC/*.c $R5_SRC/*.S $LIBS
 
 	cd $WORKD/$targ
 	./genkat
 	cd ..
 
-	kat2=`sha256sum $targ/*.rsp`
+	kat2=`shasum -a 256 $targ/*.rsp`
 	kat2=${kat2:0:64}
 
 	if [ "$kat1" = "$kat2" ]
