@@ -1,5 +1,8 @@
-//	keccakf1600.h
-//	Raw Keccak f-1600 interface. (Derived From public domain sources.)
+//  keccakf1600.h
+//  2020-04-01  Markku-Juhani O. Saarinen <mjos@pqshield.com>
+//  Copyright (c) 2020, PQShield Ltd. All rights reserved.
+
+//  Raw Keccak f-1600 interface. (Derived From public domain sources.)
 
 #ifndef _KECCAKF1600_H_
 #define _KECCAKF1600_H_
@@ -7,21 +10,14 @@
 #include <stdint.h>
 #include <stddef.h>
 
-void KeccakF1600_StateExtractBytes(uint64_t *state,
-	uint8_t *data, size_t offset, size_t length);
-void KeccakF1600_StateXORBytes(uint64_t *state,
-	const uint8_t *data, size_t offset, size_t length);
-void KeccakF1600_StatePermute(uint64_t * state);
+//  permutation
+void keccak_f1600(uint64_t * state);
 
-// Profile the permutation ?
-#ifdef XOF_PROF
-extern uint32_t perm_count[];
-#define KECCAKF1600_24(v) {\
-	perm_count[24]++;\
-	KeccakF1600_StatePermute(v); }
-#else
-#define KECCAKF1600_24(v) KeccakF1600_StatePermute(v)
-#endif /* XOF_PROF */
+//  extract bytes
+void keccak_extract(uint64_t * state,
+					uint8_t * data, size_t offset, size_t length);
+//  input bytes via xor
+void keccak_xorbytes(uint64_t * state, const uint8_t * data,
+					 size_t offset, size_t length);
 
-#endif /* _KECCAKF1600_H_ */
-
+#endif										/* _KECCAKF1600_H_ */

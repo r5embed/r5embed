@@ -1,8 +1,8 @@
-//	aesenc-1kt.c
-//	2019-03-04	Markku-Juhani O. Saarinen <mjos@pqshield.com>
-//	Copyright (c) 2019, PQShield Ltd. All rights reserved.
+//  aesenc-1kt.c
+//  2019-03-04  Markku-Juhani O. Saarinen <mjos@pqshield.com>
+//  Copyright (c) 2019, PQShield Ltd. All rights reserved.
 
-//	Simple AES implementation for embedded (encryption only)
+//  Simple AES implementation for embedded (encryption only)
 
 /*
  *	Derived from optimised ANSI C code for the Rijndael cipher (now AES)
@@ -13,13 +13,13 @@
 
 #include <stdint.h>
 
-//	cyclic rotation
+//  cyclic rotation
 
 #ifndef ROR32
 #define ROR32(x, y) (((x) >> (y)) | ((x) << (32 - (y))))
 #endif
 
-//	can handle non-aligned data
+//  can handle non-aligned data
 
 #ifndef GETU32_LE
 #define GETU32_LE(v) \

@@ -1,8 +1,8 @@
-//	xe4_c64.c
-//	2019-09-21	Markku-Juhani O. Saarinen <mjos@pqshield.com>
-//	Copyright (C) 2019, PQShield Ltd. Please see LICENSE.
+//  xe4_c64.c
+//  2019-09-21  Markku-Juhani O. Saarinen <mjos@pqshield.com>
+//  Copyright (C) 2019, PQShield Ltd. Please see LICENSE.
 
-//	Optimized 64-bit "ANSI C" implementation of XE4-163
+//  Optimized 64-bit "ANSI C" implementation of XE4-163
 
 #include "r5_parameter_sets.h"
 
@@ -37,7 +37,7 @@
 	c = t0 | t1; t2 ^= c; t3 ^= c & ~t2; \
 }
 
-//	== XE4-163 (192-bit payload) ==
+//  == XE4-163 (192-bit payload) ==
 
 void xe4_163_compute(void *block)
 {
@@ -52,25 +52,38 @@ void xe4_163_compute(void *block)
 	for (i = 2; i >= 0; i--) {
 		if (i < 2) {
 			// rotate
-			XM64_RTLM(r13, 13); XM64_RTLM(r15, 15);
-			XM64_RTLM(r17, 17); XM64_RTLM(r19, 19); XM64_RTLM(r23, 23);
-			XM64_RTLM(r29, 29); XM64_RTLM(r31, 31);
+			XM64_RTLM(r13, 13);
+			XM64_RTLM(r15, 15);
+			XM64_RTLM(r17, 17);
+			XM64_RTLM(r19, 19);
+			XM64_RTLM(r23, 23);
+			XM64_RTLM(r29, 29);
+			XM64_RTLM(r31, 31);
 
 			// xor
 			x = LITTLE_ENDIAN64(p64[i]);
-			r13 ^= x;	r15 ^= x;	r16 ^= x;
-			r17 ^= x;	r19 ^= x;	r23 ^= x;
-			r29 ^= x;	r31 ^= x;
+			r13 ^= x;
+			r15 ^= x;
+			r16 ^= x;
+			r17 ^= x;
+			r19 ^= x;
+			r23 ^= x;
+			r29 ^= x;
+			r31 ^= x;
 		}
-
 		// fold
-		XM64_FLD4(r13, 13); XM64_FLD4(r15, 15); XM64_PR16(r16);
-		XM64_FLD2(r17, 17); XM64_FLD2(r19, 19); XM64_FLD2(r23, 23);
-		XM64_FLD2(r29, 29); XM64_FLD2(r31, 31);
+		XM64_FLD4(r13, 13);
+		XM64_FLD4(r15, 15);
+		XM64_PR16(r16);
+		XM64_FLD2(r17, 17);
+		XM64_FLD2(r19, 19);
+		XM64_FLD2(r23, 23);
+		XM64_FLD2(r29, 29);
+		XM64_FLD2(r31, 31);
 	}
 
-	// XE4-163:		r13 r15 r16 r17 r19 r23 r29 r31 end
-	// bit offset:	0	13	28	44	61	80	103 132 163
+	// XE4-163:     r13 r15 r16 r17 r19 r23 r29 r31 end
+	// bit offset:  0   13  28  44  61  80  103 132 163
 
 	x = r13 ^ (r15 << 13) ^ (r16 << 28) ^ (r17 << 44) ^ (r19 << 61);
 	p64[3] ^= LITTLE_ENDIAN64(x);
@@ -90,29 +103,44 @@ void xe4_163_fixerr(void *block)
 	// decode
 	p64 = (uint64_t *) block;
 	x = LITTLE_ENDIAN64(p64[3]);
-	r13 = x; r15 = x >> 13; r16 = x >> 28; r17 = x >> 44; r19 = x >> 61;
+	r13 = x;
+	r15 = x >> 13;
+	r16 = x >> 28;
+	r17 = x >> 44;
+	r19 = x >> 61;
 	x = LITTLE_ENDIAN64(p64[4]);
-	r19 ^= x << 3; r23 = x >> 16; r29 = x >> 39;
+	r19 ^= x << 3;
+	r23 = x >> 16;
+	r29 = x >> 39;
 	x = LITTLE_ENDIAN32(((uint32_t *) block)[10]);
-	r29 ^= x << 25; r31 = x >> 4;
+	r29 ^= x << 25;
+	r31 = x >> 4;
 	x = ((uint8_t *) block)[44];
 	r31 ^= x << 28;
 
 	// unfold
-	XM64_UNF4(r13, 13); XM64_UNF4(r15, 15); XM64_UNF2(r16, 16);
-	XM64_UNF2(r17, 17); XM64_UNF2(r19, 19); XM64_UNF2(r23, 23);
-	XM64_UNF2(r29, 29); XM64_UNF2(r31, 31);
+	XM64_UNF4(r13, 13);
+	XM64_UNF4(r15, 15);
+	XM64_UNF2(r16, 16);
+	XM64_UNF2(r17, 17);
+	XM64_UNF2(r19, 19);
+	XM64_UNF2(r23, 23);
+	XM64_UNF2(r29, 29);
+	XM64_UNF2(r31, 31);
 
 	for (i = 0; i < 3; i++) {
 		if (i > 0) {
 			// rotate
-			XM64_ROTR(r13, 13); XM64_ROTR(r15, 15);
-			XM64_ROTR(r17, 17); XM64_ROTR(r19, 19); XM64_ROTR(r23, 23);
-			XM64_ROTR(r29, 29); XM64_ROTR(r31, 31);
+			XM64_ROTR(r13, 13);
+			XM64_ROTR(r15, 15);
+			XM64_ROTR(r17, 17);
+			XM64_ROTR(r19, 19);
+			XM64_ROTR(r23, 23);
+			XM64_ROTR(r29, 29);
+			XM64_ROTR(r31, 31);
 		}
 		// majority
-		MX64_MJ8(c, t0, t1, t2, x,
-			r13, r15, r16, r17, r19, r23, r29, r31);
+		MX64_MJ8(c, t0, t1, t2, x, r13, r15, r16, r17, r19, r23, r29, r31);
 		p64[i] ^= LITTLE_ENDIAN64(x);
 	}
 }

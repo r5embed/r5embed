@@ -1,8 +1,8 @@
-//	r5_cpa_kem.c
-//	2020-01-23	Markku-Juhani O. Saarinen <mjos@pqshield.com>
-//	Copyright (c) 2020, PQShield Ltd. and Koninklijke Philips N.V.
+//  r5_cpa_kem.c
+//  2020-01-23  Markku-Juhani O. Saarinen <mjos@pqshield.com>
+//  Copyright (c) 2020, PQShield Ltd. and Koninklijke Philips N.V.
 
-//	Implementation of NIST KEM API -- **CPA** KEMs
+//  Implementation of NIST KEM API -- **CPA** KEMs
 
 #include "r5_parameter_sets.h"
 
@@ -17,14 +17,14 @@
 
 // CPA-KEM KeyGen()
 
-int crypto_kem_keypair(uint8_t *pk, uint8_t *sk)
+int crypto_kem_keypair(uint8_t * pk, uint8_t * sk)
 {
 	return r5_cpa_pke_keygen(pk, sk);
 }
 
 // CPA-KEM Encaps()
 
-int crypto_kem_enc(uint8_t *ct, uint8_t *k, const uint8_t *pk)
+int crypto_kem_enc(uint8_t * ct, uint8_t * k, const uint8_t * pk)
 {
 	uint8_t hash_input[PARAMS_KAPPA_BYTES + PARAMS_CT_SIZE];
 
@@ -41,14 +41,14 @@ int crypto_kem_enc(uint8_t *ct, uint8_t *k, const uint8_t *pk)
 	memcpy(hash_input, m, PARAMS_KAPPA_BYTES);
 	memcpy(hash_input + PARAMS_KAPPA_BYTES, ct, PARAMS_CT_SIZE);
 	r5_xof(k, PARAMS_KAPPA_BYTES, hash_input,
-		PARAMS_KAPPA_BYTES + PARAMS_CT_SIZE);
+		   PARAMS_KAPPA_BYTES + PARAMS_CT_SIZE);
 
 	return 0;
 }
 
 // CPA-KEM Decaps()
 
-int crypto_kem_dec(uint8_t *k, const uint8_t *ct, const uint8_t *sk)
+int crypto_kem_dec(uint8_t * k, const uint8_t * ct, const uint8_t * sk)
 {
 	uint8_t hash_input[PARAMS_KAPPA_BYTES + PARAMS_CT_SIZE];
 	uint8_t m[PARAMS_KAPPA_BYTES];
@@ -60,10 +60,9 @@ int crypto_kem_dec(uint8_t *k, const uint8_t *ct, const uint8_t *sk)
 	memcpy(hash_input, m, PARAMS_KAPPA_BYTES);
 	memcpy(hash_input + PARAMS_KAPPA_BYTES, ct, PARAMS_CT_SIZE);
 	r5_xof(k, PARAMS_KAPPA_BYTES, hash_input,
-		PARAMS_KAPPA_BYTES + PARAMS_CT_SIZE);
+		   PARAMS_KAPPA_BYTES + PARAMS_CT_SIZE);
 
 	return 0;
 }
 
-#endif /* defined ROUND5_CCA */
-
+#endif										/* defined ROUND5_CCA */
