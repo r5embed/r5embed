@@ -70,23 +70,21 @@ int crypto_kem_enc(uint8_t * ct, uint8_t * k, const uint8_t * pk)
 
 	randombytes(m, PARAMS_KAPPA_BYTES);		// generate random m
 
-	//	G: (l | g | rho) = h(m | pk);
-	r5_xof_triplet(L_g_rho, 3 * PARAMS_KAPPA_BYTES, 
-		"GCCAKEM", 7, 
-		m, PARAMS_KAPPA_BYTES, 
-		pk, PARAMS_PK_SIZE);
+	//  G: (l | g | rho) = h(m | pk);
+	r5_xof_triplet(L_g_rho, 3 * PARAMS_KAPPA_BYTES,
+				   "GCCAKEM", 7, m, PARAMS_KAPPA_BYTES, pk, PARAMS_PK_SIZE);
 
-	//	Encrypt
+	//  Encrypt
 	r5_cpa_pke_encrypt(ct, pk, m, L_g_rho[2]);	// m: ct = (U,v)
 
-	//	Append g: ct = (U,v,g)
+	//  Append g: ct = (U,v,g)
 	memcpy(ct + PARAMS_CT_SIZE, L_g_rho[1], PARAMS_KAPPA_BYTES);
 
-	//	k = H(L, ct)
-	r5_xof_triplet(k, PARAMS_KAPPA_BYTES, 
-		"HCCAKEM", 7, 
-		L_g_rho[0], PARAMS_KAPPA_BYTES,
-		ct, PARAMS_CT_SIZE + PARAMS_KAPPA_BYTES);
+	//  k = H(L, ct)
+	r5_xof_triplet(k, PARAMS_KAPPA_BYTES,
+				   "HCCAKEM", 7,
+				   L_g_rho[0], PARAMS_KAPPA_BYTES,
+				   ct, PARAMS_CT_SIZE + PARAMS_KAPPA_BYTES);
 
 	return 0;
 }
@@ -102,29 +100,30 @@ int crypto_kem_dec(uint8_t * k, const uint8_t * ct, const uint8_t * sk)
 
 	r5_cpa_pke_decrypt(m_prime, sk, ct);	// r5_cpa_pke_decrypt m'
 
-	r5_xof_triplet(L_g_rho_prime, 3 * PARAMS_KAPPA_BYTES, 
-		"GCCAKEM", 7, 
-		m_prime, PARAMS_KAPPA_BYTES, 
-		sk + PARAMS_KAPPA_BYTES + PARAMS_KAPPA_BYTES, PARAMS_PK_SIZE);
+	r5_xof_triplet(L_g_rho_prime, 3 * PARAMS_KAPPA_BYTES,
+				   "GCCAKEM", 7,
+				   m_prime, PARAMS_KAPPA_BYTES,
+				   sk + PARAMS_KAPPA_BYTES + PARAMS_KAPPA_BYTES,
+				   PARAMS_PK_SIZE);
 
-	//	Encrypt m: ct' = (U',v')
+	//  Encrypt m: ct' = (U',v')
 	r5_cpa_pke_encrypt(ct_prime, sk + PARAMS_KAPPA_BYTES + PARAMS_KAPPA_BYTES,
 					   m_prime, L_g_rho_prime[2]);
 
-	//	ct' = (U',v',g')
+	//  ct' = (U',v',g')
 	memcpy(ct_prime + PARAMS_CT_SIZE, L_g_rho_prime[1], PARAMS_KAPPA_BYTES);
 
-	//	verification ok ?
+	//  verification ok ?
 	fail = ct_memcmp(ct, ct_prime, PARAMS_CT_SIZE + PARAMS_KAPPA_BYTES);
 
-	//	k = H(y, ct') depending on fail state
-	ct_cmov(L_g_rho_prime[0], sk + PARAMS_KAPPA_BYTES, 
+	//  k = H(y, ct') depending on fail state
+	ct_cmov(L_g_rho_prime[0], sk + PARAMS_KAPPA_BYTES,
 			fail, PARAMS_KAPPA_BYTES);
 
-	r5_xof_triplet(k, PARAMS_KAPPA_BYTES, 
-		"HCCAKEM", 7, 
-		L_g_rho_prime[0], PARAMS_KAPPA_BYTES,
-		ct_prime, PARAMS_CT_SIZE + PARAMS_KAPPA_BYTES);
+	r5_xof_triplet(k, PARAMS_KAPPA_BYTES,
+				   "HCCAKEM", 7,
+				   L_g_rho_prime[0], PARAMS_KAPPA_BYTES,
+				   ct_prime, PARAMS_CT_SIZE + PARAMS_KAPPA_BYTES);
 
 	return 0;
 }

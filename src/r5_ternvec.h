@@ -28,8 +28,8 @@ typedef uint16_t r5_ternv_t[PARAMS_H / 2][2];
 //PQS_OLOCAL void r5_sparse_tern(r5_xof_t * xof, r5_ternv_t tv);
 
 //  create a secret indexed vector
-PQS_OLOCAL void r5_idx_tern(r5_ternv_t sv, 
-			const uint8_t seed[PARAMS_KAPPA_BYTES],
-					size_t idx);
+PQS_OLOCAL void r5_idx_tern(r5_ternv_t sv,
+							const uint8_t seed[PARAMS_KAPPA_BYTES],
+							size_t idx);
 
 #endif										/* _R5_TERNVEC_H_ */

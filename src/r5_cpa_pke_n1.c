@@ -17,7 +17,7 @@
 #include "r5_xofgen.h"
 #include "r5_ternvec.h"
 
-//	secret matrix
+//  secret matrix
 
 static void r5_create_secret_mat(r5_ternv_t sm[],
 								 const uint8_t seed[PARAMS_KAPPA_BYTES],
@@ -41,9 +41,9 @@ static void r5_matrow_a_random(modq_t * a_random,
 		   seed, PARAMS_KAPPA_BYTES);
 */
 
-	r5_xof_agen(a_random, PARAM_TAU2_A_RANDOM * sizeof(modq_t), 
-		sizeof(modq_t) * ((PARAM_TAU2_A_RANDOM + AGEN_NBLOCKS - 1) / 
-			AGEN_NBLOCKS), seed);
+	r5_xof_agen(a_random, PARAM_TAU2_A_RANDOM * sizeof(modq_t),
+				sizeof(modq_t) * ((PARAM_TAU2_A_RANDOM + AGEN_NBLOCKS - 1) /
+								  AGEN_NBLOCKS), seed);
 
 #if __BYTE_ORDER__ != __ORDER_LITTLE_ENDIAN__
 	size_t i;
@@ -69,7 +69,7 @@ static int r5_create_a_perm(uint16_t a_perm[PARAMS_D],
 	r5_xof_ini(&xof);
 	r5_xof_str(&xof, "APermutation", 12);
 	r5_xof_str(&xof, sigma, PARAMS_KAPPA_BYTES);
-	r5_xof_fin(&xof, 0);
+	r5_xof_pad(&xof, 0);
 
 	for (i = 0; i < PARAMS_D; ++i) {
 		do {

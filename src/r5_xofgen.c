@@ -2,17 +2,16 @@
 //  2020-04-02  Markku-Juhani O. Saarinen <mjos@pqshield.com>
 //  Copyright (c) 2020, PQShield Ltd. All rights reserved.
 
-//	xof-relatedion (domain separation) convenience functions
+//  xof-related (domain separation) convenience functions
 
 #include "r5_xofgen.h"
 #include "r5_xof.h"
 
-//	Convenience function for 3-tuples
+//  Convenience function for 3-tuples
 
-void r5_xof_triplet(void *out, size_t olen, 
-	const void *a, size_t alen,
-	const void *b, size_t blen,
-	const void *c, size_t clen)
+void r5_xof_triplet(void *out, size_t olen,
+					const void *a, size_t alen,
+					const void *b, size_t blen, const void *c, size_t clen)
 {
 	r5_xof_t xof;
 
@@ -20,14 +19,13 @@ void r5_xof_triplet(void *out, size_t olen,
 	r5_xof_str(&xof, a, alen);
 	r5_xof_str(&xof, b, blen);
 	r5_xof_str(&xof, c, clen);
-	r5_xof_fin(&xof, 0);
+	r5_xof_pad(&xof, 0);
 	r5_xof_out(&xof, out, olen);
 }
 
-//	A public value generation
+//  A public value generation
 
-void r5_xof_agen(void *d, size_t len, size_t blen,
-		const uint8_t *seed)
+void r5_xof_agen(void *d, size_t len, size_t blen, const uint8_t * seed)
 {
 	r5_xof_t xof;
 
@@ -39,7 +37,7 @@ void r5_xof_agen(void *d, size_t len, size_t blen,
 		r5_xof_str(&xof, "AGeneration", 11);
 		r5_xof_str(&xof, seed, PARAMS_KAPPA_BYTES);
 		r5_xof_str(&xof, &ibyte, 1);
-		r5_xof_fin(&xof, 0);				//	XOF
+		r5_xof_pad(&xof, 0);				//  XOF
 		if (blen > len)
 			blen = len;
 		r5_xof_out(&xof, dpt, blen);
@@ -48,5 +46,3 @@ void r5_xof_agen(void *d, size_t len, size_t blen,
 		ibyte++;
 	}
 }
-
-

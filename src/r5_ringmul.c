@@ -26,8 +26,8 @@ void r5_ringmul_q(modq_t d[PARAMS_D],
 
 	//  expand a
 	r5_xof_agen(a, PARAMS_D * sizeof(modq_t),
-		((PARAMS_D + AGEN_NBLOCKS - 1) / AGEN_NBLOCKS) * sizeof(modq_t),
-		sigma);
+				((PARAMS_D + AGEN_NBLOCKS -
+				  1) / AGEN_NBLOCKS) * sizeof(modq_t), sigma);
 
 #if __BYTE_ORDER__ != __ORDER_LITTLE_ENDIAN__
 	for (i = 0; i < PARAMS_D; i++) {

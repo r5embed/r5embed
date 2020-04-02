@@ -27,17 +27,15 @@ int crypto_kem_enc(uint8_t * ct, uint8_t * k, const uint8_t * pk)
 	uint8_t m[PARAMS_KAPPA_BYTES];
 	uint8_t rho[PARAMS_KAPPA_BYTES];
 
-	//	Generate a random m and rho
+	//  Generate a random m and rho
 	randombytes(m, PARAMS_KAPPA_BYTES);
 	randombytes(rho, PARAMS_KAPPA_BYTES);
 
 	r5_cpa_pke_encrypt(ct, pk, m, rho);
 
-	//	k = H(m, ct)
+	//  k = H(m, ct)
 	r5_xof_triplet(k, PARAMS_KAPPA_BYTES,
-		"HCPAKEM", 7,
-		m, PARAMS_KAPPA_BYTES,
-		ct, PARAMS_CT_SIZE);
+				   "HCPAKEM", 7, m, PARAMS_KAPPA_BYTES, ct, PARAMS_CT_SIZE);
 
 	return 0;
 }
@@ -48,14 +46,12 @@ int crypto_kem_dec(uint8_t * k, const uint8_t * ct, const uint8_t * sk)
 {
 	uint8_t m[PARAMS_KAPPA_BYTES];
 
-	//	Decrypt m
+	//  Decrypt m
 	r5_cpa_pke_decrypt(m, sk, ct);
 
-	//	k = H(m, ct)
+	//  k = H(m, ct)
 	r5_xof_triplet(k, PARAMS_KAPPA_BYTES,
-		"HCPAKEM", 7,
-		m, PARAMS_KAPPA_BYTES,
-		ct, PARAMS_CT_SIZE);
+				   "HCPAKEM", 7, m, PARAMS_KAPPA_BYTES, ct, PARAMS_CT_SIZE);
 
 	return 0;
 }

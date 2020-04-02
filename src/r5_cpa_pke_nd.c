@@ -32,7 +32,7 @@ int r5_cpa_pke_keygen(uint8_t * pk, uint8_t * sk)
 
 	r5_ringmul_q(b, pk, s_v);				// B = A * S
 
-	//	Compress B q_bits -> p_bits, pk = sigma | B
+	//  Compress B q_bits -> p_bits, pk = sigma | B
 	r5_pack_q_p(pk + PARAMS_KAPPA_BYTES, b, PARAMS_H1);
 
 	return 0;
@@ -55,21 +55,21 @@ int r5_cpa_pke_encrypt(uint8_t * ct, const uint8_t * pk,
 	XEF_COMPUTE(m1, PARAMS_KAPPA_BYTES, PARAMS_F);
 #endif
 
-	//	Create R
+	//  Create R
 	r5_idx_tern(r_v, rho, 0);
 
 	r5_ringmul_q(u_t, pk, r_v);				// U^T = U = A^T * R = A * R (mod q)
 	r5_pack_q_p(ct, u_t, PARAMS_H2);		// ct = U^T | v
 
-	//	X = B * R  (mod p)
+	//  X = B * R  (mod p)
 	r5_ringmul_p(x, pk + PARAMS_KAPPA_BYTES, r_v);
 	memset(ct + PARAMS_NDP_SIZE, 0, PARAMS_MUT_SIZE);
 
 	j = 8 * PARAMS_NDP_SIZE;
 	for (i = 0; i < PARAMS_MU; i++) {		// compute, pack v
-		//	compress p->t
+		//  compress p->t
 		t = ((x[i] + PARAMS_H2) >> (PARAMS_P_BITS - PARAMS_T_BITS));
-		//	add message
+		//  add message
 		tm = (m1[(i * PARAMS_B_BITS) >> 3] >> ((i * PARAMS_B_BITS) & 7));
 #if (8 % PARAMS_B_BITS != 0)
 		if (((i * PARAMS_B_BITS) & 7) + PARAMS_B_BITS > 8) {
@@ -112,10 +112,10 @@ int r5_cpa_pke_decrypt(uint8_t * m, const uint8_t * sk, const uint8_t * ct)
 		j += PARAMS_T_BITS;
 	}
 
-	// 	X' = U * S (mod p)
+	//  X' = U * S (mod p)
 	r5_ringmul_p(x_prime, ct, s_v);			// ct = U^T | v
 
-	// 	X' = v - X', compressed to 1 bit
+	//  X' = v - X', compressed to 1 bit
 	modp_t x_p;
 	memset(m1, 0, sizeof(m1));
 	for (i = 0; i < PARAMS_MU; i++) {
@@ -127,7 +127,7 @@ int r5_cpa_pke_decrypt(uint8_t * m, const uint8_t * sk, const uint8_t * ct)
 										(x_p << ((i * PARAMS_B_BITS) & 7)));
 #if (8 % PARAMS_B_BITS != 0)
 		if (((i * PARAMS_B_BITS) & 7) + PARAMS_B_BITS > 8) {
-			//	Spill over to next message byte
+			//  Spill over to next message byte
 			m1[(i * PARAMS_B_BITS >> 3) + 1] =
 				m1[((i * PARAMS_B_BITS) >> 3) + 1] |
 				(x_p >> (8 - ((i * PARAMS_B_BITS) & 7)));
@@ -136,7 +136,7 @@ int r5_cpa_pke_decrypt(uint8_t * m, const uint8_t * sk, const uint8_t * ct)
 	}
 
 #if (PARAMS_XE != 0)
-	//	Apply error correction
+	//  Apply error correction
 	XEF_COMPUTE(m1, PARAMS_KAPPA_BYTES, PARAMS_F);
 	XEF_FIXERR(m1, PARAMS_KAPPA_BYTES, PARAMS_F);
 #endif
