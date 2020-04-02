@@ -15,7 +15,7 @@ CPA_EXTRA="R5ND_0CPA_2iot R5ND_1CPA_4longkey"
 #	standard flags
 
 CC=gcc
-CFLAGS="-march=native -Wall -Wextra -Wshadow -fsanitize=address,undefined -O2"
+CFLAGS="-Wall -Wextra -Wshadow -fsanitize=address,undefined -O2"
 LIBS=""
 TEST_MAIN=test/mygenkat_kem.c
 R5_SRC=src

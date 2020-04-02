@@ -10,7 +10,7 @@
 
 #include <string.h>
 #include "r5_ringmul.h"
-#include "r5_xof.h"
+#include "r5_xofgen.h"
 #include "r5_pack.h"
 
 // multiplication mod q, result length n
@@ -25,7 +25,9 @@ void r5_ringmul_q(modq_t d[PARAMS_D],
 	modq_t *a = aa;
 
 	//  expand a
-	r5_xof(a, PARAMS_D * sizeof(modq_t), sigma, PARAMS_KAPPA_BYTES);
+	r5_xof_agen(a, PARAMS_D * sizeof(modq_t),
+				((PARAMS_D + AGEN_NBLOCKS -
+				  1) / AGEN_NBLOCKS) * sizeof(modq_t), sigma);
 
 
 #if __BYTE_ORDER__ != __ORDER_LITTLE_ENDIAN__

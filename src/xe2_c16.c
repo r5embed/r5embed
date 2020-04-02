@@ -28,7 +28,7 @@ void xe2_53_compute(void *block)
 	uint16_t r11, r13, r14, r15;
 	uint16_t *p16, x;
 
-	// initialize
+	//  initialize
 	p16 = (uint16_t *) block;
 	r11 = r13 = r14 = r15 = LITTLE_ENDIAN16(p16[7]);
 
@@ -51,8 +51,8 @@ void xe2_53_compute(void *block)
 		XM16_FLDM(r15, 15);
 	}
 
-	// XE2-53:      r11 r13 r14 r15 end
-	// bit offset:  0   11  24  38  53
+	//  XE2-53:      r11 r13 r14 r15 end
+	//  bit offset:  0   11  24  38  53
 	p16[8] ^= LITTLE_ENDIAN16(r11 ^ (r13 << 11));
 	p16[9] ^= LITTLE_ENDIAN16((r13 >> 5) ^ (r14 << 8));
 	p16[10] ^= LITTLE_ENDIAN16((r14 >> 8) ^ (r15 << 6));
@@ -65,7 +65,7 @@ void xe2_53_fixerr(void *block)
 	uint16_t r11, r13, r14, r15;
 	uint16_t *p16, x;
 
-	// decode
+	//  decode
 	p16 = (uint16_t *) block;
 	x = LITTLE_ENDIAN16(p16[8]);
 	r11 = x;
@@ -86,7 +86,7 @@ void xe2_53_fixerr(void *block)
 
 	for (i = 0; i < 8; i++) {
 		if (i > 0) {
-			// rotate
+			//  rotate
 			XM16_ROTR(r11, 11);
 			XM16_ROTR(r13, 13);
 			XM16_ROTR(r14, 14);

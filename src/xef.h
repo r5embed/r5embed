@@ -1,6 +1,6 @@
 //  xef.h
 //  2018-10-25 Markku-Juhani O. Saarinen <mjos@pqshield.com>
-//  Copyright (c) 2019, PQShield Ltd. All rights reserved.
+//  Copyright (c) 2020, PQShield Ltd. All rights reserved.
 
 //  Prototypes for error correction codes
 

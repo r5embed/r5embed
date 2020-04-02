@@ -14,7 +14,7 @@
 #ifndef ROUND5_CT
 #if PARAMS_N == 1
 
-//  functions used by matrix code */
+//  functions used by matrix code 
 
 PQS_OLOCAL void r5_modq_addsub_d(modq_t * dst,
 								 const modq_t * p_add, const modq_t * p_sub);
@@ -42,7 +42,7 @@ PQS_OLOCAL void r5_modq_addsub3_perm_nbar_d(modq_t * dst,
 
 #else										/* PARAMS_N != 1 */
 
-//  functions used by ring code */
+//  functions used by ring code 
 
 #ifndef PQSOC
 

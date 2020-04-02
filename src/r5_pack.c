@@ -8,7 +8,7 @@
 
 #include <string.h>
 
-// compress ND elements of q bits into p bits and pack into a byte string
+//  compress ND elements of q bits into p bits and pack into a byte string
 
 void r5_pack_q_p(uint8_t * pv, const modq_t * vq, modq_t rc)
 {

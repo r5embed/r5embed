@@ -15,7 +15,7 @@
 #include "r5_xofgen.h"
 #include "rng.h"
 
-// constant time comparison; return nonzero if not equal
+//  constant time comparison; return nonzero if not equal
 
 static uint8_t ct_memcmp(const void *a, const void *b, size_t len)
 {
@@ -31,7 +31,7 @@ static uint8_t ct_memcmp(const void *a, const void *b, size_t len)
 	return (int) ((-r) >> 31);
 }
 
-// conditional move; overwrite d with a if flag is nonzero
+//  conditional move; overwrite d with a if flag is nonzero
 
 static void ct_cmov(void *d, const void *a, uint8_t flag, size_t len)
 {
@@ -50,10 +50,10 @@ int crypto_kem_keypair(uint8_t * pk, uint8_t * sk)
 {
 	uint8_t y[PARAMS_KAPPA_BYTES];
 
-	/* Generate the base key pair */
+	//  Generate the base key pair
 	r5_cpa_pke_keygen(pk, sk);
 
-	/* Append y and pk to sk */
+	//  Append y and pk to sk
 	randombytes(y, PARAMS_KAPPA_BYTES);
 	memcpy(sk + PARAMS_KAPPA_BYTES, y, PARAMS_KAPPA_BYTES);
 	memcpy(sk + PARAMS_KAPPA_BYTES + PARAMS_KAPPA_BYTES, pk, PARAMS_PK_SIZE);

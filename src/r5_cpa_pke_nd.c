@@ -73,7 +73,7 @@ int r5_cpa_pke_encrypt(uint8_t * ct, const uint8_t * pk,
 		tm = (m1[(i * PARAMS_B_BITS) >> 3] >> ((i * PARAMS_B_BITS) & 7));
 #if (8 % PARAMS_B_BITS != 0)
 		if (((i * PARAMS_B_BITS) & 7) + PARAMS_B_BITS > 8) {
-			/* Get spill over from next message byte */
+			//  Get spill over from next message byte
 			tm = (tm | (m1[((i * PARAMS_B_BITS) >> 3) + 1]
 						<< (8 - ((i * PARAMS_B_BITS) & 7))));
 		}

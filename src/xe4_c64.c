@@ -11,7 +11,7 @@
 #include "xef.h"
 #include "little_endian.h"
 
-// various bit-twiddling macros for 64-bit words
+//  various bit-twiddling macros for 64-bit words
 
 #define XM64_RTLM(r, n) { r = ((r << (64 % n)) | (r >> (n - (64 % n)))) & \
 								 ((1llu << n) - 1llu);}
@@ -45,13 +45,13 @@ void xe4_163_compute(void *block)
 	uint64_t r13, r15, r16, r17, r19, r23, r29, r31;
 	uint64_t *p64, x;
 
-	// initialize
+	//  initialize
 	p64 = (uint64_t *) block;
 	r13 = r15 = r16 = r17 = r19 = r23 = r29 = r31 = LITTLE_ENDIAN64(p64[2]);
 
 	for (i = 2; i >= 0; i--) {
 		if (i < 2) {
-			// rotate
+			//  rotate
 			XM64_RTLM(r13, 13);
 			XM64_RTLM(r15, 15);
 			XM64_RTLM(r17, 17);
@@ -60,7 +60,7 @@ void xe4_163_compute(void *block)
 			XM64_RTLM(r29, 29);
 			XM64_RTLM(r31, 31);
 
-			// xor
+			//  xor
 			x = LITTLE_ENDIAN64(p64[i]);
 			r13 ^= x;
 			r15 ^= x;
@@ -71,7 +71,7 @@ void xe4_163_compute(void *block)
 			r29 ^= x;
 			r31 ^= x;
 		}
-		// fold
+		//  fold
 		XM64_FLD4(r13, 13);
 		XM64_FLD4(r15, 15);
 		XM64_PR16(r16);
@@ -82,8 +82,8 @@ void xe4_163_compute(void *block)
 		XM64_FLD2(r31, 31);
 	}
 
-	// XE4-163:     r13 r15 r16 r17 r19 r23 r29 r31 end
-	// bit offset:  0   13  28  44  61  80  103 132 163
+	//  XE4-163:     r13 r15 r16 r17 r19 r23 r29 r31 end
+	//  bit offset:  0   13  28  44  61  80  103 132 163
 
 	x = r13 ^ (r15 << 13) ^ (r16 << 28) ^ (r17 << 44) ^ (r19 << 61);
 	p64[3] ^= LITTLE_ENDIAN64(x);
@@ -100,7 +100,7 @@ void xe4_163_fixerr(void *block)
 	uint64_t r13, r15, r16, r17, r19, r23, r29, r31;
 	uint64_t *p64, x, c, t0, t1, t2;
 
-	// decode
+	//  decode
 	p64 = (uint64_t *) block;
 	x = LITTLE_ENDIAN64(p64[3]);
 	r13 = x;
@@ -118,7 +118,7 @@ void xe4_163_fixerr(void *block)
 	x = ((uint8_t *) block)[44];
 	r31 ^= x << 28;
 
-	// unfold
+	//  unfold
 	XM64_UNF4(r13, 13);
 	XM64_UNF4(r15, 15);
 	XM64_UNF2(r16, 16);
@@ -130,7 +130,7 @@ void xe4_163_fixerr(void *block)
 
 	for (i = 0; i < 3; i++) {
 		if (i > 0) {
-			// rotate
+			//  rotate
 			XM64_ROTR(r13, 13);
 			XM64_ROTR(r15, 15);
 			XM64_ROTR(r17, 17);
@@ -139,7 +139,7 @@ void xe4_163_fixerr(void *block)
 			XM64_ROTR(r29, 29);
 			XM64_ROTR(r31, 31);
 		}
-		// majority
+		//  majority
 		MX64_MJ8(c, t0, t1, t2, x, r13, r15, r16, r17, r19, r23, r29, r31);
 		p64[i] ^= LITTLE_ENDIAN64(x);
 	}

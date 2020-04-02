@@ -1,5 +1,16 @@
 # r5embed
 
+**UPDATE:** 2020-04-02	Markku-Juhani O. Saarinen <mjos@pqshield.com>
+
+Switches to use NIST SP 800-185 TupleHashXOF for better domain separation.
+
+
+**UPDATE:** 2020-01-27	Markku-Juhani O. Saarinen <mjos@pqshield.com>
+
+This release updates the parameters, removes some the "public key encryption" 
+wrappers (this is KEM only) and alternative symmetric algorithms, and makes 
+CCA variants directly available as KEMs. 
+
 2019-03-04  Markku-Juhani O. Saarinen <mjos@pqshield.com>
 
 A self-contained version of Round5 post-quantum algorithms for embedded 
@@ -13,11 +24,6 @@ For a summary of performance and code size of all supported variants on
 Cortex M4, see the [benchmarks](./benchmarks.md) page. The raw
 benchmark data is at [stm32f4/bench.txt](stm32f4/bench.txt).
 
-**UPDATE:** 2020-01-27	Markku-Juhani O. Saarinen <mjos@pqshield.com>
-
-This release updates the parameters, removes some the "public key encryption" 
-wrappers (this is KEM only) and alternative symmetric algorithms, and makes 
-CCA variants directly available as KEMs. 
 
 ## Supported variants
 

@@ -2,19 +2,16 @@
 //  2019-03-26  Markku-Juhani O. Saarinen <mjos@pqshield.com>
 //  Copyright (c) 2020, PQShield Ltd. All rights reserved.
 
-//  Abstract interface to the needed FIPS 202 and SP 800-185 features
+//  Minimal interface to SP 800-185 (TupleHash) features.
 
-#include <stdio.h>
 #include <string.h>
 
 #include "r5_xof.h"
 #include "keccakf1600.h"
 
-//  TupleHash interface
-
 //  incremental input using idx
 
-static void r5_xof_in(r5_xof_t * xof, const uint8_t * in, size_t len)
+static inline void r5_xof_in(r5_xof_t * xof, const uint8_t * in, size_t len)
 {
 	size_t i;
 
@@ -43,6 +40,41 @@ static void r5_xof_in(r5_xof_t * xof, const uint8_t * in, size_t len)
 		memcpy(xof->buf, in, len);
 		xof->idx = len;
 	}
+}
+
+//  right_encode
+
+static inline void r5_xof_renc(r5_xof_t * xof, size_t x)
+{
+	int i;
+	uint8_t buf[9];
+
+	i = 8;
+	do {
+		buf[--i] = x & 0xFF;
+		x >>= 8;
+	}
+	while (x > 0);
+	buf[8] = 8 - i;
+
+	r5_xof_in(xof, buf + i, 9 - i);
+}
+
+//  left_encode
+
+static inline void r5_xof_lenc(r5_xof_t * xof, size_t x)
+{
+	int i;
+	uint8_t buf[9];
+
+	i = 8;
+	do {
+		buf[i--] = x & 0xFF;
+		x >>= 8;
+	}
+	while (x > 0);
+	buf[i] = 8 - i;
+	r5_xof_in(xof, buf + i, 9 - i);
 }
 
 //  incremental output using idx
@@ -78,40 +110,6 @@ void r5_xof_out(r5_xof_t * xof, void *out, size_t len)
 	}
 }
 
-//  right_encode
-
-static void r5_xof_renc(r5_xof_t * xof, size_t x)
-{
-	int i;
-	uint8_t buf[9];
-
-	i = 8;
-	do {
-		buf[--i] = x & 0xFF;
-		x >>= 8;
-	}
-	while (x > 0);
-	buf[8] = 8 - i;
-
-	r5_xof_in(xof, buf + i, 9 - i);
-}
-
-//  left_encode
-
-static void r5_xof_lenc(r5_xof_t * xof, size_t x)
-{
-	int i;
-	uint8_t buf[9];
-
-	i = 8;
-	do {
-		buf[i--] = x & 0xFF;
-		x >>= 8;
-	}
-	while (x > 0);
-	buf[i] = 8 - i;
-	r5_xof_in(xof, buf + i, 9 - i);
-}
 
 //  Encode a string (data element) from "dat", "len" bytes
 

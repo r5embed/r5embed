@@ -13,7 +13,6 @@
 #include "r5_matmul.h"
 #include "rng.h"
 #include "xef.h"
-//#include "r5_xof.h"
 #include "r5_xofgen.h"
 #include "r5_ternvec.h"
 
@@ -36,11 +35,7 @@ static void r5_create_secret_mat(r5_ternv_t sm[],
 static void r5_matrow_a_random(modq_t * a_random,
 							   const uint8_t seed[PARAMS_KAPPA_BYTES])
 {
-/*
-	r5_xof(a_random, PARAM_TAU2_A_RANDOM * sizeof(modq_t),
-		   seed, PARAMS_KAPPA_BYTES);
-*/
-
+	//  generate A
 	r5_xof_agen(a_random, PARAM_TAU2_A_RANDOM * sizeof(modq_t),
 				sizeof(modq_t) * ((PARAM_TAU2_A_RANDOM + AGEN_NBLOCKS - 1) /
 								  AGEN_NBLOCKS), seed);
@@ -156,15 +151,15 @@ int r5_cpa_pke_keygen(uint8_t * pk, uint8_t * sk)
 	modq_t a_random[PARAM_TAU2_A_RANDOM + PARAMS_D];
 	uint16_t a_perm[PARAMS_D];
 
-	// sigma = seed of (permutation of) A
+	//  sigma = seed of (permutation of) A
 	randombytes(pk, PARAMS_KAPPA_BYTES);
 
-	// A from sigma
+	//  A from sigma
 	r5_matrow_a_random(a_random, pk);
 	memcpy(a_random + PARAM_TAU2_A_RANDOM, a_random,
 		   PARAMS_D * sizeof(modq_t));
 
-	// Permutation of a_random
+	//  Permutation of a_random
 	r5_create_a_perm(a_perm, pk);
 
 	randombytes(sk, PARAMS_KAPPA_BYTES);	// secret key -- Random S
@@ -173,7 +168,7 @@ int r5_cpa_pke_keygen(uint8_t * pk, uint8_t * sk)
 
 	r5_matmul_as_q(b, a_random, a_perm, s_t);	// B = A * S
 
-	// Compress B q_bits -> p_bits, pk = sigma | B
+	//  Compress B q_bits -> p_bits, pk = sigma | B
 	r5_pack_q_p_round(pk + PARAMS_KAPPA_BYTES, &b[0][0],
 					  PARAMS_D * PARAMS_N_BAR, PARAMS_H1);
 
@@ -231,14 +226,14 @@ int r5_cpa_pke_encrypt(uint8_t * ct, const uint8_t * pk, const uint8_t * m,
 	j = 8 * PARAMS_DPU_SIZE;
 	for (i = 0; i < PARAMS_MU; i++) {		// compute, pack v
 
-		// compress p->t
+		//  compress p->t
 		t = ((x[i] + PARAMS_H2) >> (PARAMS_P_BITS - PARAMS_T_BITS));
 
-		// add message
+		//  add message
 		tm = (m1[(i * PARAMS_B_BITS) >> 3] >> ((i * PARAMS_B_BITS) & 7));
 #if (8 % PARAMS_B_BITS != 0)
 		if (((i * PARAMS_B_BITS) & 7) + PARAMS_B_BITS > 8) {
-			/* Get spill over from next message byte */
+			// Get spill over from next message byte 
 			tm = (tm | (m1[((i * PARAMS_B_BITS) >> 3) + 1] <<
 						(8 - ((i * PARAMS_B_BITS) & 7))));
 		}
@@ -297,7 +292,7 @@ int r5_cpa_pke_decrypt(uint8_t * m, const uint8_t * sk, const uint8_t * ct)
 		m1[(i * PARAMS_B_BITS) >> 3] |= t << ((i * PARAMS_B_BITS) & 7);
 #if (8 % PARAMS_B_BITS != 0)
 		if (((i * PARAMS_B_BITS) & 7) + PARAMS_B_BITS > 8) {
-			/* Spill over to next message byte */
+			//  Spill over to next message byte 
 			m1[(i * PARAMS_B_BITS >> 3) + 1] |=
 				(t >> (8 - ((i * PARAMS_B_BITS) & 7)));
 		}
