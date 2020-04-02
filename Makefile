@@ -6,15 +6,17 @@
 export				
 
 BIN		= xtest
-#CSRC	= $(wildcard src/*.c)
-#SSRC	= $(wildcard src/*.S)
-#CSRC	+= test/mynistrng.c test/aesenc-1kt.c test/mygenkat_kem.c
-CSRC	= src/keccakf1600.c src/r5_xof.c test/test_tuplehash.c
+CSRC	= $(wildcard src/*.c)
+SSRC	= $(wildcard src/*.S)
+CSRC	+= test/mynistrng.c test/aesenc-1kt.c test/mygenkat_kem.c
 OBJS	= $(CSRC:.c=.o) $(SSRC:.S=.o)
 CC		= gcc
 CFLAGS	?= -g -Wall -Wshadow -fsanitize=address,undefined -O2
-CFLAGS	+= -Inist -Isrc -DR5ND_1CCA_5d -DXDBX
+CFLAGS	+= -Inist -Isrc -DR5ND_1CPA_5d
 LIBS    =
+
+default:
+	@echo "Dummy makefile. Use ./test/testkat.sh to run a self-test."
 
 $(BIN): $(OBJS)
 	$(CC) $(CFLAGS) -o $(BIN) $(OBJS) $(LIBS)
@@ -24,5 +26,4 @@ $(BIN): $(OBJS)
 
 clean:
 	rm -rf $(OBJS) $(BIN) *~ src/*~ test/*~ *.req *.rsp
-#	cd subdir && $(MAKE) clean
 

@@ -6,10 +6,6 @@
 
 #if !defined(ARMV7_ASM)
 
-#ifdef XDBX
-#include <stdio.h>
-#endif
-
 /* Based on the public domain implementation in
  * crypto_hash/keccakc512/simple/ from http://bench.cr.yp.to/supercop.html
  * by Ronny Van Keer
@@ -58,13 +54,6 @@ void keccak_extract(uint64_t * state, uint8_t * data, size_t offset,
 	for (i = 0; i < length / 8; i++) {
 		le_put64(data + 8 * i, state[i]);
 	}
-
-#ifdef XDBX
-	printf("[XDBX] out: ");
-	for (i = 0; i < length; i++)
-		printf("%02X", data[i]);
-	printf("\n");
-#endif
 }
 
 void keccak_xorbytes(uint64_t * state, const uint8_t * data, size_t offset,
@@ -73,13 +62,6 @@ void keccak_xorbytes(uint64_t * state, const uint8_t * data, size_t offset,
 	size_t i;
 
 	(void) offset;							//  kill warning
-
-#ifdef XDBX
-	printf("[XDBX] in: ");
-	for (i = 0; i < length; i++)
-		printf("%02X", data[i]);
-	printf("\n");
-#endif
 
 	for (i = 0; i < length / 8; ++i) {
 		state[i] ^= le_get64(data + 8 * i);
@@ -117,10 +99,6 @@ void keccak_f1600(uint64_t state[25])
 	uint64_t Eka, Eke, Eki, Eko, Eku;
 	uint64_t Ema, Eme, Emi, Emo, Emu;
 	uint64_t Esa, Ese, Esi, Eso, Esu;
-
-#ifdef XDBX
-	printf("[XDBX] f1600()\n");
-#endif
 
 	//copyFromState(A, state)
 	Aba = state[0];

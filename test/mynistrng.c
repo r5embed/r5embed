@@ -178,11 +178,7 @@ randombytes_init(unsigned char *entropy_input,
 	DRBG_ctx.reseed_counter = 1;
 }
 
-#ifdef XDBX
-int xrandombytes(unsigned char *x, unsigned long long xlen)
-#else
 int randombytes(unsigned char *x, unsigned long long xlen)
-#endif
 {
 	unsigned char block[16];
 	int i = 0;
@@ -212,21 +208,6 @@ int randombytes(unsigned char *x, unsigned long long xlen)
 
 	return RNG_SUCCESS;
 }
-
-#ifdef XDBX
-int randombytes(unsigned char *x, unsigned long long xlen)
-{
-	int r = xrandombytes(x, xlen);
-
-	printf("[XDBX] randombytes(%llu) = ", xlen);
-	for (size_t i = 0; i < xlen; i++) {
-		printf("%02X", x[i]);
-	}
-	printf(" (%d)\n", r);
-
-	return r;
-}
-#endif
 
 void
 AES256_CTR_DRBG_Update(unsigned char *provided_data,

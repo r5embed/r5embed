@@ -2,143 +2,243 @@
 //  2019-03-26  Markku-Juhani O. Saarinen <mjos@pqshield.com>
 //  Copyright (c) 2020, PQShield Ltd. All rights reserved.
 
-//  Abstract interface to required FIPS 202 and SP 800-185 features
+//  Abstract interface to the needed FIPS 202 and SP 800-185 features
 
+#include <stdio.h>
 #include <string.h>
 
 #include "r5_xof.h"
 #include "keccakf1600.h"
 
-
 //  basic functions
 
-void r5_xof_clr(r5_xof_ctx_t * ctx)
+void r5_xof_clr(r5_xof_t * xof)
 {
 	size_t i;
 
 	for (i = 0; i < 25; i++) {
-		ctx->st[i] = 0;
+		xof->st[i] = 0;
 	}
-	ctx->idx = 0;
+	xof->idx = 0;
 }
 
 //  incremental input using idx
 
-void r5_xof_in(r5_xof_ctx_t * ctx, const uint8_t * in, size_t len)
+void r5_xof_in(r5_xof_t * xof, const uint8_t * in, size_t len)
 {
 	size_t i;
 
-	i = ctx->idx;
+	i = xof->idx;
 	if (i > 0) {
 		if (i + len < R5_XOF_RATE) {
-			memcpy(ctx->buf + i, in, len);
-			ctx->idx = i + len;
+			memcpy(xof->buf + i, in, len);
+			xof->idx = i + len;
 			return;
 		}
-		memcpy(ctx->buf + i, in, R5_XOF_RATE - i);
-		keccak_xorbytes(ctx->st, ctx->buf, 0, R5_XOF_RATE);
-		keccak_f1600(ctx->st);
+		memcpy(xof->buf + i, in, R5_XOF_RATE - i);
+		keccak_xorbytes(xof->st, xof->buf, 0, R5_XOF_RATE);
+		keccak_f1600(xof->st);
 		i = R5_XOF_RATE - i;
 		len -= i;
 		in += i;
-		ctx->idx = 0;
+		xof->idx = 0;
 	}
 	while (len >= R5_XOF_RATE) {
-		keccak_xorbytes(ctx->st, in, 0, R5_XOF_RATE);
-		keccak_f1600(ctx->st);
+		keccak_xorbytes(xof->st, in, 0, R5_XOF_RATE);
+		keccak_f1600(xof->st);
 		len -= R5_XOF_RATE;
 		in += R5_XOF_RATE;
 	}
 	if (len > 0) {
-		memcpy(ctx->buf, in, len);
-		ctx->idx = len;
+		memcpy(xof->buf, in, len);
+		xof->idx = len;
 	}
 }
 
 //  incremental output using idx
 
-void r5_xof_out(r5_xof_ctx_t * ctx, uint8_t * out, size_t len)
+void r5_xof_out(r5_xof_t * xof, void * out, size_t len)
 {
 	size_t i;
+	uint8_t * op = out;
 
-	i = R5_XOF_RATE - ctx->idx;
+	i = R5_XOF_RATE - xof->idx;
 	if (i >= len) {
-		memcpy(out, ctx->buf + ctx->idx, len);
-		ctx->idx += len;
+		memcpy(op, xof->buf + xof->idx, len);
+		xof->idx += len;
 		return;
 	}
 	if (i > 0) {
-		memcpy(out, ctx->buf + ctx->idx, i);
-		out += i;
+		memcpy(op, xof->buf + xof->idx, i);
+		op += i;
 		len -= i;
-		ctx->idx = R5_XOF_RATE;
+		xof->idx = R5_XOF_RATE;
 	}
 	while (len >= R5_XOF_RATE) {
-		keccak_f1600(ctx->st);
-		keccak_extract(ctx->st, out, 0, R5_XOF_RATE);
+		keccak_f1600(xof->st);
+		keccak_extract(xof->st, op, 0, R5_XOF_RATE);
 		len -= R5_XOF_RATE;
-		out += R5_XOF_RATE;
+		op += R5_XOF_RATE;
 	}
 	if (len > 0) {
-		keccak_f1600(ctx->st);
-		keccak_extract(ctx->st, ctx->buf, 0, R5_XOF_RATE);
-		memcpy(out, ctx->buf, len);
-		ctx->idx = len;
+		keccak_f1600(xof->st);
+		keccak_extract(xof->st, xof->buf, 0, R5_XOF_RATE);
+		memcpy(op, xof->buf, len);
+		xof->idx = len;
 	}
 }
 
 //  add a pad byte
 
-void r5_xof_pad(r5_xof_ctx_t * ctx, uint8_t pad)
+static void r5_xof_pad(r5_xof_t * xof, uint8_t pad)
 {
-	size_t i = ctx->idx;
-	ctx->buf[i] = pad;
-	memset(ctx->buf + i + 1, 0x00, R5_XOF_RATE - i - 1);
-	ctx->buf[R5_XOF_RATE - 1] |= 0x80;
-	keccak_xorbytes(ctx->st, ctx->buf, 0, R5_XOF_RATE);
-	ctx->idx = R5_XOF_RATE;
+	size_t i = xof->idx;
+	xof->buf[i] = pad;
+	memset(xof->buf + i + 1, 0x00, R5_XOF_RATE - i - 1);
+	xof->buf[R5_XOF_RATE - 1] |= 0x80;
+	keccak_xorbytes(xof->st, xof->buf, 0, R5_XOF_RATE);
+	xof->idx = R5_XOF_RATE;
 	//  no call to permutation unless output actually requested
 }
 
-//  absorb "len" bytes from "in" with padding "pad"
+#if 0
 
-void r5_xof_input(r5_xof_ctx_t * ctx, const void *in, size_t in_len)
+//  absorb "len" bytes from "in" with padding "pad" (SHAKE)
+
+void r5_xof_input(r5_xof_t * xof, const void *in, size_t in_len)
 {
-	r5_xof_clr(ctx);
-	r5_xof_in(ctx, in, in_len);
-	r5_xof_pad(ctx, 0x1F);
+
+	printf("[TODO] r5_xof_input()\n");
+
+	r5_xof_clr(xof);
+	r5_xof_in(xof, in, in_len);
+	r5_xof_pad(xof, 0x1F);
 }
 
-//  single-call XOF
+//  single-call XOF (SHAKE)
 
 void r5_xof(void *out, size_t out_len, const void *in, size_t in_len)
 {
-	r5_xof_ctx_t ctx;
+	r5_xof_t xof;
 
-	r5_xof_clr(&ctx);
-	r5_xof_in(&ctx, in, in_len);
-	r5_xof_pad(&ctx, 0x1F);
-	r5_xof_out(&ctx, out, out_len);
+	printf("[TODO] r5_xof()\n");
+
+	r5_xof_clr(&xof);
+	r5_xof_in(&xof, in, in_len);
+	r5_xof_pad(&xof, 0x1F);
+	r5_xof_out(&xof, out, out_len);
 }
 
-//  two-input XOF
+//  two-input XOF (cSHAKE)
 
-void r5_xof_s_input(r5_xof_ctx_t * ctx,
+void r5_xof_s_input(r5_xof_t * xof,
 					const void *in, size_t in_len,
 					const void *sstr, size_t sstr_len)
 {
 	const uint8_t cshake_hdr[5] = { 0x01, R5_XOF_RATE, 0x01, 0x00, 0x01 };
 
-	r5_xof_clr(ctx);
+	printf("[TODO] r5_xof_s_input()\n");
 
-	memcpy(ctx->buf, cshake_hdr, 5);
-	ctx->buf[5] = 8 * sstr_len;
-	memcpy(ctx->buf + 6, sstr, sstr_len);
-	memset(ctx->buf + 6 + sstr_len, 0x00, R5_XOF_RATE - 6 - sstr_len);
+	r5_xof_clr(xof);
 
-	keccak_xorbytes(ctx->st, ctx->buf, 0, R5_XOF_RATE);
-	keccak_f1600(ctx->st);
+	memcpy(xof->buf, cshake_hdr, 5);
+	xof->buf[5] = 8 * sstr_len;
+	memcpy(xof->buf + 6, sstr, sstr_len);
+	memset(xof->buf + 6 + sstr_len, 0x00, R5_XOF_RATE - 6 - sstr_len);
 
-	r5_xof_in(ctx, in, in_len);
-	r5_xof_pad(ctx, 0x04);
+	keccak_xorbytes(xof->st, xof->buf, 0, R5_XOF_RATE);
+	keccak_f1600(xof->st);
+
+	r5_xof_in(xof, in, in_len);
+	r5_xof_pad(xof, 0x04);
 }
+
+#endif
+
+//	TupleHash interface
+
+//	right_encode
+
+static void r5_xof_renc(r5_xof_t * xof, size_t x)
+{
+	int i;
+	uint8_t buf[9];
+
+	i = 8;
+	do {
+		buf[--i] = x & 0xFF;
+		x >>= 8;
+	}
+	while (x > 0);
+	buf[8] = 8 - i;
+
+	r5_xof_in(xof, buf + i, 9 - i);
+}
+
+//	left_encode
+
+static void r5_xof_lenc(r5_xof_t * xof, size_t x)
+{
+	int i;
+	uint8_t buf[9];
+
+	i = 8;
+	do {
+		buf[i--] = x & 0xFF;
+		x >>= 8;
+	}
+	while (x > 0);
+	buf[i] = 8 - i;
+	r5_xof_in(xof, buf + i, 9 - i);
+}
+
+//	Encode a string (data element) from "dat", "len" bytes
+
+void r5_xof_str(r5_xof_t * xof, const void * dat, size_t len)
+{
+	r5_xof_lenc(xof, 8 * len);
+	if (len > 0) {
+		r5_xof_in(xof, dat, len);
+	}
+}
+
+//	Reset and initialize the context
+
+void r5_xof_ini(r5_xof_t * xof)
+{
+	static uint64_t cache_st[25];
+	static int cache_ini = 0;
+	size_t i;
+
+	if (cache_ini) {
+		//	we have cached stated stored..
+		for (i = 0; i < 25; i++) {
+			xof->st[i] = cache_st[i];
+		}
+	} else {
+		//	initialize the permutation
+		r5_xof_clr(xof);
+		r5_xof_lenc(xof, R5_XOF_RATE);
+		r5_xof_str(xof, "TupleHash", 9);
+		r5_xof_str(xof, NULL, 0);		//	S
+//		r5_xof_str(xof, "My Tuple App", 12);
+		memset(xof->buf + xof->idx, 0x00, R5_XOF_RATE - xof->idx);
+		keccak_xorbytes(xof->st, xof->buf, 0, R5_XOF_RATE);
+		keccak_f1600(xof->st);
+		for (i = 0; i < 25; i++) {
+			cache_st[i] = xof->st[i];
+		}
+		cache_ini = 1;
+	}
+
+	xof->idx = 0;
+}
+
+//	Pad for output, "bits" = number of output bits, 0 = XOF
+
+void r5_xof_fin(r5_xof_t * xof, size_t bits)
+{
+	r5_xof_renc(xof, bits);			//  output length
+	r5_xof_pad(xof, 0x04);
+}
+

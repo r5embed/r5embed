@@ -26,9 +26,12 @@ void r5_ringmul_q(modq_t d[PARAMS_D],
 
 	//  expand a
 	r5_xof(a, PARAMS_D * sizeof(modq_t), sigma, PARAMS_KAPPA_BYTES);
+
+
 #if __BYTE_ORDER__ != __ORDER_LITTLE_ENDIAN__
 	for (i = 0; i < PARAMS_D; i++) {
 		a[i] = LITTLE_ENDIAN16(a[i]);
+	}
 #endif
 
 		//  note: order of coefficients a[1..n] is *NOT* reversed!
@@ -72,7 +75,6 @@ void r5_ringmul_q(modq_t d[PARAMS_D],
 			d[i] = d[i - 1] - d[i];
 		}
 	}
-}
 
 // multiplication mod p, result length mu
 

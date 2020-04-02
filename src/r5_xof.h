@@ -24,7 +24,7 @@ typedef struct {
 	uint64_t st[25];
 	uint8_t buf[R5_XOF_RATE];
 	size_t idx;
-} r5_xof_ctx_t;
+} r5_xof_t;
 
 // In Round5 SHAKE is used for everything, so hash = xof
 #define r5_hash r5_xof
@@ -33,19 +33,23 @@ typedef struct {
 
 void r5_xof(void *out, const size_t out_len,
 			const void *in, const size_t in_len);
-
-
-void r5_xof_input(r5_xof_ctx_t * ctx, const void *in, size_t in_len);
-
-void r5_xof_s_input(r5_xof_ctx_t * ctx,
+void r5_xof_input(r5_xof_t * ctx, const void *in, size_t in_len);
+void r5_xof_s_input(r5_xof_t * ctx,
 					const void *in, size_t in_len,
 					const void *sstr, size_t sstr_len);
+void r5_xof_clr(r5_xof_t * ctx);
+void r5_xof_in(r5_xof_t * ctx, const uint8_t * in, size_t in_len);
+void r5_xof_out(r5_xof_t * ctx, void * out, size_t out_len);
 
+//	TupleHash Interface
 
-//  basic interface
-void r5_xof_clr(r5_xof_ctx_t * ctx);
-void r5_xof_in(r5_xof_ctx_t * ctx, const uint8_t * in, size_t in_len);
-void r5_xof_pad(r5_xof_ctx_t * ctx, uint8_t pad);
-void r5_xof_out(r5_xof_ctx_t * ctx, uint8_t * out, size_t out_len);
+//	Reset and initialize the context
+void r5_xof_ini(r5_xof_t * ctx);
 
-#endif										/* _R5_XOF_H_ */
+//	Encode a string (data element) from "dat", "len" bytes
+void r5_xof_str(r5_xof_t * ctx, const void * dat, size_t len);
+
+//	Pad for output, "bits" = number of output bits, 0 = XOF
+void r5_xof_fin(r5_xof_t * ctx, size_t bits);
+
+#endif								/* _R5_XOF_H_ */

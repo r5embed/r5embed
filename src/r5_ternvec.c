@@ -15,7 +15,7 @@
 
 //  create a sparse ternary vector (faster index type)
 
-void r5_sparse_tern(r5_xof_ctx_t * xof, r5_ternv_t tv)
+void r5_sparse_tern(r5_xof_t * xof, r5_ternv_t tv)
 {
 	size_t i;
 	uint16_t x;
@@ -40,7 +40,7 @@ void r5_sparse_tern(r5_xof_ctx_t * xof, r5_ternv_t tv)
 
 //  create a sparse ternary vector (slower constant time version)
 
-void r5_sparse_tern(r5_xof_ctx_t * xof, r5_ternv_t tv)
+void r5_sparse_tern(r5_xof_t * xof, r5_ternv_t tv)
 {
 	int h;
 	size_t i, j;
@@ -82,3 +82,21 @@ void r5_sparse_tern(r5_xof_ctx_t * xof, r5_ternv_t tv)
 }
 
 #endif										/* ROUND5_CT */
+
+//  Create a secret indexed vector
+
+void r5_idx_tern(r5_ternv_t sv, const uint8_t seed[PARAMS_KAPPA_BYTES],
+					size_t idx)
+{
+	r5_xof_t xof;
+	uint8_t ibyte = idx;
+
+	r5_xof_ini(&xof);
+	r5_xof_str(&xof, "Secret_Key_Generation", 21);
+	r5_xof_str(&xof, seed, PARAMS_KAPPA_BYTES);
+	r5_xof_str(&xof, &ibyte, 1);
+	r5_xof_fin(&xof, 0);
+
+	r5_sparse_tern(&xof, sv);
+}
+

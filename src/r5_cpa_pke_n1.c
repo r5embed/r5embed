@@ -8,30 +8,26 @@
 
 #include <string.h>
 
+#include "little_endian.h"
 #include "r5_cpa_pke.h"
 #include "r5_matmul.h"
-#include "r5_xof.h"
 #include "rng.h"
 #include "xef.h"
-#include "little_endian.h"
+//#include "r5_xof.h"
+#include "r5_xofgen.h"
+#include "r5_ternvec.h"
 
-//  create a secret matrix
+//	secret matrix
 
 static void r5_create_secret_mat(r5_ternv_t sm[],
 								 const uint8_t seed[PARAMS_KAPPA_BYTES],
 								 size_t n)
 {
+
 	size_t i;
-	r5_xof_ctx_t xof;
-	uint64_t x;
 
 	for (i = 0; i < n; i++) {
-
-		//  XXX temporary; unknown size
-		x = LITTLE_ENDIAN64((uint64_t) i);
-		r5_xof_s_input(&xof, seed, PARAMS_KAPPA_BYTES, &x, 8);
-
-		r5_sparse_tern(&xof, sm[i]);
+		r5_idx_tern(sm[i], seed, i);
 	}
 }
 
@@ -40,8 +36,14 @@ static void r5_create_secret_mat(r5_ternv_t sm[],
 static void r5_matrow_a_random(modq_t * a_random,
 							   const uint8_t seed[PARAMS_KAPPA_BYTES])
 {
+/*
 	r5_xof(a_random, PARAM_TAU2_A_RANDOM * sizeof(modq_t),
 		   seed, PARAMS_KAPPA_BYTES);
+*/
+
+	r5_xof_agen(a_random, PARAM_TAU2_A_RANDOM * sizeof(modq_t), 
+		sizeof(modq_t) * ((PARAM_TAU2_A_RANDOM + AGEN_NBLOCKS - 1) / 
+			AGEN_NBLOCKS), seed);
 
 #if __BYTE_ORDER__ != __ORDER_LITTLE_ENDIAN__
 	size_t i;
@@ -60,20 +62,18 @@ static int r5_create_a_perm(uint16_t a_perm[PARAMS_D],
 	size_t i;
 	uint16_t rnd;
 	uint8_t v[BITS_TO_BYTES(PARAM_TAU2_A_RANDOM)];	// low ram; use bits
-	r5_xof_ctx_t ctx;
-
-	//  The DRBG customization when creating the tau=1 or tau=2 permutations.
-	static const uint8_t permutation_customization[2] = { 0, 1 };
+	r5_xof_t xof;
 
 	memset(v, 0, sizeof(v));
 
-	r5_xof_s_input(&ctx, sigma, PARAMS_KAPPA_BYTES,
-				   permutation_customization,
-				   sizeof(permutation_customization));
+	r5_xof_ini(&xof);
+	r5_xof_str(&xof, "APermutation", 12);
+	r5_xof_str(&xof, sigma, PARAMS_KAPPA_BYTES);
+	r5_xof_fin(&xof, 0);
 
 	for (i = 0; i < PARAMS_D; ++i) {
 		do {
-			r5_xof_out(&ctx, (uint8_t *) & rnd, sizeof(rnd));
+			r5_xof_out(&xof, (uint8_t *) & rnd, sizeof(rnd));
 			rnd = (uint16_t) LITTLE_ENDIAN16(rnd);
 			rnd &= (PARAM_TAU2_A_RANDOM - 1);
 		} while ((v[rnd >> 3] >> (rnd & 7)) & 1);

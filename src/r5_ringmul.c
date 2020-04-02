@@ -11,7 +11,7 @@
 #include <string.h>
 
 #include "r5_ringmul.h"
-#include "r5_xof.h"
+#include "r5_xofgen.h"
 #include "r5_addsub.h"
 #include "r5_pack.h"
 #include "little_endian.h"
@@ -25,7 +25,10 @@ void r5_ringmul_q(modq_t d[PARAMS_D],
 	size_t i;
 
 	//  expand a
-	r5_xof(a, PARAMS_D * sizeof(modq_t), sigma, PARAMS_KAPPA_BYTES);
+	r5_xof_agen(a, PARAMS_D * sizeof(modq_t),
+		((PARAMS_D + AGEN_NBLOCKS - 1) / AGEN_NBLOCKS) * sizeof(modq_t),
+		sigma);
+
 #if __BYTE_ORDER__ != __ORDER_LITTLE_ENDIAN__
 	for (i = 0; i < PARAMS_D; i++) {
 		a[i] = LITTLE_ENDIAN16(a[i]);

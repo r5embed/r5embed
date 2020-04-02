@@ -29,7 +29,7 @@ GOOD_KAT=test/good.kat
 #CC=mips-linux-gnu-gcc
 #CC=powerpc-linux-gnu-gcc
 #CFLAGS="-Wall -Wextra -Wshadow -Ofast -static"
-#CFLAGS="-Wall -Wextra -Wshadow -Ofast -static -march=armv7-a -DARMV7_ASM"
+#CFLAGS="-Wall -Wextra -Wshadow -Ofast -static -march=armv7-a -DARMV7_ASM -Wno-aggressive-loop-optimizations"
 
 #	targets specified on command line ?
 
