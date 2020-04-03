@@ -19,7 +19,7 @@ void r5_xof_triplet(void *out, size_t olen,
 	r5_xof_str(&xof, a, alen);
 	r5_xof_str(&xof, b, blen);
 	r5_xof_str(&xof, c, clen);
-	r5_xof_pad(&xof, 0);
+	r5_xof_pad(&xof, 8 * olen);				//  TupleHash
 	r5_xof_out(&xof, out, olen);
 }
 
@@ -34,10 +34,10 @@ void r5_xof_agen(void *d, size_t len, size_t blen, const uint8_t * seed)
 
 	while (len > 0) {
 		r5_xof_ini(&xof);
-		r5_xof_str(&xof, "AGeneration", 11);
+		r5_xof_str(&xof, "AGEN", 4);
 		r5_xof_str(&xof, seed, PARAMS_KAPPA_BYTES);
 		r5_xof_str(&xof, &ibyte, 1);
-		r5_xof_pad(&xof, 0);				//  XOF
+		r5_xof_pad(&xof, 0);				//  TupleHashXOF
 		if (blen > len)
 			blen = len;
 		r5_xof_out(&xof, dpt, blen);

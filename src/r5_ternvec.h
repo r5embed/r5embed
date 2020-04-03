@@ -6,7 +6,6 @@
 #define _R5_TERNVEC_H_
 
 #include "r5_parameter_sets.h"
-#include "r5_xof.h"
 
 //  currently constant time support only for ring variants
 #if defined(ROUND5_CT) && (PARAMS_N == 1)
@@ -26,6 +25,7 @@ typedef uint16_t r5_ternv_t[PARAMS_H / 2][2];
 
 //  create a secret indexed vector
 PQS_OLOCAL void r5_idx_tern(r5_ternv_t sv,
+							void *dom, size_t domlen,
 							const uint8_t seed[PARAMS_KAPPA_BYTES],
 							size_t idx);
 

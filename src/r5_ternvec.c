@@ -85,17 +85,18 @@ static inline void r5_sparse_tern(r5_xof_t * xof, r5_ternv_t tv)
 
 //  Create a secret indexed vector
 
-void r5_idx_tern(r5_ternv_t sv, const uint8_t seed[PARAMS_KAPPA_BYTES],
-				 size_t idx)
+void r5_idx_tern(r5_ternv_t sv,
+				 void *dom, size_t domlen,
+				 const uint8_t seed[PARAMS_KAPPA_BYTES], size_t idx)
 {
 	r5_xof_t xof;
 	uint8_t ibyte = idx;
 
 	r5_xof_ini(&xof);
-	r5_xof_str(&xof, "Secret_Key_Generation", 21);
+	r5_xof_str(&xof, dom, domlen);
 	r5_xof_str(&xof, seed, PARAMS_KAPPA_BYTES);
 	r5_xof_str(&xof, &ibyte, 1);
-	r5_xof_pad(&xof, 0);
+	r5_xof_pad(&xof, 0);					//  XOF
 
 	r5_sparse_tern(&xof, sv);
 }

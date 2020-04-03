@@ -80,6 +80,8 @@ do
 
 	cd $WORKD/$targ
 	./genkat
+#	mkdir -p /tmp/tv/$targ
+#	cp *.rsp /tmp/tv/$targ
 	cd ..
 
 	kat2=`shasum -a 256 $targ/*.rsp`

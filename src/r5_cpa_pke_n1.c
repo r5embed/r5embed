@@ -13,22 +13,9 @@
 #include "r5_matmul.h"
 #include "rng.h"
 #include "xef.h"
+#include "r5_xof.h"
 #include "r5_xofgen.h"
 #include "r5_ternvec.h"
-
-//  secret matrix
-
-static void r5_create_secret_mat(r5_ternv_t sm[],
-								 const uint8_t seed[PARAMS_KAPPA_BYTES],
-								 size_t n)
-{
-
-	size_t i;
-
-	for (i = 0; i < n; i++) {
-		r5_idx_tern(sm[i], seed, i);
-	}
-}
 
 //  create "matrix row" a_random
 
@@ -150,6 +137,7 @@ int r5_cpa_pke_keygen(uint8_t * pk, uint8_t * sk)
 	r5_ternv_t s_t[PARAMS_N_BAR];
 	modq_t a_random[PARAM_TAU2_A_RANDOM + PARAMS_D];
 	uint16_t a_perm[PARAMS_D];
+	size_t i;
 
 	//  sigma = seed of (permutation of) A
 	randombytes(pk, PARAMS_KAPPA_BYTES);
@@ -164,7 +152,9 @@ int r5_cpa_pke_keygen(uint8_t * pk, uint8_t * sk)
 
 	randombytes(sk, PARAMS_KAPPA_BYTES);	// secret key -- Random S
 
-	r5_create_secret_mat(s_t, sk, PARAMS_N_BAR);
+	for (i = 0; i < PARAMS_N_BAR; i++) {
+		r5_idx_tern(s_t[i], "SGEN", 4, sk, i);
+	}
 
 	r5_matmul_as_q(b, a_random, a_perm, s_t);	// B = A * S
 
@@ -193,7 +183,9 @@ int r5_cpa_pke_encrypt(uint8_t * ct, const uint8_t * pk, const uint8_t * m,
 	modp_t t, tm;
 
 	//  Create R
-	r5_create_secret_mat(r_t, rho, PARAMS_M_BAR);
+	for (i = 0; i < PARAMS_N_BAR; i++) {
+		r5_idx_tern(r_t[i], "RGEN", 4, rho, i);
+	}
 
 	//  unpack public key
 	r5_unpack_p(&mat.b[0][0], PARAMS_D * PARAMS_N_BAR,
@@ -264,7 +256,9 @@ int r5_cpa_pke_decrypt(uint8_t * m, const uint8_t * sk, const uint8_t * ct)
 	uint8_t m1[BITS_TO_BYTES(PARAMS_MU * PARAMS_B_BITS)];
 	modp_t t;
 
-	r5_create_secret_mat(s_t, sk, PARAMS_N_BAR);
+	for (i = 0; i < PARAMS_N_BAR; i++) {
+		r5_idx_tern(s_t[i], "SGEN", 4, sk, i);
+	}
 
 	r5_unpack_p((modp_t *) u_t, PARAMS_M_BAR * PARAMS_D, ct);	// ct = U^T | v
 
