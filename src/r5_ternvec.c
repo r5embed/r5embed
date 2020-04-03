@@ -15,7 +15,7 @@
 
 //  create a sparse ternary vector (faster index type)
 
-void r5_sparse_tern(r5_xof_t * xof, r5_ternv_t tv)
+static inline void r5_sparse_tern(r5_xof_t * xof, r5_ternv_t tv)
 {
 	size_t i;
 	uint16_t x;
@@ -40,7 +40,7 @@ void r5_sparse_tern(r5_xof_t * xof, r5_ternv_t tv)
 
 //  create a sparse ternary vector (slower constant time version)
 
-void r5_sparse_tern(r5_xof_t * xof, r5_ternv_t tv)
+static inline void r5_sparse_tern(r5_xof_t * xof, r5_ternv_t tv)
 {
 	int h;
 	size_t i, j;
