@@ -37,8 +37,8 @@ void r5_xof_agen(void *d, size_t len, size_t blen, const uint8_t * seed)
 		r5_xof_str(&xof, "AGEN", 4);
 		r5_xof_str(&xof, seed, PARAMS_KAPPA_BYTES);
 		r5_xof_str(&xof, &ibyte, 1);
-		r5_xof_pad(&xof, 0);				//  TupleHashXOF
-		if (blen > len)
+		r5_xof_pad(&xof, 8 * blen);			//  TupleHash
+		if (blen > len)						//  XXX this should be before pad
 			blen = len;
 		r5_xof_out(&xof, dpt, blen);
 		dpt += blen;

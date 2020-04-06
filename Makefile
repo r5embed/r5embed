@@ -11,7 +11,7 @@ SSRC	= $(wildcard src/*.S)
 CSRC	+= test/mynistrng.c test/aesenc-1kt.c test/mygenkat_kem.c
 OBJS	= $(CSRC:.c=.o) $(SSRC:.S=.o)
 CC		= gcc
-CFLAGS	?= -g -Wall -Wshadow -fsanitize=address,undefined -O2
+CFLAGS	?= -g -Wall -Wshadow -fsanitize=address,undefined -O2 -DXDX
 CFLAGS	+= -Inist -Isrc -DR5ND_1CPA_5d
 LIBS    =
 
