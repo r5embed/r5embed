@@ -28,7 +28,7 @@ int r5_cpa_pke_keygen(uint8_t * pk, uint8_t * sk)
 	randombytes(pk, PARAMS_KAPPA_BYTES);	// sigma = seed of A
 
 	randombytes(sk, PARAMS_KAPPA_BYTES);	// secret key -- Random S
-	r5_idx_tern(s_v, sk, 0);
+	r5_idx_tern(s_v, "SGEN", 4, sk, 0);
 
 	r5_ringmul_q(b, pk, s_v);				// B = A * S
 
@@ -56,7 +56,7 @@ int r5_cpa_pke_encrypt(uint8_t * ct, const uint8_t * pk,
 #endif
 
 	//  Create R
-	r5_idx_tern(r_v, rho, 0);
+	r5_idx_tern(r_v, "RGEN", 4, rho, 0);
 
 	r5_ringmul_q(u_t, pk, r_v);				// U^T = U = A^T * R = A * R (mod q)
 	r5_pack_q_p(ct, u_t, PARAMS_H2);		// ct = U^T | v
@@ -100,7 +100,7 @@ int r5_cpa_pke_decrypt(uint8_t * m, const uint8_t * sk, const uint8_t * ct)
 	modp_t t, x_prime[PARAMS_MU];
 	uint8_t m1[BITS_TO_BYTES(PARAMS_MU * PARAMS_B_BITS)];
 
-	r5_idx_tern(s_v, sk, 0);
+	r5_idx_tern(s_v, "SGEN", 4, sk, 0);
 
 	j = 8 * PARAMS_NDP_SIZE;
 	for (i = 0; i < PARAMS_MU; i++) {

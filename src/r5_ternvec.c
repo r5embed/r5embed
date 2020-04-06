@@ -11,12 +11,23 @@
 
 #include <string.h>
 
+void r5_idx_tern(r5_ternv_t tv,
+				 void *dom, size_t domlen,
+				 const uint8_t seed[PARAMS_KAPPA_BYTES], size_t idx)
+{
+	r5_xof_t xof;
+	uint8_t ibyte = idx;
+
+	r5_xof_ini(&xof);
+	r5_xof_str(&xof, dom, domlen);
+	r5_xof_str(&xof, seed, PARAMS_KAPPA_BYTES);
+	r5_xof_str(&xof, &ibyte, 1);
+	r5_xof_pad(&xof, 0);					//  XOF
+
 #ifndef ROUND5_CT
 
-//  create a sparse ternary vector (faster index type)
+	//  create a sparse ternary vector (faster index type)
 
-static inline void r5_sparse_tern(r5_xof_t * xof, r5_ternv_t tv)
-{
 	size_t i;
 	uint16_t x;
 	uint8_t v[PARAMS_D];
@@ -26,7 +37,7 @@ static inline void r5_sparse_tern(r5_xof_t * xof, r5_ternv_t tv)
 	for (i = 0; i < PARAMS_H; i++) {
 		do {
 			do {							//  uniform sampling
-				r5_xof_out(xof, (uint8_t *) & x, sizeof(x));
+				r5_xof_out(&xof, (uint8_t *) & x, sizeof(x));
 				x = LITTLE_ENDIAN16(x);
 			} while (x >= PARAMS_RS_LIM);	//  RS_LIM = d * RS_DIV
 			x /= PARAMS_RS_DIV;
@@ -34,14 +45,11 @@ static inline void r5_sparse_tern(r5_xof_t * xof, r5_ternv_t tv)
 		v[x] = 1;							//  mark as occupied
 		tv[i >> 1][i & 1] = x;				//  addition / subtract index
 	}
-}
 
 #else										/* ROUND5_CT */
 
-//  create a sparse ternary vector (slower constant time version)
+	//  create a sparse ternary vector (slower constant time version)
 
-static inline void r5_sparse_tern(r5_xof_t * xof, r5_ternv_t tv)
-{
 	int h;
 	size_t i, j;
 	uint16_t x;
@@ -58,7 +66,7 @@ static inline void r5_sparse_tern(r5_xof_t * xof, r5_ternv_t tv)
 
 	for (i = 0; i < PARAMS_HMAX; i++) {		//  see "ct_compute_hi.py"
 
-		r5_xof_out(xof, (uint8_t *) & x, sizeof(x));
+		r5_xof_out(&xof, (uint8_t *) & x, sizeof(x));
 		x = LITTLE_ENDIAN16(x);
 		x /= PARAMS_RS_DIV;					//  no uniform rejection here
 
@@ -79,23 +87,5 @@ static inline void r5_sparse_tern(r5_xof_t * xof, r5_ternv_t tv)
 			b >>= 1;						//  b & 1 == 1 when j == x >> 6
 		}
 	}
-}
-
 #endif										/* ROUND5_CT */
-
-//  Create a secret indexed vector
-
-void r5_idx_tern(r5_ternv_t sv, const uint8_t seed[PARAMS_KAPPA_BYTES],
-				 size_t idx)
-{
-	r5_xof_t xof;
-	uint8_t ibyte = idx;
-
-	r5_xof_ini(&xof);
-	r5_xof_str(&xof, "Secret_Key_Generation", 21);
-	r5_xof_str(&xof, seed, PARAMS_KAPPA_BYTES);
-	r5_xof_str(&xof, &ibyte, 1);
-	r5_xof_pad(&xof, 0);
-
-	r5_sparse_tern(&xof, sv);
 }

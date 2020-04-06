@@ -23,7 +23,7 @@ static inline void r5_xof_in(r5_xof_t * xof, const uint8_t * in, size_t len)
 			return;
 		}
 		memcpy(xof->buf + i, in, R5_XOF_RATE - i);
-		keccak_xorbytes(xof->st, xof->buf, 0, R5_XOF_RATE);
+		keccak_xorbytes(xof->st, xof->buf, R5_XOF_RATE);
 		keccak_f1600(xof->st);
 		i = R5_XOF_RATE - i;
 		len -= i;
@@ -31,7 +31,7 @@ static inline void r5_xof_in(r5_xof_t * xof, const uint8_t * in, size_t len)
 		xof->idx = 0;
 	}
 	while (len >= R5_XOF_RATE) {
-		keccak_xorbytes(xof->st, in, 0, R5_XOF_RATE);
+		keccak_xorbytes(xof->st, in, R5_XOF_RATE);
 		keccak_f1600(xof->st);
 		len -= R5_XOF_RATE;
 		in += R5_XOF_RATE;
@@ -98,13 +98,13 @@ void r5_xof_out(r5_xof_t * xof, void *out, size_t len)
 	}
 	while (len >= R5_XOF_RATE) {
 		keccak_f1600(xof->st);
-		keccak_extract(xof->st, op, 0, R5_XOF_RATE);
+		keccak_extract(xof->st, op, R5_XOF_RATE);
 		len -= R5_XOF_RATE;
 		op += R5_XOF_RATE;
 	}
 	if (len > 0) {
 		keccak_f1600(xof->st);
-		keccak_extract(xof->st, xof->buf, 0, R5_XOF_RATE);
+		keccak_extract(xof->st, xof->buf, R5_XOF_RATE);
 		memcpy(op, xof->buf, len);
 		xof->idx = len;
 	}
@@ -145,7 +145,7 @@ void r5_xof_ini(r5_xof_t * xof)
 		r5_xof_str(xof, NULL, 0);			//  S
 //      r5_xof_str(xof, "My Tuple App", 12);
 		memset(xof->buf + xof->idx, 0x00, R5_XOF_RATE - xof->idx);
-		keccak_xorbytes(xof->st, xof->buf, 0, R5_XOF_RATE);
+		keccak_xorbytes(xof->st, xof->buf, R5_XOF_RATE);
 		keccak_f1600(xof->st);
 		for (i = 0; i < 25; i++) {
 			cache_st[i] = xof->st[i];
@@ -167,7 +167,7 @@ void r5_xof_pad(r5_xof_t * xof, size_t bits)
 	xof->buf[i] = 0x04;						//  cSHAKE
 	memset(xof->buf + i + 1, 0x00, R5_XOF_RATE - i - 1);
 	xof->buf[R5_XOF_RATE - 1] |= 0x80;
-	keccak_xorbytes(xof->st, xof->buf, 0, R5_XOF_RATE);
+	keccak_xorbytes(xof->st, xof->buf, R5_XOF_RATE);
 	xof->idx = R5_XOF_RATE;
 	//  no call to permutation unless output actually requested
 }
