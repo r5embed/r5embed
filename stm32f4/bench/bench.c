@@ -152,11 +152,11 @@ int test_speed()
 	do {
 
 		for (i = 0; i < 100; i++) {
-			KECCAKF1600_24(st);
-			KECCAKF1600_24(st);
-			KECCAKF1600_24(st);
-			KECCAKF1600_24(st);
-			KECCAKF1600_24(st);
+			keccak_f1600(st);
+			keccak_f1600(st);
+			keccak_f1600(st);
+			keccak_f1600(st);
+			keccak_f1600(st);
 			n += 5;
 		}
 		t1 = get_cycles() - t0;
