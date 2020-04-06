@@ -1,9 +1,6 @@
 //  keccakf1600.c
 //  2020-04-01  Markku-Juhani O. Saarinen <mjos@pqshield.com>
 
-
-//  Flag for alternative implementation: keccakf1600_armv7m.S
-
 #if !defined(ARMV7_ASM)
 
 /* Based on the public domain implementation in
@@ -44,24 +41,18 @@ static inline void le_put64(uint8_t * x, uint64_t u)
 	x[7] = u >> 56;
 }
 
-void keccak_extract(uint64_t * state, uint8_t * data, size_t offset,
-					size_t length)
+void keccak_extract(uint64_t * state, uint8_t * data, size_t length)
 {
 	size_t i;
-
-	(void) offset;							//  kill warning
 
 	for (i = 0; i < length / 8; i++) {
 		le_put64(data + 8 * i, state[i]);
 	}
 }
 
-void keccak_xorbytes(uint64_t * state, const uint8_t * data, size_t offset,
-					 size_t length)
+void keccak_xorbytes(uint64_t * state, const uint8_t * data, size_t length)
 {
 	size_t i;
-
-	(void) offset;							//  kill warning
 
 	for (i = 0; i < length / 8; ++i) {
 		state[i] ^= le_get64(data + 8 * i);
@@ -347,5 +338,4 @@ void keccak_f1600(uint64_t state[25])
 	state[23] = Aso;
 	state[24] = Asu;
 }
-
-#endif										/* !ARMV7_ASM */
+#endif
