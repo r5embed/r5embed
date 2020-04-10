@@ -15,7 +15,7 @@ CPA_EXTRA="R5ND_0CPA_2iot R5ND_1CPA_4longkey"
 #	standard flags
 
 CC=gcc
-CFLAGS="-march=native -Wall -Wextra -Wshadow -fsanitize=address,undefined -O2"
+CFLAGS=" -O2 -Wall -Wextra -Wshadow -fsanitize=address,undefined"
 LIBS=""
 TEST_MAIN=test/mygenkat_kem.c
 R5_SRC=src
@@ -29,7 +29,7 @@ GOOD_KAT=test/good.kat
 #CC=mips-linux-gnu-gcc
 #CC=powerpc-linux-gnu-gcc
 #CFLAGS="-Wall -Wextra -Wshadow -Ofast -static"
-#CFLAGS="-Wall -Wextra -Wshadow -Ofast -static -march=armv7-a -DARMV7_ASM"
+#CFLAGS="-Wall -Wextra -Wshadow -Ofast -static -march=armv7-a -DARMV7_ASM -Wno-aggressive-loop-optimizations"
 
 #	targets specified on command line ?
 
@@ -80,6 +80,8 @@ do
 
 	cd $WORKD/$targ
 	./genkat
+#	mkdir -p /tmp/tv/$targ
+#	cp *.rsp /tmp/tv/$targ
 	cd ..
 
 	kat2=`shasum -a 256 $targ/*.rsp`

@@ -24,8 +24,9 @@
 \begin{tabular}{l p{90mm}}
 {\bf Changelog} \\
 \hline
-2019-01-31  & Markku-Juhani O. Saarinen \verb|<mjos@pqshield.com>| \\
+2020-01-31  & Markku-Juhani O. Saarinen \verb|<mjos@pqshield.com>| \\
             & {\it First measurements for new parameters.}  \\
+2020-04-06  & {\it TupleHash, optimizations.}   \\
 \hline
 \end{tabular}
 \end{center}
@@ -37,9 +38,9 @@
 A separate source distribution of Round5 without external library
 dependencies is available from: \url{https://github.com/r5embed/r5embed}.
 
-This codebase is smaller and more portable than the NIST reference code and 
-has been tested on various architectures (32/64 bit targets, big-endian, etc). 
-It forms the basis for our embedded testing and hardware-software codesign 
+This codebase is smaller and more portable than the NIST reference code and
+has been tested on various architectures (32/64 bit targets, big-endian, etc).
+It forms the basis for our embedded testing and hardware-software codesign
 (although those hardware drivers are not included in the above distribution).
 
 \subsection{Leading performance on Cortex M4}
@@ -53,15 +54,15 @@ This particular MCU (and Cortex M4 in general) does not deploy a data cache --
 a separate flash cache exists on the instruction bus. Code execution paths are
 therefore designed to be constant, while there is some variation in the data
 access paths. This implementation may be considered \emph{hardened} or
-\emph{resistant} against a time-channel attack, while not strictly constant 
+\emph{resistant} against a time-channel attack, while not strictly constant
 time.
 
 This updated implementation will be made available to the PQM4 joint Cortex M4
 benchmarking effort\footnote{PQM4: Cortex-M4 post-quantum cryptography library:
-\url{https://github.com/mupq/pqm4}.}. We note that during the second round of 
-the NIST competition Round5 had overall leading embedded performance according 
+\url{https://github.com/mupq/pqm4}.}. We note that during the second round of
+the NIST competition Round5 had overall leading embedded performance according
 to PQM4 data, although the margin is not particularly large. Compared to
-some other candidates, the ``r5embed'' implementation is much smaller and more 
+some other candidates, the ``r5embed'' implementation is much smaller and more
 of it is written in a high-level language, as it was written for portability.
 
 Table \ref{tab:m4cycles} summarizes performance on the Cortex M4 target.
@@ -79,26 +80,26 @@ RAM, ROM (Flash), and bandwidth requirements of the ARMv7 implementation.
     \multicolumn{1}{r|}{\bf Dec} &
     \multicolumn{1}{r|}{\bf Tot} \\
     \hline
-    \verb|R5ND_1CPA_5d| & 391   & 572   & 244   & 1207  \\
-    \verb|R5ND_3CPA_5d| & 784   & 1081  & 396   & 2262  \\
-    \verb|R5ND_5CPA_5d| & 1423  & 1948  & 688   & 4060  \\
-    \verb|R5ND_1CCA_5d| & 364   & 573   & 731   & 1669  \\
-    \verb|R5ND_3CCA_5d| & 784   & 1185  & 1493  & 3463  \\
-    \verb|R5ND_5CCA_5d| & 1354  & 1987  & 2529  & 5871  \\
-%   \verb|R5ND_1CPA_0d| & 356   & 470   & 153   & 981   \\
-%   \verb|R5ND_3CPA_0d| & 1168  & 1560  & 549   & 3277  \\
-%   \verb|R5ND_5CPA_0d| & 1583  & 2131  & 713   & 4428  \\
-%   \verb|R5ND_1CCA_0d| & 486   & 732   & 903   & 2122  \\
-%   \verb|R5ND_3CCA_0d| & 796   & 1204  & 1463  & 3464  \\
-%   \verb|R5ND_5CCA_0d| & 1091  & 1646  & 1973  & 4712  \\
-    \verb|R5N1_1CPA_0d| & 6705  & 4488  & 1280  & 12474 \\
-    \verb|R5N1_3CPA_0d| & 10114 & 6749  & 1924  & 18788 \\
-    \verb|R5N1_5CPA_0d| & 34831 & 19958 & 4460  & 59249 \\
-    \verb|R5N1_1CCA_0d| & 4252  & 3615  & 4134  & 12002 \\
-    \verb|R5N1_3CCA_0d| & 17317 & 11714 & 13202 & 42234 \\
-    \verb|R5N1_5CCA_0d| & 23272 & 16042 & 17645 & 56960 \\
-    \verb|R5ND_0CPA_2iot| & 340 & 465   & 190   & 997   \\
-    \verb|R5ND_1CPA_4longkey| & 418 & 623 & 267 & 1310  \\
+    \verb|R5ND_1CPA_5d| & 425   & 607   & 247   & 1280  \\
+    \verb|R5ND_3CPA_5d| & 839   & 1136  & 400   & 2376  \\
+    \verb|R5ND_5CPA_5d| & 1455  & 1976  & 697   & 4129  \\
+    \verb|R5ND_1CCA_5d| & 384   & 593   & 755   & 1734  \\
+    \verb|R5ND_3CCA_5d| & 840   & 1253  & 1567  & 3661  \\
+    \verb|R5ND_5CCA_5d| & 1386  & 2011  & 2563  & 5961  \\
+%   \verb|R5ND_1CPA_0d| & 360   & 474   & 155   & 990   \\
+%   \verb|R5ND_3CPA_0d| & 1223  & 1615  & 555   & 3393  \\
+%   \verb|R5ND_5CPA_0d| & 1593  & 2141  & 719   & 4455  \\
+%   \verb|R5ND_1CCA_0d| & 504   & 750   & 926   & 2181  \\
+%   \verb|R5ND_3CCA_0d| & 832   & 1241  & 1505  & 3579  \\
+%   \verb|R5ND_5CCA_0d| & 1161  & 1714  & 2047  & 4923  \\
+    \verb|R5N1_1CPA_0d| & 6625  & 4488  & 1209  & 12323 \\
+    \verb|R5N1_3CPA_0d| & 9935  & 7063  & 1849  & 18849 \\
+    \verb|R5N1_5CPA_0d| & 34833 & 20891 & 4455  & 60181 \\
+    \verb|R5N1_1CCA_0d| & 4166  & 3723  & 4051  & 11942 \\
+    \verb|R5N1_3CCA_0d| & 17094 & 11986 & 13572 & 42654 \\
+    \verb|R5N1_5CCA_0d| & 23206 & 16681 & 17949 & 57837 \\
+    \verb|R5ND_0CPA_2iot| & 393 & 517   & 195   & 1106  \\
+    \verb|R5ND_1CPA_4longkey| & 423 & 628 & 271 & 1324  \\
     \hline
 \end{tabular}
 \caption{Round5 performance on ARM Cortex M4 (STM32F407 Discovery)
@@ -127,26 +128,26 @@ RAM, ROM (Flash), and bandwidth requirements of the ARMv7 implementation.
     \multicolumn{1}{r|}{\bf CT}         &
     \multicolumn{1}{r|}{\bf Code} \\
     \hline
-    \verb|R5ND_1CPA_5d| & 3822  & 4821  & 2564  & 445   & 549   & 4974  \\
-    \verb|R5ND_3CPA_5d| & 5550  & 6989  & 3548  & 780   & 859   & 6410  \\
-    \verb|R5ND_5CPA_5d| & 6990  & 8733  & 4548  & 972   & 1063  & 4092  \\
-    \verb|R5ND_1CCA_5d| & 3910  & 4981  & 5596  & 461   & 620   & 5326  \\
-    \verb|R5ND_3CCA_5d| & 5598  & 7109  & 8052  & 780   & 934   & 6904  \\
-    \verb|R5ND_5CCA_5d| & 7038  & 9029  & 10428 & 978   & 1285  & 4722  \\
-%   \verb|R5ND_1CPA_0d| & 4478  & 5389  & 2308  & 634   & 682   & 2382  \\
-%   \verb|R5ND_3CPA_0d| & 6006  & 7501  & 4668  & 909   & 981   & 2438  \\
-%   \verb|R5ND_5CPA_0d| & 7494  & 9445  & 5924  & 1178  & 1274  & 2480  \\
-%   \verb|R5ND_1CCA_0d| & 4478  & 5581  & 6316  & 676   & 740   & 2770  \\
-%   \verb|R5ND_3CCA_0d| & 6110  & 7725  & 8836  & 983   & 1103  & 2914  \\
-%   \verb|R5ND_5CCA_0d| & 8046  & 10237 & 11756 & 1349  & 1509  & 2948  \\
-    \verb|R5N1_1CPA_0d| & 18958 & 24389 & 17852 & 5214  & 5236  & 3136  \\
-    \verb|R5N1_3CPA_0d| & 26606 & 35749 & 28084 & 8834  & 8866  & 3166  \\
-    \verb|R5N1_5CPA_0d| & 40590 & 55181 & 46284 & 14264 & 14288 & 3274  \\
-    \verb|R5N1_1CCA_0d| & 19502 & 25525 & 31316 & 5740  & 5788  & 3310  \\
-    \verb|R5N1_3CCA_0d| & 29870 & 39853 & 49564 & 9660  & 9716  & 3678  \\
-    \verb|R5N1_5CCA_0d| & 37406 & 52325 & 67028 & 14636 & 14708 & 3574  \\
-    \verb|R5ND_0CPA_2iot| & 3150  & 3845 & 2036 & 342   & 394   & 3442  \\
-    \verb|R5ND_1CPA_4longkey| & 3790 & 4861 & 2660 & 453 & 563  & 5006  \\
+    \verb|R5ND_1CPA_5d| & 3862  & 4317  & 2124  & 445   & 549   & 5894 \\
+    \verb|R5ND_3CPA_5d| & 5598  & 6173  & 2708  & 780   & 859   & 7332 \\
+    \verb|R5ND_5CPA_5d| & 7038  & 7717  & 3468  & 972   & 1063  & 4828 \\
+    \verb|R5ND_1CCA_5d| & 3958  & 4405  & 5028  & 461   & 620   & 6248 \\
+    \verb|R5ND_3CCA_5d| & 5638  & 6229  & 7164  & 780   & 934   & 7788 \\
+    \verb|R5ND_5CCA_5d| & 7078  & 7781  & 9068  & 978   & 1285  & 5412 \\
+%   \verb|R5ND_1CPA_0d| & 4526  & 4765  & 1716  & 634   & 682   & 3054 \\
+%   \verb|R5ND_3CPA_0d| & 6054  & 6565  & 3676  & 909   & 981   & 3114 \\
+%   \verb|R5ND_5CPA_0d| & 7542  & 8205  & 4628  & 1178  & 1274  & 3160 \\
+%   \verb|R5ND_1CCA_0d| & 4518  & 4877  & 5620  & 676   & 740   & 3440 \\
+%   \verb|R5ND_3CCA_0d| & 6150  & 6669  & 7772  & 983   & 1103  & 3554 \\
+%   \verb|R5ND_5CCA_0d| & 8078  & 8757  & 10268 & 1349  & 1509  & 3586 \\
+    \verb|R5N1_1CPA_0d| & 19286 & 19501 & 12996 & 5214  & 5236  & 3796 \\
+    \verb|R5N1_3CPA_0d| & 26950 & 27221 & 19556 & 8834  & 8866  & 3804 \\
+    \verb|R5N1_5CPA_0d| & 40934 & 41213 & 32324 & 14264 & 14288 & 3910 \\
+    \verb|R5N1_1CCA_0d| & 19878 & 20109 & 25900 & 5740  & 5788  & 3892 \\
+    \verb|R5N1_3CCA_0d| & 30206 & 30485 & 40204 & 9660  & 9716  & 4228 \\
+    \verb|R5N1_5CCA_0d| & 37638 & 37933 & 52644 & 14636 & 14708 & 4164 \\
+    \verb|R5ND_0CPA_2iot| & 3198  & 3501  & 1740  & 342 & 394   & 3618 \\
+    \verb|R5ND_1CPA_4longkey| & 3830 & 4357 & 2180 & 453 & 563  & 5764 \\
     \hline
     \end{tabular}
     \caption{Round5 RAM (Stack) / ROM (Flash) and bandwidth usage on
@@ -168,12 +169,12 @@ RISC-V Core (RV32IMC ``Pluto'') and other peripherals such as a very
 fast SHA-3 Keccak core.
 
 We synthesized PQSoC with and without the ring arithmetic accelerator on
-a Xilinx Artix-7 platform (Digilent Arty A7-35T board). Table 
-\ref{tab:fpgasize} indicates its relative size, which is very small. 
+a Xilinx Artix-7 platform (Digilent Arty A7-35T board). Table
+\ref{tab:fpgasize} indicates its relative size, which is very small.
 Even with the CPU the implementation is smaller than some proposed
 hardware modules; as a codesign it is minuscule.
-From Table \ref{tab:pqsoc} we see that the performance advantage 
-gained from the coprocessor is between $600\%$ and $1152\%$, depending 
+From Table \ref{tab:pqsoc} we see that the performance advantage
+gained from the coprocessor is between $664\%$ and $1382\%$, depending
 on the variant.
 
 Four DSP units are used by the multiplication unit of the RV32 CPU core,
@@ -190,15 +191,14 @@ subtractions.
     Artix-7 FPGA    & \multicolumn{2}{r}{Coprocessor?} & Area \\
     {\bf Component} & {\bf No } & {\bf Yes} & {\bf Delta} \\
     \hline
-    SLICEL          & 1,550     & 1,718     & +168  \\
-    SLICEM          &   635     &   710     & +75   \\
-    LUT as Logic    & 6,994     & 7,736     & +742  \\
+    SLICEL          & 1,525     & 1,533     & +8    \\
+    SLICEM          &   626     &   691     & +64   \\
+    LUT as Logic    & 7,064     & 7,720     & +656  \\
     LUT as Memory   &    48     &    48     & +0    \\
-    Slice Registers & 2,662     & 3,312     & +650  \\
-    DSP48E1         &     4     &    5      & +1    \\
+    Slice Registers & 2,626     & 3,336     & +710  \\
+    DSP48E1         &     4     &     5     & +1    \\
     \hline
 \end{tabular}
-
     \caption{Synthesis of PQSoC with and without the Round5 lattice
     coprocessor on a Xilinx Artix-7 (XC7A35) FPGA platform (Arty 7),
     indicating its size.}
@@ -207,10 +207,10 @@ subtractions.
 \end{table}
 
 The design achieves timing closure at 100 MHz -- that was also the clock
-frequency used in timing runs. As can be seen, depending on ring variant
-security level key generation requires $1.5 - 4.5$ ms,
-encapsulation $1.8 - 5.3$ ms, and decapsulation
-$0.9 - 7.5$ ms. What is noteworthy in comparison to monolithic
+frequency used in timing runs. As can be seen, depending on (ring variant)
+security level key generation requires $1.3 - 3.4$ ms,
+encapsulation $1.7 - 4.5$ ms, and decapsulation
+$0.9 - 6.2$ ms. What is noteworthy in comparison to monolithic
 hardware implementations is that all of these options are available
 \emph{simultaneously} via the same hardware module with very small additional
 cost.
@@ -218,34 +218,28 @@ cost.
 \begin{table}
 \begin{center}
     \begin{tabular}{| l | n{3}{0} n{3}{0} n{3}{0}
-                        | n{4}{0} n{4}{0} n{4}{0} | n{2}{2} |}
+                        | n{4}{0} n{4}{0} n{4}{0} | n{3}{2} |}
     \hline
         & \multicolumn{3}{c|}{With coprocessor}
-        & \multicolumn{3}{c|}{Plain C Code} & {KEX} \\
+        & \multicolumn{3}{c|}{Plain C Code} & {Speed} \\
     {\bf Variant}   & {\bf KG} & {\bf Enc} & {\bf Dec}
-                    & {\bf KG} & {\bf Enc} & {\bf Dec} & {$\times$}     \\
+                    & {\bf KG} & {\bf Enc} & {\bf Dec} & {\bf Factor}     \\
     \hline
-\verb|R5ND_1CPA_5d|     & 150  & 215  & 108  & 888  & 1581 & 736  &  6.76   \\
-\verb|R5ND_3CPA_5d|     & 242  & 323  & 138  & 1949 & 3241 & 1349 &  9.28   \\
-\verb|R5ND_5CPA_5d|     & 412  & 526  & 222  & 4039 & 6632 & 2702 & 11.52   \\
-\verb|R5ND_1CCA_5d|     & 142  & 213  & 305  & 788  & 1386 & 2005 &  6.32   \\
-\verb|R5ND_3CCA_5d|     & 244  & 342  & 478  & 1951 & 3260 & 4606 &  9.21   \\
-\verb|R5ND_5CCA_5d|     & 396  & 539  & 749  & 3824 & 6291 & 8824 & 11.24   \\
-%\verb|R5ND_1CPA_0d|    & 132  & 173  & 65   & 731  & 936  & 228  &  5.11   \\
-%\verb|R5ND_3CPA_0d|    & 368  & 475  & 210  & 3180 & 4173 & 1096 &  8.02   \\
-%\verb|R5ND_5CPA_0d|    & 450  & 598  & 231  & 4515 & 5980 & 1548 &  9.40   \\
-%\verb|R5ND_1CCA_0d|    & 180  & 259  & 359  & 1175 & 1534 & 1915 &  5.78   \\
-%\verb|R5ND_3CCA_0d|    & 265  & 384  & 524  & 1950 & 2559 & 3189 &  6.55   \\
-%\verb|R5ND_5CCA_0d|    & 353  & 515  & 689  & 2771 & 3616 & 4474 &  6.97   \\
-\verb|R5ND_0CPA_2iot|   & 134  & 178  & 89   & 753  & 1190 & 482  &  6.04   \\
-\verb|R5ND_1CPA_4longkey| & 155 & 222 & 116  & 893  & 1661 & 817  &  6.82   \\
+\verb|R5ND_1CPA_5d| & 137   & 195   & 89    & 888   & 1578  & 724   & 7.59  \\
+\verb|R5ND_3CPA_5d| & 205   & 273   & 105   & 1937  & 3222  & 1329  & 11.12 \\
+\verb|R5ND_5CPA_5d| & 346   & 450   & 164   & 4001  & 6595  & 2663  & 13.82 \\
+\verb|R5ND_1CCA_5d| & 130   & 195   & 276   & 789   & 1387  & 1997  & 6.94  \\
+\verb|R5ND_3CCA_5d| & 207   & 290   & 401   & 1939  & 3248  & 4575  & 10.86 \\
+\verb|R5ND_5CCA_5d| & 338   & 458   & 627   & 3794  & 6257  & 8758  & 13.22 \\
+\verb|R5ND_0CPA_2iot| & 127 & 166   & 73    & 761   & 1193  & 473   & 6.64  \\
+\verb|R5ND_1CPA_4longkey| & 132 & 196 & 91  & 884   & 1653  & 801   & 7.96  \\
     \hline
     \end{tabular}
     \caption{Performance of Round5 on a lightweight RISC-V SoC with the
     lattice coprocessor and without. The numbers are in 1000s of cycles
     at 100 MHz (equivalent to 10 $\mu s$). Neither of the implementations
-    uses assembly language. The hardware accelerator can be used with 
-	other CPU architectures as well.}
+    uses assembly language. The hardware accelerator can be used with
+    other CPU architectures as well.}
     \label{tab:pqsoc}
 \end{center}
 \end{table}
