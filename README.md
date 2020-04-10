@@ -1,8 +1,9 @@
 # r5embed
 
-**UPDATE:** 2020-04-02	Markku-Juhani O. Saarinen <mjos@pqshield.com>
+**UPDATE:** 2020-04-10	Markku-Juhani O. Saarinen <mjos@pqshield.com>
 
-Switches to use NIST SP 800-185 TupleHashXOF for better domain separation.
+Switches to use NIST SP 800-185 TupleHash and TupleHashXOF for better
+domain separation.
 
 
 **UPDATE:** 2020-01-27	Markku-Juhani O. Saarinen <mjos@pqshield.com>
