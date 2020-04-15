@@ -24,9 +24,10 @@ standardization candidate.
 For a summary of performance and code size of all supported variants on 
 Cortex M4, see the [benchmarks](./benchmarks.md) page. The raw
 benchmark data is at [stm32f4/bench.txt](stm32f4/bench.txt).
-A very prief [report](rep/rep.pdf) is also available, which additionally
-offers RISC-V hardware-software numbers (running essentially the same code,
-but with hardware drivers for SHA3 and ring arithmetic).
+A very brief report [rep.pdf](rep/rep.pdf) is also available, which 
+additionally offers RISC-V hardware-software numbers (running essentially 
+the same code, but with hardware drivers for SHA3 and ring arithmetic).
+
 
 ## Supported variants
 
