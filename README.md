@@ -16,15 +16,17 @@ CCA variants directly available as KEMs.
 
 A self-contained version of Round5 post-quantum algorithms for embedded 
 platforms. This heavily modified fork is **NOT OFFICIAL** -- but is 
-testvector-compatible with the second-round submission to NIST. 
-Round5 is a currently a 2nd round 
+testvector-compatible with the NIST submission. 
+Round5 (in a slightly different form) is a currently a 2nd round 
 [NIST PQC](https://csrc.nist.gov/Projects/Post-Quantum-Cryptography)
 standardization candidate. 
 
 For a summary of performance and code size of all supported variants on 
 Cortex M4, see the [benchmarks](./benchmarks.md) page. The raw
 benchmark data is at [stm32f4/bench.txt](stm32f4/bench.txt).
-
+A very prief [report](rep/rep.pdf) is also available, which additionally
+offers RISC-V hardware-software numbers (running essentially the same code,
+but with hardware drivers for SHA3 and ring arithmetic).
 
 ## Supported variants
 
